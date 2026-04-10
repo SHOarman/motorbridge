@@ -1,12 +1,15 @@
 import 'package:get/get.dart';
 import 'package:motorbridge/presentation/authscreen/createaccount.dart';
-import 'package:motorbridge/presentation/vehicles/view/vehicels.dart';
+import 'package:motorbridge/presentation/vehicles/view/vehicles.dart';
+import 'package:motorbridge/presentation/vehicles/view/vehicle_details.dart';
+import '../../presentation/add_vehicles/view/addvehicles.dart';
 import '../../presentation/authscreen/forgotpassword.dart';
 import '../../presentation/authscreen/resetpassword.dart';
 import '../../presentation/authscreen/singin.dart';
 import '../../presentation/authscreen/verificationcode.dart';
-import '../../presentation/home/binding/home_binding.dart';
 import '../../presentation/home/view/home_screen.dart';
+import '../../presentation/profile/view/profile.dart';
+import '../../presentation/reminders/view/reminders.dart';
 import '../../presentation/splashscreen/splashscreen1.dart';
 import '../../presentation/splashscreen/splashscreen2.dart';
 import 'app_routes.dart';
@@ -31,11 +34,15 @@ class AppPages {
     GetPage(
       name: AppRoutes.home,
       page: () => const HomeScreen(),
-      binding: HomeBinding(),
+      transition: Transition.noTransition,
       transitionDuration: Duration.zero,
     ),
 
     //=============================================vehicles===============================
-    GetPage(name: AppRoutes.vehicles, page: () => const Vehicels(), transitionDuration: Duration.zero),
+    GetPage(name: AppRoutes.vehicles, page: () => const Vehicles(), transitionDuration: Duration.zero),
+    GetPage(name: AppRoutes.addvehicles, page: ()=> const AddVehiclesScreen(), transitionDuration: Duration.zero),
+    GetPage(name: AppRoutes.reminders, page: ()=> const Reminders(), transitionDuration: Duration.zero),
+    GetPage(name: AppRoutes.profile, page: ()=> const Profile(), transitionDuration: Duration.zero),
+    // GetPage(name: AppRoutes.vehicledetails, page: ()=> const VehicleDetails(), transitionDuration: Duration.zero),
   ];
 }

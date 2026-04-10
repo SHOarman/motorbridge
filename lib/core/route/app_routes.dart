@@ -4,6 +4,7 @@ class AppRoutes {
   static const String vehicles = '/vehicles';
   static const String reminders = '/reminders';
   static const String profile = '/profile';
+  static const String vehicledetails = '/vehicledetails';
 
   //===============================onloding========================================
 
@@ -17,4 +18,14 @@ class AppRoutes {
   static const forgotpassword = '/forgotpassword';
   static const resetpassword = '/resetpassword';
   static const verificationcode = '/verificationcode';
+
+
+
+  ///==============================================addvehicles=================================================
+  static const addvehicles = '/addvehicles';
+  static const vehicletype = '/vehicletype';
+  static const importantdates = '/importantdates';
+  static const moredetails = '/moredetails';
+  static const galleryimages = '/galleryimages';
+
 }
