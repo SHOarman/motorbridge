@@ -1,166 +1,319 @@
-// import 'package:flutter/material.dart';
-// import 'package:motorbridge/general_widget/customappbar.dart';
-// import 'package:get/get.dart';
-//
-// class VehicleDetails extends StatelessWidget {
-//   const VehicleDetails({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     const Color primaryColor = Color(0xFF1B4E9F);
-//
-//     return Scaffold(
-//       backgroundColor: const Color(0xFFF5F6F8),
-//       appBar: CustomAppBar(
-//         title: "Vehicle Details",
-//         backgroundImage: "assets/image/appbar.png",
-//         leftIcon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
-//         onLeftTap: () => Get.back(),
-//       ),
-//       body: SingleChildScrollView(
-//         padding: const EdgeInsets.all(20),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             // Vehicle Hero Section
-//             Container(
-//               width: double.infinity,
-//               padding: const EdgeInsets.all(20),
-//               decoration: BoxDecoration(
-//                 color: Colors.white,
-//                 borderRadius: BorderRadius.circular(20),
-//                 boxShadow: [
-//                   BoxShadow(
-//                     color: Colors.black.withValues(alpha: 0.05),
-//                     blurRadius: 15,
-//                     offset: const Offset(0, 8),
-//                   ),
-//                 ],
-//               ),
-//               child: Column(
-//                 children: [
-//                   Image.asset(
-//                     "assets/image/Rectangle 2.png",
-//                     height: 180,
-//                     fit: BoxFit.contain,
-//                   ),
-//                   const SizedBox(height: 20),
-//                   const Text(
-//                     "Toyota Hilux",
-//                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-//                   ),
-//                   const Text(
-//                     "2.4 D-4D Invincible X",
-//                     style: TextStyle(color: Colors.grey, fontSize: 16),
-//                   ),
-//                   const SizedBox(height: 15),
-//                   Container(
-//                     padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-//                     decoration: BoxDecoration(
-//                       color: const Color(0xFFFFD54F),
-//                       borderRadius: BorderRadius.circular(10),
-//                     ),
-//                     child: const Text(
-//                       "AB12 CDE",
-//                       style: TextStyle(
-//                         fontSize: 22,
-//                         fontWeight: FontWeight.w900,
-//                         letterSpacing: 2,
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//             const SizedBox(height: 25),
-//
-//             const Text(
-//               "Important Dates",
-//               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-//             ),
-//             const SizedBox(height: 15),
-//
-//             _buildDateCard("MOT Status", "Valid until 15 Oct 2026", Icons.check_circle, Colors.green),
-//             _buildDateCard("Tax Status", "Taxed until 01 Nov 2026", Icons.monetization_on, primaryColor),
-//             _buildDateCard("Insurance", "Expires 20 Dec 2026", Icons.security, Colors.orange),
-//
-//             const SizedBox(height: 25),
-//
-//             const Text(
-//               "Vehicle Specifications",
-//               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-//             ),
-//             const SizedBox(height: 15),
-//
-//             _buildSpecGrid(),
-//
-//             const SizedBox(height: 40),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-//
-//   Widget _buildDateCard(String title, String status, IconData icon, Color color) {
-//     return Container(
-//       margin: const EdgeInsets.only(bottom: 12),
-//       padding: const EdgeInsets.all(16),
-//       decoration: BoxDecoration(
-//         color: Colors.white,
-//         borderRadius: BorderRadius.circular(15),
-//       ),
-//       child: Row(
-//         children: [
-//           Icon(icon, color: color, size: 28),
-//           const SizedBox(width: 15),
-//           Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-//               Text(status, style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
-//             ],
-//           ),
-//           const Spacer(),
-//           const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
-//         ],
-//       ),
-//     );
-//   }
-//
-//   Widget _buildSpecGrid() {
-//     return Container(
-//       padding: const EdgeInsets.all(20),
-//       decoration: BoxDecoration(
-//         color: Colors.white,
-//         borderRadius: BorderRadius.circular(20),
-//       ),
-//       child: GridView.count(
-//         shrinkWrap: true,
-//         physics: const NeverScrollableScrollPhysics(),
-//         crossAxisCount: 2,
-//         childAspectRatio: 2.5,
-//         mainAxisSpacing: 20,
-//         crossAxisSpacing: 20,
-//         children: [
-//           _buildSpecItem("Engine", "2.4L Diesel"),
-//           _buildSpecItem("Year", "2026"),
-//           _buildSpecItem("Fuel Type", "Diesel"),
-//           _buildSpecItem("Transmission", "Automatic"),
-//           _buildSpecItem("Color", "White"),
-//           _buildSpecItem("Doors", "4"),
-//         ],
-//       ),
-//     );
-//   }
-//
-//   Widget _buildSpecItem(String label, String value) {
-//     return Column(
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       children: [
-//         Text(label, style: const TextStyle(color: Colors.grey, fontSize: 12)),
-//         const SizedBox(height: 4),
-//         Text(value, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-//       ],
-//     );
-//   }
-// }
+import 'dart:ui';
+import 'package:flutter/material.dart';
+import 'package:motorbridge/core/route/app_routes.dart';
+import 'package:motorbridge/general_widget/customappbar.dart';
+import 'package:get/get.dart';
+import 'package:motorbridge/presentation/vehicles/widget/RunningCostsCard.dart';
+import 'package:motorbridge/presentation/vehicles/widget/VehicleDocumentsCard.dart';
+import 'package:motorbridge/utils/app_text_styles.dart';
+
+import '../../reminders/widget/customText.dart';
+import '../widget/CustomVehicleField.dart';
+
+class VehicleDetails extends StatelessWidget {
+  const VehicleDetails({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    const Color primaryColor = Color(0xFF1B4E9F);
+
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F6F8),
+      appBar: CustomAppBar(
+        title: "Vehicle Details",
+        backgroundImage: "assets/image/appbar.png",
+        leftIcon: const Icon(
+          Icons.arrow_back_ios_new,
+          color: Colors.white,
+          size: 20,
+        ),
+        onLeftTap: () => Get.back(),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
+                  Container(
+                    width: double.infinity,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: const Color(0xff9DBDEE),
+                        width: 1,
+                      ),
+                    ),
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: Image.asset(
+                            "assets/image/Rectangle_2-removebg-preview.png",
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                        Positioned(
+                          top: 15,
+                          right: 15,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6),
+                              color: const Color(0xffFFF4D0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.05),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Text(
+                              "Vehicle 1",
+                              style: AppTextStyles.smallText.copyWith(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: const Color(0xffFDC209),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Toyota Hilux",
+                        style: AppTextStyles.bigText.copyWith(
+                          fontSize: 24,
+                          color: const Color(0xff2A2A2A),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: primaryColor,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                "Edit",
+                                style: AppTextStyles.smallText.copyWith(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(width: 5),
+                              Image.asset(
+                                "assets/icon/Vector (3).png",
+                                height: 15,
+                                width: 15,
+                                color: Colors.white,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    "2GD-FTV. 2026",
+                    style: AppTextStyles.smallText.copyWith(
+                      fontSize: 16,
+                      color: const Color(0xff888888),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Container(
+                    width: double.infinity,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: const Color(0xff141414),
+                        width: 1.5,
+                      ),
+                      borderRadius: BorderRadius.circular(7),
+                      color: const Color(0xffFDC209),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "AB12 CDE",
+                        style: AppTextStyles.bigText.copyWith(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xff2A2A2A),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                ],
+              ),
+            ),
+
+            SizedBox(height: 20),
+            CustomReminderCard(
+              title: "MOT",
+              date: "26 Apr 2026",
+              vehicleName: "Due Soon",
+              buttonText: "Book Now",
+              iconPath: 'assets/icon/Group (4).png',
+              buttonIconPath: 'assets/icon/fluent_share-20-filled.png',
+              backgroundColor: Colors.white,
+              titleColor: const Color(0xff2A2A2A),
+              dateColor: const Color(0xff888888),
+              expiryTextColor: const Color(0xff14B11C),
+              buttonColor: primaryColor,
+              customButtonTextColor: Colors.white,
+              badgeBackgroundColor: const Color(0xffF4CC9D),
+              badgeTextColor: const Color(0xff3F2402),
+              borderColor: const Color(0xffCECECE),
+              onButtonPressed: () {},
+            ),
+            CustomReminderCard(
+              title: "Road Tax",
+              date: "10 Jul 2026",
+              vehicleName: "Upcoming",
+              buttonText: "Pay Tax Online",
+              iconPath: 'assets/icon/image 2.png',
+              buttonIconPath: 'assets/icon/fluent_share-20-filled.png',
+              backgroundColor: Colors.white,
+              titleColor: const Color(0xff2A2A2A),
+              dateColor: const Color(0xff888888),
+              expiryTextColor: const Color(0xff14B11C),
+              buttonColor: primaryColor,
+              customButtonTextColor: Colors.white,
+              badgeBackgroundColor: const Color(0xffD1FADF),
+              badgeTextColor: const Color(0xff14B11C),
+              borderColor: const Color(0xffCECECE),
+              onButtonPressed: () {},
+            ),
+            CustomReminderCard(
+              title: "Insurance",
+              date: "10 July 2026",
+              vehicleName: "Upcoming",
+              buttonText: "Find Insurance",
+              iconPath: 'assets/icon/image 3.png',
+              buttonIconPath: 'assets/icon/fluent_share-20-filled.png',
+              backgroundColor: Colors.white,
+              titleColor: const Color(0xff2A2A2A),
+              dateColor: const Color(0xff888888),
+              expiryTextColor: const Color(0xff14B11C),
+              buttonColor: primaryColor,
+              customButtonTextColor: Colors.white,
+              badgeBackgroundColor: const Color(0xffD1FADF),
+              badgeTextColor: const Color(0xff14B11C),
+              borderColor: const Color(0xffCECECE),
+              onButtonPressed: () {},
+            ),
+
+            CustomReminderCard(
+              title: "Service Due",
+              date: "10 June 2026",
+              vehicleName: "Upcoming",
+              buttonText: "Book Now",
+              iconPath: 'assets/icon/mdi_tools.png',
+              buttonIconPath: 'assets/icon/fluent_share-20-filled.png',
+              backgroundColor: Colors.white,
+              titleColor: const Color(0xff2A2A2A),
+              dateColor: const Color(0xff888888),
+              expiryTextColor: const Color(0xff14B11C),
+              buttonColor: primaryColor,
+              customButtonTextColor: Colors.white,
+              badgeBackgroundColor: const Color(0xffD1FADF),
+              badgeTextColor: const Color(0xff14B11C),
+              borderColor: const Color(0xffCECECE),
+              onButtonPressed: () {},
+            ),
+
+            CustomReminderCard(
+              title: "Breakdown Cover",
+              date: "1 Jan 2026",
+              vehicleName: "Expired",
+              buttonText: "Find Cover",
+              iconPath: 'assets/icon/image 4.png',
+              buttonIconPath: 'assets/icon/fluent_share-20-filled.png',
+              backgroundColor: Colors.white,
+              titleColor: const Color(0xff2A2A2A),
+              dateColor: const Color(0xff888888),
+              expiryTextColor: const Color(0xff14B11C),
+              buttonColor: primaryColor,
+              customButtonTextColor: Colors.white,
+              badgeBackgroundColor: const Color(0xffDABBBB),
+              badgeTextColor: const Color(0xffB11414),
+              borderColor: const Color(0xffDABBBB),
+              onButtonPressed: () {},
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  CustomVehicleField(
+                    label: "Engine Size",
+                    hintText: "e.g., WBA 273937923 937",
+                  ),
+                  CustomVehicleField(
+                    label: "Vin Number",
+                    hintText: "e.g., WBA 273937923 937",
+                  ),
+                  CustomVehicleField(
+                    label: "Engine Number",
+                    hintText: "e.g., WBA 273937923 937",
+                  ),
+                  CustomVehicleField(label: "Color", hintText: "e.g., White"),
+                  CustomVehicleField(
+                    label: "Bhp",
+                    hintText: "e.g., 150",
+                    keyboardType: TextInputType.number,
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 20),
+
+            RunningCostsCard(
+              iconPath: "assets/icon/Icon (18).png",
+              trendIconPath: "assets/icon/Icon (19).png",
+              repairIconPath: "assets/icon/Icon (20).png",
+              arrowIconPath: "assets/icon/Icon (21).png",
+              onPressed: () {},
+            ),
+
+
+            SizedBox(height: 20,),
+            
+            VehicleDocumentsCard(onAddTap: (){
+              Get.toNamed(AppRoutes.addDocuments);
+            }, onViewTap: (String p1) {
+              print(p1);
+
+            },),
+            SizedBox(height: 20,),
+
+
+
+          ],
+        ),
+      ),
+    );
+  }
+}

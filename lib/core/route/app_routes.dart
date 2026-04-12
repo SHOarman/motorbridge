@@ -3,7 +3,6 @@ class AppRoutes {
   static const String home = '/home';
   static const String vehicles = '/vehicles';
   static const String reminders = '/reminders';
-  static const String profile = '/profile';
   static const String vehicledetails = '/vehicledetails';
 
   //===============================onloding========================================
@@ -27,5 +26,13 @@ class AppRoutes {
   static const importantdates = '/importantdates';
   static const moredetails = '/moredetails';
   static const galleryimages = '/galleryimages';
+  static const addDocuments="/addDocuments";
+
+
+
+  ///=========================================profile===================================
+  static const String profile = '/profile';
+  static const String editprofile='/editprofile';
+  static const String editpassword='/editpassword';
 
 }

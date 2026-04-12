@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 import 'package:motorbridge/presentation/authscreen/createaccount.dart';
+import 'package:motorbridge/presentation/profile/view/editprofile.dart';
+import 'package:motorbridge/presentation/vehicles/view/addDocument.dart';
 import 'package:motorbridge/presentation/vehicles/view/vehicles.dart';
 import 'package:motorbridge/presentation/vehicles/view/vehicle_details.dart';
 import '../../presentation/add_vehicles/view/addvehicles.dart';
@@ -15,7 +17,7 @@ import '../../presentation/splashscreen/splashscreen2.dart';
 import 'app_routes.dart';
 
 class AppPages {
-  static const initial = AppRoutes.splashscreen1;
+  static const initial = AppRoutes.home;
 
   static final routes = [
     //===============================splashscreen==================================
@@ -42,7 +44,13 @@ class AppPages {
     GetPage(name: AppRoutes.vehicles, page: () => const Vehicles(), transitionDuration: Duration.zero),
     GetPage(name: AppRoutes.addvehicles, page: ()=> const AddVehiclesScreen(), transitionDuration: Duration.zero),
     GetPage(name: AppRoutes.reminders, page: ()=> const Reminders(), transitionDuration: Duration.zero),
+     GetPage(name: AppRoutes.vehicledetails, page: ()=> const VehicleDetails(), transitionDuration: Duration.zero),
+
+    GetPage(name: AppRoutes.addDocuments, page: ()=> const AddDocument(), transitionDuration: Duration.zero),
+
+
+    //=======================================profile======================================================
     GetPage(name: AppRoutes.profile, page: ()=> const Profile(), transitionDuration: Duration.zero),
-    // GetPage(name: AppRoutes.vehicledetails, page: ()=> const VehicleDetails(), transitionDuration: Duration.zero),
+    GetPage(name: AppRoutes.editprofile, page: ()=> const EditProfile(), transitionDuration: Duration.zero),
   ];
 }

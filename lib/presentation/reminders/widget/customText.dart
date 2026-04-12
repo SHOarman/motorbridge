@@ -1,9 +1,11 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:motorbridge/utils/app_text_styles.dart';
 
 class CustomReminderCard extends StatelessWidget {
   final String title;
   final String date;
-  final String expiryStatus;
+  final String? expiryStatus; // Nullable করা হয়েছে
   final String vehicleName;
   final String buttonText;
   final String iconPath;
@@ -19,11 +21,15 @@ class CustomReminderCard extends StatelessWidget {
   final Color badgeTextColor;
   final VoidCallback onButtonPressed;
 
+  final Color? borderColor;
+  final Color? customButtonTextColor;
+  final BorderSide? buttonBorder;
+
   const CustomReminderCard({
     super.key,
     required this.title,
     required this.date,
-    required this.expiryStatus,
+    this.expiryStatus, // Optional parameter
     required this.vehicleName,
     required this.buttonText,
     required this.iconPath,
@@ -37,6 +43,9 @@ class CustomReminderCard extends StatelessWidget {
     required this.badgeBackgroundColor,
     required this.badgeTextColor,
     required this.onButtonPressed,
+    this.borderColor,
+    this.customButtonTextColor,
+    this.buttonBorder,
   });
 
   @override
@@ -47,7 +56,10 @@ class CustomReminderCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: Colors.blue.shade100, width: 1),
+        border: Border.all(
+          color: borderColor ?? Colors.blue.shade100,
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
@@ -70,7 +82,7 @@ class CustomReminderCard extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: TextStyle(
+                      style: AppTextStyles.smallText.copyWith(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: titleColor,
@@ -79,7 +91,7 @@ class CustomReminderCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       "Due: $date",
-                      style: TextStyle(
+                      style: AppTextStyles.smallText.copyWith(
                         fontSize: 14,
                         color: dateColor,
                         fontWeight: FontWeight.w500,
@@ -105,7 +117,7 @@ class CustomReminderCard extends StatelessWidget {
                     ),
                     child: Text(
                       vehicleName,
-                      style: TextStyle(
+                      style: AppTextStyles.smallText.copyWith(
                         color: badgeTextColor,
                         fontWeight: FontWeight.bold,
                         fontSize: 12,
@@ -122,18 +134,19 @@ class CustomReminderCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 54),
-            child: Text(
-              expiryStatus,
-              style: TextStyle(
+
+          if (expiryStatus != null && expiryStatus!.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            Text(
+              expiryStatus!,
+              style: AppTextStyles.smallText.copyWith(
                 fontSize: 14,
                 color: expiryTextColor,
                 fontWeight: FontWeight.w600,
               ),
             ),
-          ),
+          ],
+
           const SizedBox(height: 15),
           SizedBox(
             width: double.infinity,
@@ -142,20 +155,21 @@ class CustomReminderCard extends StatelessWidget {
               onPressed: onButtonPressed,
               style: ElevatedButton.styleFrom(
                 backgroundColor: buttonColor,
+                elevation: 0,
+                side: buttonBorder,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
-                elevation: 0,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     buttonText,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
+                    style: AppTextStyles.smallText.copyWith(
+                      color: customButtonTextColor ?? Colors.white,
                       fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -163,7 +177,7 @@ class CustomReminderCard extends StatelessWidget {
                     buttonIconPath,
                     height: 18,
                     width: 18,
-                    color: Colors.white,
+                    color: customButtonTextColor ?? Colors.white,
                   ),
                 ],
               ),
