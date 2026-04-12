@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:motorbridge/core/services/controller/add_document_controller.dart';
 import 'package:motorbridge/general_widget/customappbar.dart';
-import 'package:motorbridge/presentation/vehicles/widget/CustomVehicleField.dart';
+import 'package:motorbridge/presentation/vehicles/widget/custom_vehicle_field.dart';
 
 class AddDocument extends GetView<AddDocumentController> {
   const AddDocument({super.key});

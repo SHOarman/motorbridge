@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:motorbridge/core/route/app_routes.dart';
 import 'package:motorbridge/general_widget/customappbar.dart';
 import 'package:get/get.dart';
-import 'package:motorbridge/presentation/vehicles/widget/RunningCostsCard.dart';
-import 'package:motorbridge/presentation/vehicles/widget/VehicleDocumentsCard.dart';
+import 'package:motorbridge/presentation/vehicles/widget/running_costs_card.dart';
+import 'package:motorbridge/presentation/vehicles/widget/vehicle_documents_card.dart';
 import 'package:motorbridge/utils/app_text_styles.dart';
 
-import '../../reminders/widget/customText.dart';
-import '../widget/CustomVehicleField.dart';
+import '../../reminders/widget/custom_text.dart';
+import '../widget/custom_vehicle_field.dart';
 
 class VehicleDetails extends StatelessWidget {
   const VehicleDetails({super.key});

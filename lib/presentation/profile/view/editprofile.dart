@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:motorbridge/core/services/controller/profile_controller.dart';
 import 'package:motorbridge/general_widget/customappbar.dart';
-import 'package:motorbridge/presentation/vehicles/widget/CustomVehicleField.dart';
+
+import '../../vehicles/widget/custom_vehicle_field.dart';
 
 class EditProfile extends StatelessWidget {
   const EditProfile({super.key});

@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:motorbridge/presentation/authscreen/createaccount.dart';
 import 'package:motorbridge/presentation/profile/view/editprofile.dart';
-import 'package:motorbridge/presentation/vehicles/view/addDocument.dart';
+import 'package:motorbridge/presentation/vehicles/view/add_document.dart';
 import 'package:motorbridge/presentation/vehicles/view/vehicles.dart';
 import 'package:motorbridge/presentation/vehicles/view/vehicle_details.dart';
 import '../../presentation/add_vehicles/view/addvehicles.dart';
@@ -10,6 +10,7 @@ import '../../presentation/authscreen/resetpassword.dart';
 import '../../presentation/authscreen/singin.dart';
 import '../../presentation/authscreen/verificationcode.dart';
 import '../../presentation/home/view/home_screen.dart';
+import '../../presentation/home/view/motoring_emergencies.dart';
 import '../../presentation/profile/view/profile.dart';
 import '../../presentation/reminders/view/reminders.dart';
 import '../../presentation/splashscreen/splashscreen1.dart';
@@ -39,6 +40,8 @@ class AppPages {
       transition: Transition.noTransition,
       transitionDuration: Duration.zero,
     ),
+    GetPage(name: AppRoutes.motoringemergencies, page: () => const MotoringEmergencies(), transitionDuration: Duration.zero),
+
 
     //=============================================vehicles===============================
     GetPage(name: AppRoutes.vehicles, page: () => const Vehicles(), transitionDuration: Duration.zero),

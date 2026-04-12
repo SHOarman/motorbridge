@@ -157,90 +157,7 @@ class HomeScreen extends GetView<HomeController> {
               onTap: () {},
               iconPath: 'assets/icon/Frame (5).png',
             ),
-            // const SizedBox(height: 20),
-            // Container(
-            //   height: 400,
-            //   decoration: BoxDecoration(
-            //     color: const Color(0xffF99D66).withValues(alpha: 0.2),
-            //     borderRadius: BorderRadius.circular(16),
-            //     border: Border.all(color: const Color(0xFFFFB900), width: 1),
-            //   ),
-            //   child: Padding(
-            //     padding: const EdgeInsets.all(20),
-            //     child: Column(
-            //       children: [
-            //         Row(
-            //           children: [
-            //             Image.asset(
-            //               "assets/icon/Container (19).png",
-            //               width: 25,
-            //               height: 25,
-            //             ),
-            //             const SizedBox(width: 10),
-            //             Text(
-            //               "Important Legal Notice",
-            //               style: AppTextStyles.bigText.copyWith(
-            //                 fontSize: 18,
-            //                 fontWeight: FontWeight.w500,
-            //               ),
-            //             ),
-            //           ],
-            //         ),
-            //         const SizedBox(height: 10),
-            //         Text(
-            //           "This page provides quick access to emergency\n contact numbers and your stored vehicle information.",
-            //           style: AppTextStyles.smallText,
-            //         ),
-            //         const SizedBox(height: 6),
-            //         Text(
-            //           "Always call 999 in a life-threatening emergency.",
-            //           style: AppTextStyles.bigText.copyWith(
-            //             fontSize: 13,
-            //             fontWeight: FontWeight.w500,
-            //           ),
-            //         ),
-            //         const SizedBox(height: 10),
-            //         RichText(
-            //           text: const TextSpan(
-            //             style: TextStyle(
-            //               fontSize: 14,
-            //               color: Color(0xFF4A4A4A),
-            //               height: 1.5,
-            //             ),
-            //             children: [
-            //               TextSpan(
-            //                 text:
-            //                     "Motor Bridge UK is a reminder and information storage tool only. ",
-            //               ),
-            //               TextSpan(
-            //                 text: "We take no liability",
-            //                 style: TextStyle(
-            //                   fontWeight: FontWeight.bold,
-            //                   color: Colors.black,
-            //                 ),
-            //               ),
-            //               TextSpan(
-            //                 text:
-            //                     " for the accuracy of contact numbers, policy details, or any decisions made using information stored in this app.\n\n",
-            //               ),
-            //               TextSpan(
-            //                 text: "You are solely responsible",
-            //                 style: TextStyle(
-            //                   fontWeight: FontWeight.bold,
-            //                   color: Colors.black,
-            //                 ),
-            //               ),
-            //               TextSpan(
-            //                 text:
-            //                     " for ensuring your stored information is accurate and up-to-date.",
-            //               ),
-            //             ],
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
+
             const SizedBox(height: 30),
             CustomActionButton(
               title: "Motoring Emergencies",
@@ -248,7 +165,9 @@ class HomeScreen extends GetView<HomeController> {
               iconPath: "assets/icon/Frame (6).png",
               bgColor: const Color(0xFFC62828),
               contentColor: Colors.white,
-              onTap: () {},
+              onTap: () {
+                Get.toNamed(AppRoutes.motoringemergencies);
+              },
             ),
             const SizedBox(height: 8),
             CustomActionButton(
@@ -263,7 +182,7 @@ class HomeScreen extends GetView<HomeController> {
             const SizedBox(height: 8),
 
             // const SizedBox(height: 20),
-            // MyEmergencyButton(),
+
             const SizedBox(height: 20),
             Text(
               "Added Vehicles",

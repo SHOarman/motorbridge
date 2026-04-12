@@ -1,6 +1,6 @@
 class AppRoutes {
   static const String initial = '/';
-  static const String home = '/home';
+
   static const String vehicles = '/vehicles';
   static const String reminders = '/reminders';
   static const String vehicledetails = '/vehicledetails';
@@ -34,5 +34,12 @@ class AppRoutes {
   static const String profile = '/profile';
   static const String editprofile='/editprofile';
   static const String editpassword='/editpassword';
+
+
+
+  //==============================home==================================
+  static const String home = '/home';
+  static const String motoringemergencies = '/motoringemergencies';
+
 
 }

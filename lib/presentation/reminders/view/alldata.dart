@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:motorbridge/presentation/reminders/widget/customText.dart';
+import 'package:motorbridge/presentation/reminders/widget/custom_text.dart';
 
 class AllData extends StatelessWidget {
   const AllData({super.key});

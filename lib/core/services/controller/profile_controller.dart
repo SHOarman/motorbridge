@@ -51,7 +51,7 @@ class ProfileController extends GetxController {
       "Success", 
       "Profile updated successfully",
       snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.green.withOpacity(0.1),
+      backgroundColor: Colors.green.withValues(alpha: 0.1),
       colorText: Colors.green[800],
     );
     

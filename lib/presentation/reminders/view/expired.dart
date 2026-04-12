@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../widget/customText.dart';
+import '../widget/custom_text.dart';
 
 class ExpiredData extends StatelessWidget {
   const ExpiredData({super.key});
