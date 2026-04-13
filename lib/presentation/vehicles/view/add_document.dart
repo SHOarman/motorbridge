@@ -76,7 +76,7 @@ class AddDocument extends GetView<AddDocumentController> {
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
                                 color: controller.selectedFile.value == null
-                                    ? const Color(0xff4A4A4A).withOpacity(0.8)
+                                    ? const Color(0xff4A4A4A).withValues(alpha: 0.8)
                                     : const Color(0xFF1B4E9F),
                               ),
                             ),

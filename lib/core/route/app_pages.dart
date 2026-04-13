@@ -12,18 +12,24 @@ import '../../presentation/authscreen/verificationcode.dart';
 import '../../presentation/home/view/home_screen.dart';
 import '../../presentation/home/view/motoring_emergencies.dart';
 import '../../presentation/profile/view/profile.dart';
+import '../../presentation/home/view/helpandtutorial.dart';
 import '../../presentation/reminders/view/reminders.dart';
 import '../../presentation/splashscreen/splashscreen1.dart';
 import '../../presentation/splashscreen/splashscreen2.dart';
+import '../../presentation/home/view/accident_report_tab.dart';
 import 'app_routes.dart';
 
 class AppPages {
-  static const initial = AppRoutes.home;
+  static const initial = AppRoutes.splashscreen1;
 
   static final routes = [
+    // GetPage(name: AppRoutes.home, page: ()=> const HomeScreen(), transitionDuration: Duration.zero),
+
     //===============================splashscreen==================================
     GetPage(name: AppRoutes.splashscreen1, page: () => const Splashscreen1()),
     GetPage(name: AppRoutes.splashscreen2, page: () => const Splashscreen2()),
+    
+    GetPage(name: AppRoutes.accidentReport, page: () => const AccidentReportTab()),
 
     //===========================authscsrn================================================
 
@@ -41,6 +47,7 @@ class AppPages {
       transitionDuration: Duration.zero,
     ),
     GetPage(name: AppRoutes.motoringemergencies, page: () => const MotoringEmergencies(), transitionDuration: Duration.zero),
+    GetPage(name: "/HelpAndTutorialView", page: () => const HelpAndTutorialView(), transitionDuration: Duration.zero),
 
 
     //=============================================vehicles===============================

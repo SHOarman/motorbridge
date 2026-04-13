@@ -31,7 +31,7 @@ class CustomMenuTile extends StatelessWidget {
           onTap: onTap,
           borderRadius: BorderRadius.circular(12),
           splashColor: Colors.black12,
-          highlightColor: Colors.black.withOpacity(0.05),
+          highlightColor: Colors.black.withValues(alpha: 0.05),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
             child: Row(

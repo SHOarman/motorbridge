@@ -11,6 +11,7 @@ import 'package:motorbridge/presentation/home/widget/custom_action_card.dart';
 import 'package:motorbridge/utils/app_text_styles.dart';
 import '../../../core/services/controller/home_controller.dart';
 import '../widget/vehiclecard.dart';
+import 'helpandtutorial.dart';
 
 class HomeScreen extends GetView<HomeController> {
   const HomeScreen({super.key});
@@ -154,7 +155,7 @@ class HomeScreen extends GetView<HomeController> {
               title: "Help & Tutorial",
               bgColor: const Color(0x3300B100),
               contentColor: const Color(0xFF00B100),
-              onTap: () {},
+              onTap: () => Get.to(() => const HelpAndTutorialView()),
               iconPath: 'assets/icon/Frame (5).png',
             ),
 

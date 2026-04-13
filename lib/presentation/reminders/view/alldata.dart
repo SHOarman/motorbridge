@@ -29,7 +29,7 @@ class AllData extends StatelessWidget {
                 buttonColor: const Color(0xFF1B4E9F),
                 badgeBackgroundColor: const Color(0xFFFFF4D0),
                 badgeTextColor: const Color(0xFFFDC209),
-                onButtonPressed: () => print("Booking clicked"),
+                onButtonPressed: () {},
                 buttonIconPath: 'assets/icon/fluent_share-20-filled.png',
               ),
 
@@ -49,7 +49,7 @@ class AllData extends StatelessWidget {
                 buttonColor: const Color(0xFF1B4E9F),
                 badgeBackgroundColor: const Color(0xFFD0FFDF),
                 badgeTextColor: const Color(0xFF109D59),
-                onButtonPressed: () => print("Booking clicked"),
+                onButtonPressed: () {},
                 buttonIconPath: 'assets/icon/fluent_share-20-filled.png',
               ),
 
@@ -69,7 +69,7 @@ class AllData extends StatelessWidget {
                 buttonColor: const Color(0xFF1B4E9F),
                 badgeBackgroundColor: const Color(0xFFFFF4D0),
                 badgeTextColor: const Color(0xFFFDC209),
-                onButtonPressed: () => print("Booking clicked"),
+                onButtonPressed: () {},
                 buttonIconPath: 'assets/icon/fluent_share-20-filled.png',
               ),
 
@@ -90,7 +90,7 @@ class AllData extends StatelessWidget {
                 buttonColor: const Color(0xFF1B4E9F),
                 badgeBackgroundColor: const Color(0xFFFFD0D0),
                 badgeTextColor: const Color(0xFFFD0909),
-                onButtonPressed: () => print("Booking clicked"),
+                onButtonPressed: () {},
                 buttonIconPath: 'assets/icon/fluent_share-20-filled.png',
               ),
             ],

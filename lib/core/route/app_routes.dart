@@ -40,6 +40,5 @@ class AppRoutes {
   //==============================home==================================
   static const String home = '/home';
   static const String motoringemergencies = '/motoringemergencies';
-
-
+  static const String accidentReport = '/accidentReport';
 }

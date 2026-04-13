@@ -29,7 +29,7 @@ class RunningCostsCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -66,7 +66,7 @@ class RunningCostsCard extends StatelessWidget {
             decoration: BoxDecoration(
               color: const Color(0xffF0FFF4),
               border: Border.all(
-                color: const Color(0xff27AE60).withOpacity(0.3),
+                color: const Color(0xff27AE60).withValues(alpha: 0.3),
                 width: 1,
               ),
               borderRadius: BorderRadius.circular(15),

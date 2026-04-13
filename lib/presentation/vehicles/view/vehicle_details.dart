@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:motorbridge/core/route/app_routes.dart';
 import 'package:motorbridge/general_widget/customappbar.dart';
@@ -9,6 +8,7 @@ import 'package:motorbridge/utils/app_text_styles.dart';
 
 import '../../reminders/widget/custom_text.dart';
 import '../widget/custom_vehicle_field.dart';
+import 'viewallexpensesaddnew.dart';
 
 class VehicleDetails extends StatelessWidget {
   const VehicleDetails({super.key});
@@ -295,7 +295,7 @@ class VehicleDetails extends StatelessWidget {
               trendIconPath: "assets/icon/Icon (19).png",
               repairIconPath: "assets/icon/Icon (20).png",
               arrowIconPath: "assets/icon/Icon (21).png",
-              onPressed: () {},
+              onPressed: () => Get.to(() => const ViewAllExpensesAddNew()),
             ),
 
 
@@ -304,7 +304,7 @@ class VehicleDetails extends StatelessWidget {
             VehicleDocumentsCard(onAddTap: (){
               Get.toNamed(AppRoutes.addDocuments);
             }, onViewTap: (String p1) {
-              print(p1);
+              debugPrint(p1);
 
             },),
             SizedBox(height: 20,),

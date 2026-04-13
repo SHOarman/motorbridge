@@ -35,7 +35,7 @@ class Profile extends StatelessWidget {
                   border: Border.all(color: Color(0xffB0CEFF), width: 1),
                   boxShadow: [
                     BoxShadow(
-                      color: Color(0xff0000001F).withValues(alpha: 0.05),
+                      color: const Color(0xFF000000).withValues(alpha: 0.05),
                       blurRadius: 4,
                       offset: const Offset(0, 4),
                       spreadRadius: 2,
@@ -47,9 +47,9 @@ class Profile extends StatelessWidget {
                 child: Stack(
                   children: [
                     Positioned(
-                      child: Image.asset("assets/image/Ellipse 7.png"),
                       left: 20,
                       top: 20,
+                      child: Image.asset("assets/image/Ellipse 7.png"),
                     ),
 
                     Positioned(
@@ -121,28 +121,28 @@ class Profile extends StatelessWidget {
                     title: "Hilux 2026",
                     subtitle: "2GD-FTV",
                     leading: Image.asset('assets/icon/image 4.png'),
-                    onTap: () => print("Car clicked"),
+                    onTap: () {},
                   ),
 
                   // Notification card (Icon shoho)
                   CustomMenuTile(
                     title: "Notifications",
                     leading: Image.asset("assets/icon/image 4 (1).png"),
-                    onTap: () => print("Notification clicked"),
+                    onTap: () {},
                   ),
 
                   // Privacy & Policy card
                   CustomMenuTile(
                     title: "Privacy & Policy",
                     leading: Image.asset("assets/icon/image 4 (2).png"),
-                    onTap: () => print("Privacy clicked"),
+                    onTap: () {},
                   ),
 
                   // Terms & Conditions card
                   CustomMenuTile(
                     title: "Terms & Conditions",
                     leading: Image.asset("assets/icon/image 4 (3).png"),
-                    onTap: () => print("Terms clicked"),
+                    onTap: () {},
                   ),
 
                   SizedBox(height: 30),

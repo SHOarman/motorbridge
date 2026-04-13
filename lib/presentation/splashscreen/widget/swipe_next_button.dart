@@ -65,10 +65,10 @@ class SwipeNextButton extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: List.generate(5, (index) {
                     return Padding(
-                      padding: const EdgeInsets.only(right: 26),
+                      padding: const EdgeInsets.only(right: 16),
                       child: Icon(
                         Icons.arrow_forward_ios,
-                        size: 23,
+                        size: 20,
                         color: const Color(0xFF00C853).withValues(alpha: 0.2 + (index * 0.15)),
                       ),
                     );

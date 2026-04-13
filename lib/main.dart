@@ -1,6 +1,5 @@
 import 'package:google_fonts/google_fonts.dart';
 import 'package:motorbridge/utils/app_colors.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'core/dependency_injection/injecation.dart';
@@ -17,32 +16,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(440, 956),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (_, child) {
-        return GetMaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'MotorBridge',
-          theme: ThemeData(
-            scaffoldBackgroundColor: const Color(0xFFF5F6F8),
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: AppColors.primaryColor,
-              surface: const Color(0xFFF5F6F8),
-            ),
-            textTheme: GoogleFonts.nunitoTextTheme(),
-            elevatedButtonTheme: ElevatedButtonThemeData(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.buttonColor,
-                foregroundColor: Colors.white,
-              ),
-            ),
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'MotorBridge',
+      theme: ThemeData(
+        scaffoldBackgroundColor: const Color(0xFFF5F6F8),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: AppColors.primaryColor,
+          surface: const Color(0xFFF5F6F8),
+        ),
+        textTheme: GoogleFonts.nunitoTextTheme(),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.buttonColor,
+            foregroundColor: Colors.white,
           ),
-          initialRoute: AppPages.initial,
-          getPages: AppPages.routes,
-        );
-      },
+        ),
+      ),
+      initialRoute: AppPages.initial,
+      getPages: AppPages.routes,
     );
   }
 }
