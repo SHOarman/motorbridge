@@ -146,6 +146,14 @@ class Profile extends StatelessWidget {
                   ),
 
                   SizedBox(height: 30),
+                  CustomMenuTile(
+                    title: "Log Out",
+                    leading: Image.asset("assets/icon/material-symbols_logout.png"),
+                    onTap: () {},
+                    backgroundColor: Color.fromRGBO(255, 67, 67, 0.2),
+
+
+                  ),
 
 
                 ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:motorbridge/core/route/app_routes.dart';
 import 'accident_report_tab.dart';
 import '../../../utils/app_text_styles.dart';
 
@@ -197,9 +198,7 @@ class SummaryView extends StatelessWidget {
 
                       // Navigate back to Home page after a short delay
                       Future.delayed(const Duration(seconds: 2), () {
-                        Get.offAllNamed(
-                          '/',
-                        ); // Navigate to home and clear stack
+                        Get.toNamed(AppRoutes.home);
                       });
                     },
                     style: ElevatedButton.styleFrom(
