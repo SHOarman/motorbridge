@@ -11,23 +11,23 @@ class BottomNavPainter extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     ui.Path path = ui.Path();
-    path.moveTo(0.0, 40.0);
-    path.quadraticBezierTo(0.0, 0.0, 20.0, 0.0); // Fixed radius logic
+    path.moveTo(0.0, size.height * 0.50);
+    path.quadraticBezierTo(0.0, 0.0, 20.0, 0.0);
     path.lineTo(size.width * 0.35, 0.0);
 
     path.cubicTo(
       size.width * 0.40, 0.0,
-      size.width * 0.40, 45.0,
-      size.width * 0.50, 45.0,
+      size.width * 0.40, size.height * 0.58,
+      size.width * 0.50, size.height * 0.58,
     );
     path.cubicTo(
-      size.width * 0.60, 45.0,
+      size.width * 0.60, size.height * 0.58,
       size.width * 0.60, 0.0,
       size.width * 0.65, 0.0,
     );
 
     path.lineTo(size.width - 20.0, 0.0);
-    path.quadraticBezierTo(size.width, 0.0, size.width, 40.0);
+    path.quadraticBezierTo(size.width, 0.0, size.width, size.height * 0.50);
     path.lineTo(size.width, size.height);
     path.lineTo(0.0, size.height);
     path.close();
@@ -69,60 +69,81 @@ class CustomBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final sw = MediaQuery.of(context).size.width;
+    final sh = MediaQuery.of(context).size.height;
+
+    // Responsive dimensions
+    final double navHeight  = sh * 0.105;
+    final double barHeight  = navHeight * 0.85;
+    final double fabSize    = sw * 0.158;   // ~58px on 360px screen
+    final double iconSize   = sw * 0.065;   // ~23px
+    final double labelSize  = sw * 0.028;   // ~10px
+    final double fabIconSize = sw * 0.090;  // ~32px
+
     return SizedBox(
-      height: 100,
+      height: navHeight,
       child: Stack(
         alignment: Alignment.bottomCenter,
         clipBehavior: Clip.none,
         children: [
+          // Custom painted background
           CustomPaint(
-            size: Size(MediaQuery.of(context).size.width, 80),
+            size: Size(sw, barHeight),
             painter: BottomNavPainter(),
           ),
+
+          // Nav items row
           Container(
-            height: 80,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            height: barHeight,
+            padding: EdgeInsets.symmetric(horizontal: sw * 0.025),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildNavItem(0),
-                _buildNavItem(1),
-                const SizedBox(width: 60),
-                _buildNavItem(2),
-                _buildNavItem(3),
+                _buildNavItem(0, iconSize, labelSize),
+                _buildNavItem(1, iconSize, labelSize),
+                SizedBox(width: fabSize),
+                _buildNavItem(2, iconSize, labelSize),
+                _buildNavItem(3, iconSize, labelSize),
               ],
             ),
           ),
+
+          // Floating "+" button
           Positioned(
-            top: -5,
+            top: -fabSize * 0.12,
             child: GestureDetector(
               onTap: () {
-                // Navigate only if not already on the Add Vehicles page
                 if (selectedIndex != 4) {
                   Get.toNamed(AppRoutes.addvehicles);
                 }
               },
               child: Container(
-                height: 65,
-                width: 65,
+                height: fabSize,
+                width: fabSize,
                 decoration: BoxDecoration(
-                  // Darker color if selectedIndex is 4
                   color: selectedIndex == 4
                       ? const Color(0xFF0D2D5E)
                       : const Color(0xFF1B4E9F),
                   shape: BoxShape.circle,
                   border: Border.all(
-                      color: selectedIndex == 4 ? Colors.lightBlueAccent : Colors.white,
-                      width: 4
+                    color: selectedIndex == 4
+                        ? Colors.lightBlueAccent
+                        : Colors.white,
+                    width: sw * 0.010,
                   ),
                   boxShadow: [
                     BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.2),
-                        blurRadius: 8,
-                        offset: const Offset(0, 4))
+                      color: Colors.black.withValues(alpha: 0.2),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    )
                   ],
                 ),
-                child: const Icon(Icons.add, color: Colors.white, size: 35),
+                child: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: fabIconSize,
+                ),
               ),
             ),
           ),
@@ -131,7 +152,7 @@ class CustomBottomNavBar extends StatelessWidget {
     );
   }
 
-  Widget _buildNavItem(int index) {
+  Widget _buildNavItem(int index, double iconSize, double labelSize) {
     final item = _navItems[index];
     final bool isSelected = selectedIndex == index;
     return GestureDetector(
@@ -140,14 +161,18 @@ class CustomBottomNavBar extends StatelessWidget {
       },
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(isSelected ? item.activeIcon : item.inactiveIcon,
-              height: 26, width: 26),
-          const SizedBox(height: 4),
+          Image.asset(
+            isSelected ? item.activeIcon : item.inactiveIcon,
+            height: iconSize,
+            width: iconSize,
+          ),
+          const SizedBox(height: 3),
           Text(
             item.label,
             style: TextStyle(
-              fontSize: 11,
+              fontSize: labelSize,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               color: isSelected ? const Color(0xFF1B4E9F) : Colors.black54,
             ),
@@ -160,9 +185,10 @@ class CustomBottomNavBar extends StatelessWidget {
 
 class _NavItem {
   final String activeIcon, inactiveIcon, label, route;
-  const _NavItem(
-      {required this.activeIcon,
-        required this.inactiveIcon,
-        required this.label,
-        required this.route});
+  const _NavItem({
+    required this.activeIcon,
+    required this.inactiveIcon,
+    required this.label,
+    required this.route,
+  });
 }

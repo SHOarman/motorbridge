@@ -34,7 +34,7 @@ class SummaryView extends StatelessWidget {
               children: [
                 Text(
                   "Accident Report Summary",
-                  style: AppTextStyles.bigText.copyWith(
+                  style: AppTextStyles.internt.copyWith(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
                     color: const Color(0xFF1E293B),
@@ -82,7 +82,7 @@ class SummaryView extends StatelessWidget {
                   ),
                   child: Text(
                     "Party 1",
-                    style: AppTextStyles.smallText.copyWith(
+                    style: AppTextStyles.internt.copyWith(
                       fontSize: 14,
                       color: const Color(0xFF1E293B),
                     ),
@@ -105,7 +105,7 @@ class SummaryView extends StatelessWidget {
                   ),
                   child: Text(
                     "Witness 1",
-                    style: AppTextStyles.smallText.copyWith(
+                    style: AppTextStyles.internt.copyWith(
                       fontSize: 14,
                       color: const Color(0xFF1E293B),
                     ),
@@ -124,7 +124,7 @@ class SummaryView extends StatelessWidget {
                   ),
                   child: RichText(
                     text: TextSpan(
-                      style: AppTextStyles.smallText.copyWith(
+                      style: AppTextStyles.internt.copyWith(
                         fontSize: 13,
                         color: const Color(0xFF166534),
                         height: 1.5,
@@ -166,7 +166,7 @@ class SummaryView extends StatelessWidget {
                         const SizedBox(width: 10),
                         Text(
                           "Previous",
-                          style: AppTextStyles.smallText.copyWith(
+                          style: AppTextStyles.internt.copyWith(
                             fontWeight: FontWeight.w700,
                           ),
                         ),
@@ -216,7 +216,7 @@ class SummaryView extends StatelessWidget {
                         const SizedBox(width: 10),
                         Text(
                           "Save Report",
-                          style: AppTextStyles.smallText.copyWith(
+                          style: AppTextStyles.internt.copyWith(
                             fontWeight: FontWeight.w700,
                             color: Colors.white,
                           ),
@@ -241,7 +241,7 @@ class SummaryView extends StatelessWidget {
         const SizedBox(width: 10),
         Text(
           title,
-          style: AppTextStyles.bigText.copyWith(
+          style: AppTextStyles.internt.copyWith(
             fontSize: 16,
             fontWeight: FontWeight.w700,
             color: const Color(0xFF1E293B),
@@ -257,14 +257,14 @@ class SummaryView extends StatelessWidget {
       children: [
         Text(
           label,
-          style: AppTextStyles.smallText.copyWith(
+          style: AppTextStyles.internt.copyWith(
             fontSize: 14,
             color: const Color(0xFF64748B),
           ),
         ),
         Text(
           value,
-          style: AppTextStyles.smallText.copyWith(
+          style: AppTextStyles.internt.copyWith(
             fontSize: 14,
             fontWeight: FontWeight.w500,
             color: const Color(0xFF1E293B),

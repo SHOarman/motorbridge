@@ -16,7 +16,7 @@ class EditProfile extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: CustomAppBar(
         title: "Edit Profile",
-        backgroundImage: "assets/image/appbar.png",
+        backgroundImage: "assets/image/Image__3_-removebg-preview.png",
         leftIcon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
         onLeftTap: () {
           Get.back();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:motorbridge/core/route/app_routes.dart';
 import 'package:motorbridge/presentation/authscreen/widget/customtextfield.dart';
 
 import '../../general_widget/customtaxbutton.dart';
@@ -58,7 +59,9 @@ class Resetpassword extends StatelessWidget {
 
             SizedBox(height: 50,),
 
-            CustomButton(text: "Confirm", onTap: (){})
+            CustomButton(text: "Confirm", onTap: (){
+              Get.toNamed(AppRoutes.singin);
+            })
 
 
 

@@ -9,5 +9,8 @@ class AppTextStyles {
   static TextStyle get bigText =>
       GoogleFonts.nunito(fontSize: 32, fontWeight: FontWeight.w700);
 
-  // You can add more specific keys here if needed
+  static TextStyle get internt=>
+      GoogleFonts.inter(fontSize:14,fontWeight: FontWeight.w600 );
+
+
 }

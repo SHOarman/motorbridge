@@ -14,7 +14,7 @@ class MotoringEmergencies extends StatelessWidget {
     return Scaffold(
       appBar: CustomAppBar(
         title: "Motoring Emergencies",
-        backgroundImage: "assets/image/appbar.png",
+        backgroundImage: "assets/image/Image__3_-removebg-preview.png",
         onLeftTap: () => Get.back(),
         leftIcon: const Icon(
           Icons.arrow_back_ios_new,
@@ -31,10 +31,10 @@ class MotoringEmergencies extends StatelessWidget {
               const SizedBox(height: 20),
               Container(
                 decoration: BoxDecoration(
-                  color: const Color(0xffFFFBEB),
+                  color: const Color(0xffFEF0B5),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: const Color(0xFFFFB900),
+                    color: const Color(0xff141414),
                     width: 1.5,
                   ),
                 ),
@@ -65,7 +65,7 @@ class MotoringEmergencies extends StatelessWidget {
                       RichText(
                         text: TextSpan(
                           style: AppTextStyles.smallText.copyWith(
-                            fontSize: 13,
+                            fontSize: 14,
                             color: Colors.black,
                             height: 1.5,
                           ),
@@ -79,7 +79,7 @@ class MotoringEmergencies extends StatelessWidget {
                               "Always call 999 in a life-threatening emergency.",
                               style: TextStyle(
                                 fontWeight: FontWeight.w800,
-                                fontSize: 13,
+                                fontSize: 14,
                               ),
                             ),
                           ],
@@ -89,7 +89,7 @@ class MotoringEmergencies extends StatelessWidget {
                       RichText(
                         text: TextSpan(
                           style: AppTextStyles.smallText.copyWith(
-                            fontSize: 13,
+                            fontSize: 14,
                             color: Colors.black,
                             height: 1.5,
                           ),
@@ -113,8 +113,9 @@ class MotoringEmergencies extends StatelessWidget {
                       RichText(
                         text: TextSpan(
                           style: AppTextStyles.smallText.copyWith(
-                            fontSize: 13,
+                            fontSize: 14,
                             height: 1.4,
+                              color: Colors.black
                           ),
                           children: [
                             const TextSpan(
@@ -137,7 +138,7 @@ class MotoringEmergencies extends StatelessWidget {
                 title: "UK Emergency Services",
                 subtitle: "Police, Fire, Ambulance",
                 iconAsset: "assets/icon/Frame (8).png",
-                backgroundColor: const Color(0xFFFFEBEE),
+                backgroundColor: const Color(0xffFFC8C8),
                 buttonColor: const Color(0xFFB71C1C),
                 phoneNumber: "999",
               ),
@@ -146,7 +147,7 @@ class MotoringEmergencies extends StatelessWidget {
                 title: "National Highways",
                 subtitle: "Road incidents & breakdowns on Motorways",
                 iconAsset: "assets/icon/Frame (9).png",
-                backgroundColor: const Color(0xFFE3F2FD),
+                backgroundColor: const Color(0xffD9E6FF),
                 buttonColor: const Color(0xFF2196F3),
                 phoneNumber: "0300 123 5000",
               ),
@@ -201,7 +202,7 @@ class MotoringEmergencies extends StatelessWidget {
                       "Broken down? Need Cover?",
                       textAlign: TextAlign.center,
                       style: AppTextStyles.smallText.copyWith(
-                        fontSize: 16,
+                        fontSize: 17,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -264,7 +265,7 @@ class MotoringEmergencies extends StatelessWidget {
                     Text(
                       "Document a new accident and ",
                       style: AppTextStyles.smallText.copyWith(
-                        fontSize: 16,
+                        fontSize: 17,
                         fontWeight: FontWeight.w400,
                         color: const Color(0xff4A5565),
                       ),
@@ -272,7 +273,7 @@ class MotoringEmergencies extends StatelessWidget {
                     Text(
                       "collect important information",
                       style: AppTextStyles.smallText.copyWith(
-                        fontSize: 16,
+                        fontSize: 17,
                         fontWeight: FontWeight.w400,
                         color: const Color(0xff4A5565),
                       ),

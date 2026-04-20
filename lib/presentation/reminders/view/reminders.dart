@@ -15,7 +15,7 @@ class Reminders extends StatelessWidget {
       child: Scaffold(
         appBar: const CustomAppBar(
           title: "Reminders",
-          backgroundImage: "assets/image/appbar.png",
+          backgroundImage: "assets/image/Image__3_-removebg-preview.png",
         ),
         bottomNavigationBar: const CustomBottomNavBar(selectedIndex: 2),
         body: Column(

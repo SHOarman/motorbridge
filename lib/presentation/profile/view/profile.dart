@@ -16,7 +16,7 @@ class Profile extends StatelessWidget {
       bottomNavigationBar: const CustomBottomNavBar(selectedIndex: 3),
       appBar: CustomAppBar(
         title: "Profile",
-        backgroundImage: "assets/image/appbar.png",
+        backgroundImage: "assets/image/Image__3_-removebg-preview.png",
       ),
       body: SingleChildScrollView(
         child: Padding(

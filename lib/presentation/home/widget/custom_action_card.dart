@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CustomActionCard extends StatelessWidget {
   final String title;
-  final String iconPath; // আইকন ইমেজের পাথ
+  final String iconPath;
   final Color bgColor;
   final Color contentColor;
   final VoidCallback onTap;
@@ -18,17 +18,24 @@ class CustomActionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final sw = MediaQuery.of(context).size.width;
+    final sh = MediaQuery.of(context).size.height;
+
+    final double cardHeight = sh * 0.052;   // ~40px on 760px screen
+    final double iconSize   = sw * 0.052;   // ~19px on 360px screen
+    final double fontSize   = sw * 0.038;   // ~14px on 360px screen
+
     return Container(
-      height: 40,
+      height: cardHeight,
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(7),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.15),
+            color: Colors.black.withOpacity(0.15),
             blurRadius: 4,
             offset: const Offset(0, 4),
-          ),
+          )
         ],
       ),
       child: Material(
@@ -37,7 +44,7 @@ class CustomActionCard extends StatelessWidget {
           onTap: onTap,
           borderRadius: BorderRadius.circular(7),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: EdgeInsets.symmetric(horizontal: sw * 0.028),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -46,17 +53,17 @@ class CustomActionCard extends StatelessWidget {
                     title,
                     style: TextStyle(
                       color: contentColor,
-                      fontSize: 14,
+                      fontSize: fontSize,
                       fontWeight: FontWeight.w500,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: sw * 0.022),
                 Image.asset(
                   iconPath,
-                  width: 20,
-                  height: 20,
+                  width:  iconSize,
+                  height: iconSize,
                   color: contentColor,
                 ),
               ],

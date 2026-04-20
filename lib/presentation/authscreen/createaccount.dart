@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:motorbridge/core/route/app_routes.dart';
 import 'package:motorbridge/core/services/controller/authcontroller.dart';
 import 'package:motorbridge/presentation/authscreen/widget/customtextfield.dart';
 import 'package:motorbridge/presentation/authscreen/widget/socialloginbutton.dart';
@@ -15,7 +16,17 @@ class Createaccount extends StatelessWidget {
     final Authcontroller controller = Get.put(Authcontroller());
 
     return Scaffold(
+      appBar: AppBar(
+
+
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Get.back(),
+        ),
+
+      ),
       body: SingleChildScrollView(
+
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
@@ -102,7 +113,7 @@ class Createaccount extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
-                      // Navigate to Terms screen
+
                     },
                     child: Text(
                       "Terms & Conditions",
@@ -121,7 +132,9 @@ class Createaccount extends StatelessWidget {
               const SizedBox(height: 30),
               CustomButton(
                 text: "Sign Up",
-                onTap: () {},
+                onTap: () {
+                  Get.toNamed(AppRoutes.singin);
+                },
                 backgroundColor: AppColors.primaryColor,
               ),
 
@@ -130,7 +143,10 @@ class Createaccount extends StatelessWidget {
               Row(
                 children: [
                   const Expanded(
-                    child: Divider(color: Color(0xFFE2E8F0), thickness: 1),
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 20),
+                      child: Divider(color: Color(0xFFCECECE), thickness: 1),
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -143,7 +159,10 @@ class Createaccount extends StatelessWidget {
                     ),
                   ),
                   const Expanded(
-                    child: Divider(color: Color(0xFFE2E8F0), thickness: 1),
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 20),
+                      child: Divider(color: Color(0xFFCECECE), thickness: 1),
+                    ),
                   ),
                 ],
               ),
@@ -164,7 +183,7 @@ class Createaccount extends StatelessWidget {
                 ],
               ),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

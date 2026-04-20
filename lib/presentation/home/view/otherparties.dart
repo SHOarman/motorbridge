@@ -44,11 +44,14 @@ class OtherPartiesView extends StatelessWidget {
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+
+                        //===================================
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF2563EB),
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
+                            horizontal: 8, vertical: 8),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
                         minimumSize: Size.zero,
@@ -66,8 +69,8 @@ class OtherPartiesView extends StatelessWidget {
                 Text(
                   "Collect details from other drivers involved",
                   style: AppTextStyles.smallText.copyWith(
-                    fontSize: 14,
-                    color: const Color(0xFF64748B),
+                    fontSize: 15,
+                    color: const Color(0xff4A5565),
                   ),
                 ),
                 const SizedBox(height: 25),
@@ -231,7 +234,7 @@ class OtherPartiesView extends StatelessWidget {
                           Text("Next",
                               style: AppTextStyles.smallText.copyWith(
                                   fontWeight: FontWeight.w700,
-                                  color: Colors.white)),
+                                  color: Color(0xffFFFFFF))),
                           const SizedBox(width: 10),
                           const Icon(Icons.arrow_forward, size: 20),
                         ],
@@ -251,10 +254,10 @@ class OtherPartiesView extends StatelessWidget {
   Widget _buildLabel(String text) {
     return Text(
       text,
-      style: AppTextStyles.smallText.copyWith(
-        fontWeight: FontWeight.w700,
-        color: const Color(0xFF1E293B),
-        fontSize: 13,
+      style: AppTextStyles.internt.copyWith(
+        fontWeight: FontWeight.w500,
+        color: const Color(0xff0A0A0A),
+        fontSize: 14,
       ),
     );
   }
@@ -274,7 +277,11 @@ class OtherPartiesView extends StatelessWidget {
       onChanged: onChanged,
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: const TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
+        hintStyle: AppTextStyles.internt.copyWith(
+          fontSize: 15,fontWeight: FontWeight.w600,
+          color: Color(0xff717182)
+
+        ),
         fillColor: const Color(0xFFF1F5F9),
         filled: true,
         border: OutlineInputBorder(
@@ -283,7 +290,9 @@ class OtherPartiesView extends StatelessWidget {
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
-      style: const TextStyle(fontSize: 14, color: Color(0xFF1E293B)),
+      style: AppTextStyles.internt.copyWith(
+        color: Color(0xff0A0A0A),fontWeight: FontWeight.w500,fontSize: 15
+      ),
     );
   }
 }

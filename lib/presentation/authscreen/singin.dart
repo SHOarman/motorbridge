@@ -76,12 +76,14 @@ class Singin extends StatelessWidget {
                 backgroundColor: AppColors.primaryColor,
               ),
               const SizedBox(height: 40),
+
+
               Row(
                 children: [
                   const Expanded(
                     child: Padding(
-                      padding: EdgeInsets.only(left: 30),
-                      child: Divider(color: Color(0xFFE2E8F0), thickness: 1),
+                      padding: EdgeInsets.only(left: 20),
+                      child: Divider(color: Color(0xFFCECECE), thickness: 1),
                     ),
                   ),
                   Padding(
@@ -96,8 +98,8 @@ class Singin extends StatelessWidget {
                   ),
                   const Expanded(
                     child: Padding(
-                      padding: EdgeInsets.only(right: 30),
-                      child: Divider(color: Color(0xFFE2E8F0), thickness: 1),
+                      padding: EdgeInsets.only(right: 20),
+                      child: Divider(color: Color(0xFFCECECE), thickness: 1),
                     ),
                   ),
                 ],

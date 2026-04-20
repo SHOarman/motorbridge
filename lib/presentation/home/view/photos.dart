@@ -36,7 +36,7 @@ class PhotosVideosView extends StatelessWidget {
                   style: AppTextStyles.bigText.copyWith(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF1E293B),
+                    color: const Color(0xff0A0A0A),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -48,16 +48,16 @@ class PhotosVideosView extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: const Color(0xFFEFF6FF), // Light Blue
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: const Color(0xFFDBEAFE)),
+                    border: Border.all(color: const Color(0xFFDBEAFE),width: 2),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         "What to Photograph:",
-                        style: AppTextStyles.smallText.copyWith(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 16,
+                        style: AppTextStyles.internt.copyWith(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 18,
                           color: const Color(0xFF1E293B),
                         ),
                       ),
@@ -108,9 +108,9 @@ class PhotosVideosView extends StatelessWidget {
                       Text(
                         "Take photos of the accident scene to\ninclude in your report",
                         textAlign: TextAlign.center,
-                        style: AppTextStyles.smallText.copyWith(
-                          fontSize: 13,
-                          color: const Color(0xFF64748B),
+                        style: AppTextStyles.internt.copyWith(
+                          fontSize: 14,
+                          color: const Color(0xff4A5565),
                           height: 1.4,
                         ),
                       ),
@@ -222,15 +222,16 @@ class PhotosVideosView extends StatelessWidget {
         children: [
           const Padding(
             padding: EdgeInsets.only(top: 6),
-            child: Icon(Icons.circle, size: 4, color: Color(0xFF2563EB)),
+            child: Icon(Icons.circle, size: 6, color: Color(0xFF2563EB)),
           ),
           const SizedBox(width: 10),
           Expanded(
             child: Text(
               text,
-              style: AppTextStyles.smallText.copyWith(
+              style: AppTextStyles.internt.copyWith(
                 fontSize: 14,
-                color: const Color(0xFF334155),
+                color: const Color(0xff0A0A0A),
+                fontWeight: FontWeight.w400
               ),
             ),
           ),

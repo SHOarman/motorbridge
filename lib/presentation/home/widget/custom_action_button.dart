@@ -27,20 +27,24 @@ class CustomActionButton extends StatefulWidget {
 class _CustomActionButtonState extends State<CustomActionButton> {
   double _scale = 1.0;
 
-  void _onTapDown(TapDownDetails details) {
-    setState(() => _scale = 0.95);
-  }
-
-  void _onTapUp(TapUpDetails details) {
-    setState(() => _scale = 1.0);
-  }
+  void _onTapDown(TapDownDetails _) => setState(() => _scale = 0.95);
+  void _onTapUp(TapUpDetails _) => setState(() => _scale = 1.0);
 
   @override
   Widget build(BuildContext context) {
+    final sw = MediaQuery.of(context).size.width;
+    final sh = MediaQuery.of(context).size.height;
+
+    final double iconSize   = sw * 0.050;  // ~18px
+    final double titleSize  = sw * 0.042;  // ~15px
+    final double subSize    = sw * 0.030;  // ~11px
+    final double hPad       = sw * 0.050;
+    final double vPad       = sh * 0.016;
+
     final iconWidget = Image.asset(
       widget.iconPath,
-      width: 20,
-      height: 20,
+      width:  iconSize,
+      height: iconSize,
       color: widget.contentColor,
     );
 
@@ -73,7 +77,7 @@ class _CustomActionButtonState extends State<CustomActionButton> {
               highlightColor: Colors.white.withValues(alpha: 0.1),
               onTap: widget.onTap,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                padding: EdgeInsets.symmetric(horizontal: hPad, vertical: vPad),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -82,29 +86,33 @@ class _CustomActionButtonState extends State<CustomActionButton> {
                       children: [
                         if (!widget.iconAfterText) ...[
                           iconWidget,
-                          const SizedBox(width: 8),
+                          SizedBox(width: sw * 0.022),
                         ],
-                        Text(
-                          widget.title,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: widget.contentColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                        Flexible(
+                          child: Text(
+                            widget.title,
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: widget.contentColor,
+                              fontSize: titleSize,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                         if (widget.iconAfterText) ...[
-                          const SizedBox(width: 8),
+                          SizedBox(width: sw * 0.022),
                           iconWidget,
                         ],
                       ],
                     ),
+                    SizedBox(height: sh * 0.004),
                     Text(
                       widget.subtitle,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: widget.contentColor.withValues(alpha: 0.8),
-                        fontSize: 12,
+                        fontSize: subSize,
                       ),
                     ),
                   ],

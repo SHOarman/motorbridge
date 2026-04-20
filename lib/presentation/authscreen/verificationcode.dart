@@ -79,7 +79,7 @@ class Verificationcode extends StatelessWidget {
                 children: [
                   Text(
                     "Haven’t got the email yet? ",
-                    style: AppTextStyles.smallText.copyWith(color: Color(0xff374151)),
+                    style: AppTextStyles.smallText.copyWith(color: Color(0xff374151),fontSize: 14),
                   ),
                   InkWell(
                     onTap: () {
@@ -91,6 +91,7 @@ class Verificationcode extends StatelessWidget {
                         color: AppColors.primaryColor,
                         fontWeight: FontWeight.bold,
                         decoration: TextDecoration.underline,
+                        fontSize: 14,
                       ),
                     ),
                   ),

@@ -10,9 +10,10 @@ class AccidentDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AccidentReportTabController controller =
-        Get.find<AccidentReportTabController>();
+    Get.find<AccidentReportTabController>();
 
     return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -33,7 +34,7 @@ class AccidentDetailsView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "When and Where Did It Happen?",
+                  "When and Where Did\nIt Happen?",
                   style: AppTextStyles.bigText.copyWith(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
@@ -45,11 +46,9 @@ class AccidentDetailsView extends StatelessWidget {
                 // Date & Time
                 Row(
                   children: [
-                    Expanded(
-                        child: _buildLabelWithIcon("Date", Icons.access_time)),
+                    Expanded(child: _buildLabelWithIcon("Date", Icons.access_time)),
                     const SizedBox(width: 16),
-                    Expanded(
-                        child: _buildLabelWithIcon("Time", Icons.access_time)),
+                    Expanded(child: _buildLabelWithIcon("Time", Icons.access_time)),
                   ],
                 ),
                 const SizedBox(height: 8),
@@ -57,46 +56,41 @@ class AccidentDetailsView extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Obx(() => GestureDetector(
-                            onTap: () async {
-                              DateTime? picked = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: DateTime(2000),
-                                lastDate: DateTime(2101),
-                              );
-                              if (picked != null) {
-                                controller
-                                    .setDate(DateFormat('yyyy-MM-dd').format(picked));
-                              }
-                            },
-                            child: _buildInputBox(
-                              controller.accidentDate.value.isEmpty
-                                  ? "Select Date"
-                                  : controller.accidentDate.value,
-                              hasText: controller.accidentDate.value.isNotEmpty,
-                            ),
-                          )),
+                        onTap: () async {
+                          DateTime? picked = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(2000),
+                            lastDate: DateTime(2101),
+                          );
+                          if (picked != null) {
+                            controller.setDate(DateFormat('yyyy-MM-dd').format(picked));
+                          }
+                        },
+                        child: _buildInputBox(
+                          controller.accidentDate.value.isEmpty ? "Select Date" : controller.accidentDate.value,
+                          hasText: controller.accidentDate.value.isNotEmpty,
+                        ),
+                      )),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
                       child: Obx(() => GestureDetector(
-                            onTap: () async {
-                              TimeOfDay? picked = await showTimePicker(
-                                context: context,
-                                initialTime: TimeOfDay.now(),
-                              );
-                              if (picked != null) {
-                                if (!context.mounted) return;
-                                controller.setTime(picked.format(context));
-                              }
-                            },
-                            child: _buildInputBox(
-                              controller.accidentTime.value.isEmpty
-                                  ? "Select Time"
-                                  : controller.accidentTime.value,
-                              hasText: controller.accidentTime.value.isNotEmpty,
-                            ),
-                          )),
+                        onTap: () async {
+                          TimeOfDay? picked = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.now(),
+                          );
+                          if (picked != null) {
+                            if (!context.mounted) return;
+                            controller.setTime(picked.format(context));
+                          }
+                        },
+                        child: _buildInputBox(
+                          controller.accidentTime.value.isEmpty ? "Select Time" : controller.accidentTime.value,
+                          hasText: controller.accidentTime.value.isNotEmpty,
+                        ),
+                      )),
                     ),
                   ],
                 ),
@@ -106,33 +100,35 @@ class AccidentDetailsView extends StatelessWidget {
                 const SizedBox(height: 8),
                 TextField(
                   onChanged: (val) => controller.location.value = val,
-                  decoration: _inputDecoration("e.g., M25 Junction 15 or High Street, London"),
+                  decoration: _inputDecoration("Enter your location"),
                   style: _inputTextStyle(),
                 ),
 
                 const SizedBox(height: 20),
-                Text(
-                  "What Happened?",
-                  style: _labelStyle(),
-                ),
+                Text("What Happened?", style: _labelStyle()),
                 const SizedBox(height: 8),
                 TextField(
                   onChanged: (val) => controller.whatHappened.value = val,
                   maxLines: 4,
-                  decoration: _inputDecoration("Describe the accident in detail: what happened, direction of travel, speed, etc."),
+                  decoration: _inputDecoration("Describe the accident in detail..."),
                   style: _inputTextStyle(),
                 ),
 
                 const SizedBox(height: 20),
+                // --- FIXED ROW ALIGNMENT ---
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start, // Top align columns
                   children: [
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Weather Conditions", style: _labelStyle()),
+                          Text("Weather Conditions",
+                            style: _labelStyle(),
+                            maxLines: 2, // Ensure same space for both
+                          ),
                           const SizedBox(height: 8),
-                          _buildDropdown("Weather", controller.weatherCondition, [
+                          _buildDropdown(controller.weatherCondition, [
                             "Clear", "Rainy", "Foggy", "Snowy", "Windy"
                           ]),
                         ],
@@ -143,9 +139,12 @@ class AccidentDetailsView extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Road Conditions", style: _labelStyle()),
+                          Text("Road Conditions",
+                            style: _labelStyle(),
+                            maxLines: 2,
+                          ),
                           const SizedBox(height: 8),
-                          _buildDropdown("Road", controller.roadCondition, [
+                          _buildDropdown(controller.roadCondition, [
                             "Dry", "Wet", "Icy", "Loose Gravel", "Uneven"
                           ]),
                         ],
@@ -160,26 +159,18 @@ class AccidentDetailsView extends StatelessWidget {
                 TextField(
                   onChanged: (val) => controller.damageDescription.value = val,
                   maxLines: 3,
-                  decoration: _inputDecoration("Describe the damage to your vehicle"),
+                  decoration: _inputDecoration("Describe the damage..."),
                   style: _inputTextStyle(),
                 ),
 
-                const SizedBox(height: 20),
-                _buildCheckboxRow(
-                  "Were there any injuries?",
-                  controller.hasInjuries,
-                  controller.toggleInjuries,
-                ),
-                const SizedBox(height: 10),
-                _buildCheckboxRow(
-                  "Did the police attend?",
-                  controller.policeAttended,
-                  controller.togglePolice,
-                ),
+                const SizedBox(height: 24),
+                _buildCheckboxRow("Were there any injuries?", controller.hasInjuries, controller.toggleInjuries),
+                const SizedBox(height: 16),
+                _buildCheckboxRow("Did the police attend?", controller.policeAttended, controller.togglePolice),
               ],
             ),
           ),
-          
+
           const SizedBox(height: 30),
           // Navigation Buttons
           Row(
@@ -191,16 +182,9 @@ class AccidentDetailsView extends StatelessWidget {
                     onPressed: () => controller.previousTab(),
                     style: OutlinedButton.styleFrom(
                       side: const BorderSide(color: Color(0xFFE2E8F0)),
-                      foregroundColor: const Color(0xFF1E293B),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.arrow_back, size: 20),
-                        const SizedBox(width: 10),
-                        Text("Previous", style: AppTextStyles.smallText.copyWith(fontWeight: FontWeight.w700)),
-                      ],
-                    ),
+                    child: const Text("Previous"),
                   ),
                 ),
               ),
@@ -209,33 +193,14 @@ class AccidentDetailsView extends StatelessWidget {
                 child: SizedBox(
                   height: 56,
                   child: Obx(() {
-                    bool isValid = controller.accidentDate.value.isNotEmpty &&
-                                    controller.accidentTime.value.isNotEmpty &&
-                                    controller.location.value.isNotEmpty &&
-                                    controller.whatHappened.value.isNotEmpty &&
-                                    controller.weatherCondition.value.isNotEmpty &&
-                                    controller.roadCondition.value.isNotEmpty &&
-                                    controller.damageDescription.value.isNotEmpty;
+                    bool isValid = controller.accidentDate.value.isNotEmpty && controller.location.value.isNotEmpty;
                     return ElevatedButton(
                       onPressed: isValid ? () => controller.nextTab() : null,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF2563EB),
-                        foregroundColor: Colors.white,
-                        disabledBackgroundColor: const Color(0xFF2563EB).withValues(alpha: 0.5),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                        elevation: 0,
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("Next",
-                              style: AppTextStyles.smallText.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white)),
-                          const SizedBox(width: 10),
-                          const Icon(Icons.arrow_forward, size: 20),
-                        ],
-                      ),
+                      child: const Text("Next", style: TextStyle(color: Colors.white)),
                     );
                   }),
                 ),
@@ -248,26 +213,25 @@ class AccidentDetailsView extends StatelessWidget {
     );
   }
 
-  TextStyle _labelStyle() => AppTextStyles.smallText.copyWith(
-    fontWeight: FontWeight.w700,
-    color: const Color(0xFF1E293B),
+  // Styles using AppTextStyles.internt
+  TextStyle _labelStyle() => AppTextStyles.internt.copyWith(
+    fontWeight: FontWeight.w600,
+    color: const Color(0xff0A0A0A),
+    fontSize: 14,
   );
 
-  TextStyle _inputTextStyle() => AppTextStyles.smallText.copyWith(
+  TextStyle _inputTextStyle() => AppTextStyles.internt.copyWith(
     color: const Color(0xFF1E293B),
     fontSize: 14,
   );
 
   InputDecoration _inputDecoration(String hint) => InputDecoration(
     hintText: hint,
-    hintStyle: const TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
+    hintStyle: AppTextStyles.internt.copyWith(color: const Color(0xff717182), fontSize: 13),
     fillColor: const Color(0xFFF1F5F9),
     filled: true,
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10),
-      borderSide: BorderSide.none,
-    ),
-    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
+    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
   );
 
   Widget _buildLabelWithIcon(String label, IconData icon) {
@@ -283,40 +247,23 @@ class AccidentDetailsView extends StatelessWidget {
   Widget _buildInputBox(String text, {bool hasText = false}) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF1F5F9),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Text(
-        text,
-        style: AppTextStyles.smallText.copyWith(
-          color: hasText ? const Color(0xFF1E293B) : const Color(0xFF94A3B8),
-          fontSize: 14,
-        ),
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(color: const Color(0xFFF1F5F9), borderRadius: BorderRadius.circular(10)),
+      child: Text(text, style: _inputTextStyle().copyWith(color: hasText ? null : Colors.grey)),
     );
   }
 
-  Widget _buildDropdown(String label, RxString selectedValue, List<String> items) {
+  Widget _buildDropdown(RxString selectedValue, List<String> items) {
     return Obx(() => Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF1F5F9),
-        borderRadius: BorderRadius.circular(10),
-      ),
+      decoration: BoxDecoration(color: const Color(0xFFF1F5F9), borderRadius: BorderRadius.circular(10)),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           value: selectedValue.value.isEmpty ? null : selectedValue.value,
-          hint: const Text("Select..", style: TextStyle(color: Color(0xFF94A3B8), fontSize: 14)),
+          hint: Text("Select..", style: AppTextStyles.internt.copyWith(fontSize: 14)),
           isExpanded: true,
-          icon: const Icon(Icons.keyboard_arrow_down, color: Color(0xFF94A3B8)),
-          items: items.map((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value, style: _inputTextStyle()),
-            );
-          }).toList(),
+          icon: const Icon(Icons.keyboard_arrow_down),
+          items: items.map((val) => DropdownMenuItem(value: val, child: Text(val, style: _inputTextStyle()))).toList(),
           onChanged: (val) => selectedValue.value = val ?? "",
         ),
       ),
@@ -326,29 +273,18 @@ class AccidentDetailsView extends StatelessWidget {
   Widget _buildCheckboxRow(String label, RxBool value, Function(bool?) onChanged) {
     return GestureDetector(
       onTap: () => onChanged(!value.value),
-      behavior: HitTestBehavior.opaque,
       child: Row(
         children: [
           Obx(() => Container(
-            width: 22,
-            height: 22,
+            width: 24, height: 24,
             decoration: BoxDecoration(
               color: value.value ? const Color(0xFF2563EB) : const Color(0xFFF1F5F9),
               borderRadius: BorderRadius.circular(6),
-              border: value.value ? null : Border.all(color: const Color(0xFFCBD5E1)),
             ),
-            child: value.value ? const Icon(Icons.check, size: 16, color: Colors.white) : null,
+            child: value.value ? const Icon(Icons.check, size: 18, color: Colors.white) : null,
           )),
           const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              label,
-              style: AppTextStyles.smallText.copyWith(
-                fontWeight: FontWeight.w500,
-                color: const Color(0xFF334155),
-              ),
-            ),
-          ),
+          Text(label, style: _labelStyle()),
         ],
       ),
     );

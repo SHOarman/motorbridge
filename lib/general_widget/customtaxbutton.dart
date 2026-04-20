@@ -4,7 +4,6 @@ class CustomButton extends StatelessWidget {
   final String text;
   final VoidCallback onTap;
   final String? imagePath;
-  final double imageSize;
   final Color backgroundColor;
   final Color textColor;
 
@@ -13,13 +12,19 @@ class CustomButton extends StatelessWidget {
     required this.text,
     required this.onTap,
     this.imagePath,
-    this.imageSize = 20.0,
     this.backgroundColor = const Color(0xFF154da1),
     this.textColor = Colors.white,
   });
 
   @override
   Widget build(BuildContext context) {
+    final sw = MediaQuery.of(context).size.width;
+    final sh = MediaQuery.of(context).size.height;
+
+    final double fontSize  = sw * 0.042; // ~15px on 360 screen
+    final double iconSize  = sw * 0.050; // ~18px
+    final double vPad      = sh * 0.018; // ~14px on 760 screen
+
     return Material(
       color: backgroundColor,
       borderRadius: BorderRadius.circular(12),
@@ -27,7 +32,11 @@ class CustomButton extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(
+            vertical: vPad,
+            horizontal: sw * 0.044,
+          ),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -36,16 +45,16 @@ class CustomButton extends StatelessWidget {
                 text,
                 style: TextStyle(
                   color: textColor,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               if (imagePath != null) ...[
-                const SizedBox(width: 8),
+                SizedBox(width: sw * 0.022),
                 Image.asset(
                   imagePath!,
-                  height: imageSize,
-                  width: imageSize,
+                  height: iconSize,
+                  width: iconSize,
                 ),
               ],
             ],

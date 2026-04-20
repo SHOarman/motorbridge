@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:motorbridge/utils/app_sizes.dart';
 
 class VehicleCard extends StatelessWidget {
   final String vehicleName;
@@ -28,9 +29,10 @@ class VehicleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = AppSizes(context);
+
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -56,19 +58,22 @@ class VehicleCard extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Text(
-                          vehicleName,
-                          style: const TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF333333),
+                        Flexible(
+                          child: Text(
+                            vehicleName,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: s.fontXXL,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFF333333),
+                            ),
                           ),
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: s.spaceS),
                         Text(
                           year,
-                          style: const TextStyle(
-                            fontSize: 14,
+                          style: TextStyle(
+                            fontSize: s.fontM,
                             color: Colors.grey,
                           ),
                         ),
@@ -76,7 +81,10 @@ class VehicleCard extends StatelessWidget {
                     ),
                     Text(
                       engineCode,
-                      style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+                      style: TextStyle(
+                        fontSize: s.fontM,
+                        color: Colors.grey.shade600,
+                      ),
                     ),
                   ],
                 ),
@@ -91,18 +99,19 @@ class VehicleCard extends StatelessWidget {
                   ),
                   child: Text(
                     vehicleTag,
-                    style: const TextStyle(
-                      color: Color(0xFFFFB300),
+                    style: TextStyle(
+                      color: const Color(0xFFFFB300),
                       fontWeight: FontWeight.bold,
+                      fontSize: s.fontM,
                     ),
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: s.spaceM),
 
-          // Registration Number Plate Section
+          // Registration Number Plate
           Container(
             width: double.infinity,
             height: 48,
@@ -112,22 +121,12 @@ class VehicleCard extends StatelessWidget {
             ),
             child: Row(
               children: [
-                // Container(
-                //   width: 12,
-                //   decoration: BoxDecoration(
-                //     color: Colors.black.withOpacity(0.1),
-                //     borderRadius: const BorderRadius.only(
-                //       topLeft: Radius.circular(8),
-                //       bottomLeft: Radius.circular(8),
-                //     ),
-                //   ),
-                // ),
                 Expanded(
                   child: Center(
                     child: Text(
                       registrationNumber,
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: s.fontXL,
                         fontWeight: FontWeight.w900,
                         color: registrationTextColor,
                         letterSpacing: 2.5,
@@ -135,21 +134,20 @@ class VehicleCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
               ],
             ),
           ),
 
-          const SizedBox(height: 20),
+          SizedBox(height: s.spaceM),
           SizedBox(
-            height: 160,
+            height: s.vehicleCardImageHeight,
             width: double.infinity,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(15),
               child: Image.asset(vehicleImage, fit: BoxFit.contain),
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: s.spaceM),
           SizedBox(
             width: double.infinity,
             height: 52,
@@ -157,21 +155,22 @@ class VehicleCard extends StatelessWidget {
               onPressed: onViewDetails,
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF1B4E9F),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
               ),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     "View Details",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 16,
+                      fontSize: s.fontL,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(width: 10),
-                  Icon(Icons.arrow_right_alt, color: Colors.white),
+                  const SizedBox(width: 10),
+                  const Icon(Icons.arrow_right_alt, color: Colors.white),
                 ],
               ),
             ),

@@ -6,6 +6,7 @@ import 'package:motorbridge/presentation/vehicles/widget/running_costs_card.dart
 import 'package:motorbridge/presentation/vehicles/widget/vehicle_documents_card.dart';
 import 'package:motorbridge/utils/app_text_styles.dart';
 
+import 'package:motorbridge/utils/app_sizes.dart';
 import '../../reminders/widget/custom_text.dart';
 import '../widget/custom_vehicle_field.dart';
 import 'viewallexpensesaddnew.dart';
@@ -15,13 +16,14 @@ class VehicleDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = AppSizes(context);
     const Color primaryColor = Color(0xFF1B4E9F);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6F8),
       appBar: CustomAppBar(
         title: "Vehicle Details",
-        backgroundImage: "assets/image/appbar.png",
+        backgroundImage: "assets/image/Image__3_-removebg-preview.png",
         leftIcon: const Icon(
           Icons.arrow_back_ios_new,
           color: Colors.white,
@@ -41,7 +43,7 @@ class VehicleDetails extends StatelessWidget {
                   const SizedBox(height: 20),
                   Container(
                     width: double.infinity,
-                    height: 200,
+                    height: s.vehicleDetailImageHeight,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),

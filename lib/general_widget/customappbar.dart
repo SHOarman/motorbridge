@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../utils/app_text_styles.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -24,6 +23,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final sw = MediaQuery.of(context).size.width;
+
     return Container(
       decoration: BoxDecoration(
         color: backgroundColor,
@@ -41,13 +42,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           children: [
             if (backgroundImage != null)
               Positioned(
-                right: -70,
-                top: -25,
+                right: -sw * 0.19,
+                top: -sw * 0.07,
                 child: Opacity(
                   opacity: 0.5,
                   child: Image.asset(
                     backgroundImage!,
-                    width: 150,
+                    width: sw * 0.40,
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -55,44 +56,50 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
             SafeArea(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                padding: EdgeInsets.symmetric(
+                  horizontal: sw * 0.028,
+                  vertical: sw * 0.028,
+                ),
                 child: Row(
                   children: [
+                    // Left icon
                     Expanded(
                       flex: 1,
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: leftIcon != null
                             ? GestureDetector(
-                          onTap: onLeftTap,
-                          child: leftIcon,
-                        )
+                                onTap: onLeftTap,
+                                child: leftIcon,
+                              )
                             : const SizedBox.shrink(),
                       ),
                     ),
 
+                    // Title
                     Expanded(
                       flex: 4,
                       child: Text(
                         title,
                         textAlign: TextAlign.center,
                         style: AppTextStyles.bigText.copyWith(
-                          fontSize: 20,
+                          fontSize: sw * 0.050,
                           fontWeight: FontWeight.w400,
                           color: Colors.white,
                         ),
                       ),
                     ),
 
+                    // Right icon
                     Expanded(
                       flex: 1,
                       child: Align(
                         alignment: Alignment.centerRight,
                         child: rightIcon != null
                             ? GestureDetector(
-                          onTap: onRightTap,
-                          child: rightIcon,
-                        )
+                                onTap: onRightTap,
+                                child: rightIcon,
+                              )
                             : const SizedBox.shrink(),
                       ),
                     ),
@@ -107,5 +114,5 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(150);
+  Size get preferredSize => const Size.fromHeight(90);
 }

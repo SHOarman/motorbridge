@@ -14,7 +14,7 @@ class Vehicles extends StatelessWidget {
       bottomNavigationBar: const CustomBottomNavBar(selectedIndex: 1),
       appBar: const CustomAppBar(
         title: "Added Vehicles",
-        backgroundImage: "assets/image/appbar.png",
+        backgroundImage: "assets/image/Image__3_-removebg-preview.png",
       ),
       body: SingleChildScrollView(
         child: Column(
