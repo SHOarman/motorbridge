@@ -12,7 +12,6 @@ class ViewAllExpensesAddNew extends StatefulWidget {
 class _ViewAllExpensesAddNewState extends State<ViewAllExpensesAddNew> {
   String selectedFilter = "Daily";
 
-  // Hardcoded data based on selection
   Map<String, dynamic> get currentData {
     switch (selectedFilter) {
       case "Weekly":
@@ -51,7 +50,7 @@ class _ViewAllExpensesAddNewState extends State<ViewAllExpensesAddNew> {
           "category": "Full Fleet Costs",
           "catAmount": "£95,400.00"
         };
-      default: // Daily
+      default:
         return {
           "total": "£2050.00",
           "average": "£2050.00",
@@ -77,37 +76,26 @@ class _ViewAllExpensesAddNewState extends State<ViewAllExpensesAddNew> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Top Bar
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () => Get.back(),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.arrow_back, size: 18),
-                          const SizedBox(width: 8),
-                          Text(
-                            "Back to Vehicle",
-                            style: AppTextStyles.smallText.copyWith(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
+                child: GestureDetector(
+                  onTap: () => Get.back(),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.arrow_back, size: 20),
+                      const SizedBox(width: 8),
+                      Text(
+                        "Back to Vehicle",
+                        style: AppTextStyles.smallText.copyWith(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-
-                  ],
+                    ],
+                  ),
                 ),
               ),
-
-
-
               const SizedBox(height: 16),
-
-              // Vehicle Header Card
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Container(
@@ -125,7 +113,7 @@ class _ViewAllExpensesAddNewState extends State<ViewAllExpensesAddNew> {
                           Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.1),
+                              color: Colors.white.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: const Icon(Icons.directions_car, color: Colors.white, size: 28),
@@ -144,7 +132,7 @@ class _ViewAllExpensesAddNewState extends State<ViewAllExpensesAddNew> {
                               Text(
                                 "2024",
                                 style: AppTextStyles.smallText.copyWith(
-                                  color: Colors.white.withValues(alpha: 0.7),
+                                  color: Colors.white.withOpacity(0.7),
                                 ),
                               ),
                             ],
@@ -171,340 +159,246 @@ class _ViewAllExpensesAddNewState extends State<ViewAllExpensesAddNew> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 24),
-
-              // Running Costs Section
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFD1FAE5),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Icon(Icons.currency_pound, color: Color(0xFF059669), size: 20),
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      "Running Costs",
-                      style: AppTextStyles.bigText.copyWith(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const Spacer(),
-                    ElevatedButton.icon(
-                      onPressed: () => _showAddCostDialog(context),
-                      icon: const Icon(Icons.add, size: 18),
-                      label: const Text("Add Cost"),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF2563EB),
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                        elevation: 0,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              // Filter Tabs
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("View by:", style: AppTextStyles.smallText.copyWith(color: Colors.grey[600], fontSize: 13)),
-                    const SizedBox(height: 10),
-                    Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF1F5F9),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        children: [
-                          _buildFilterTab("Daily"),
-                          _buildFilterTab("Weekly"),
-                          _buildFilterTab("Monthly"),
-                          _buildFilterTab("Yearly"),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Total Expenses Card
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.symmetric(vertical: 24),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFECFDF5),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: const Color(0xFFD1FAE5)),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        offset: const Offset(0, 2),
+                        blurRadius: 4,
+                        spreadRadius: -2,
+                      ),
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        offset: const Offset(0, 4),
+                        blurRadius: 6,
+                        spreadRadius: -1,
+                      ),
+                    ],
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          const Icon(Icons.trending_up, color: Color(0xFF059669), size: 20),
-                          const SizedBox(width: 10),
-                          Text(
-                            "Total Running Costs",
-                            style: AppTextStyles.smallText.copyWith(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: const Color(0xFF065F46),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        data['total'],
-                        style: AppTextStyles.bigText.copyWith(fontSize: 32, fontWeight: FontWeight.w800),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        data['entries'],
-                        style: AppTextStyles.smallText.copyWith(fontSize: 12, color: const Color(0xFF059669)),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // Average Daily Cost Card
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFEEF2FF),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: const Color(0xFFE0E7FF)),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(Icons.bar_chart, color: Color(0xFF4F46E5), size: 20),
-                          const SizedBox(width: 10),
-                          Text(
-                            "Average Daily Cost",
-                            style: AppTextStyles.smallText.copyWith(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: const Color(0xFF3730A3),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        data['average'],
-                        style: AppTextStyles.bigText.copyWith(fontSize: 32, fontWeight: FontWeight.w800),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        data['avgLabel'],
-                        style: AppTextStyles.smallText.copyWith(fontSize: 12, color: const Color(0xFF4F46E5)),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 30),
-
-              // Trend Section
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.show_chart, color: Color(0xFF2563EB), size: 20),
-                        const SizedBox(width: 10),
-                        Text(
-                          data['trend'],
-                          style: AppTextStyles.bigText.copyWith(fontSize: 18, fontWeight: FontWeight.w700),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    Container(
-                      height: 300,
-                      width: double.infinity,
-                      padding: const EdgeInsets.fromLTRB(10, 20, 20, 20),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Row(
-                        children: [
-                          // Y-Axis Labels
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const SizedBox(
-                                height: 20,
-                                child: RotatedBox(
-                                  quarterTurns: 3,
-                                  child: Text("Amount (£)", style: TextStyle(fontSize: 10, color: Colors.grey)),
-                                ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFD1FAE5),
+                                borderRadius: BorderRadius.circular(8),
                               ),
-                              const Spacer(),
-                              _axisLabel("2200"),
-                              _axisLabel("1650"),
-                              _axisLabel("1100"),
-                              _axisLabel("550"),
-                              _axisLabel("0"),
-                              const SizedBox(height: 40), // Height matching X labels
-                            ],
-                          ),
-                          const SizedBox(width: 8),
-                          // Content & Grid
-                          Expanded(
-                            child: Column(
+                              child: const Icon(Icons.currency_pound, color: Color(0xFF059669), size: 20),
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              "Running Costs",
+                              style: AppTextStyles.bigText.copyWith(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            const Spacer(),
+                            ElevatedButton.icon(
+                              onPressed: () => _showAddCostDialog(context),
+                              icon: const Icon(Icons.add, size: 18, color: Colors.white),
+                              label: const Text("Add Cost", style: TextStyle(color: Colors.white)),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF2563EB),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                elevation: 0,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("View by:", style: AppTextStyles.smallText.copyWith(color: Colors.grey[600], fontSize: 13)),
+                            const SizedBox(height: 10),
+                            Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFF1F5F9),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                children: [
+                                  _buildFilterTab("Daily"),
+                                  _buildFilterTab("Weekly"),
+                                  _buildFilterTab("Monthly"),
+                                  _buildFilterTab("Yearly"),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      _buildSummaryCard(
+                        color: const Color(0xFFECFDF5),
+                        borderColor: const Color(0xFFD1FAE5),
+                        icon: Icons.trending_up,
+                        iconColor: const Color(0xFF059669),
+                        title: "Total Running Costs",
+                        titleColor: const Color(0xFF065F46),
+                        amount: data['total'],
+                        subtitle: data['entries'],
+                        subtitleColor: const Color(0xFF059669),
+                      ),
+                      const SizedBox(height: 16),
+                      _buildSummaryCard(
+                        color: const Color(0xFFEEF2FF),
+                        borderColor: const Color(0xFFE0E7FF),
+                        icon: Icons.bar_chart,
+                        iconColor: const Color(0xFF4F46E5),
+                        title: "Average Daily Cost",
+                        titleColor: const Color(0xFF3730A3),
+                        amount: data['average'],
+                        subtitle: data['avgLabel'],
+                        subtitleColor: const Color(0xFF4F46E5),
+                      ),
+                      const SizedBox(height: 30),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
                               children: [
-                                Expanded(
-                                  child: Stack(
+                                const Icon(Icons.show_chart, color: Color(0xFF2563EB), size: 20),
+                                const SizedBox(width: 10),
+                                Text(
+                                  data['trend'],
+                                  style: AppTextStyles.bigText.copyWith(fontSize: 18, fontWeight: FontWeight.w700),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 20),
+                            Container(
+                              height: 300,
+                              width: double.infinity,
+                              padding: const EdgeInsets.fromLTRB(10, 20, 20, 20),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(color: const Color(0xFFF1F5F9)),
+                              ),
+                              child: Row(
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      // Grid lines
-                                      const Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          _GridLine(),
-                                          _GridLine(),
-                                          _GridLine(),
-                                          _GridLine(),
-                                          Divider(height: 1, color: Colors.grey),
-                                        ],
-                                      ),
-                                      // Bars
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                                        child: Row(
-                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: (data['bars'] as List).map((h) => _buildBar(h, data['date'])).toList(),
-                                        ),
-                                      ),
+                                      const SizedBox(height: 20, child: RotatedBox(quarterTurns: 3, child: Text("Amount (£)", style: TextStyle(fontSize: 10, color: Colors.grey)))),
+                                      const Spacer(),
+                                      _axisLabel("2200"), _axisLabel("1650"), _axisLabel("1100"), _axisLabel("550"), _axisLabel("0"),
+                                      const SizedBox(height: 40),
                                     ],
                                   ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Stack(
+                                      children: [
+                                        const Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [_GridLine(), _GridLine(), _GridLine(), _GridLine(), Divider(height: 1, color: Colors.grey)]),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: (data['bars'] as List).map((h) => _buildBar(h, data['date'])).toList(),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      _sectionTitle("Category Summary"),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFFF1F2),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: const Color(0xFFFFC9C9), width: 1),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.build_outlined, color: Color(0xFFE11D48), size: 20),
+                              const SizedBox(width: 12),
+                              Text(data['category'], style: AppTextStyles.smallText.copyWith(fontWeight: FontWeight.w600)),
+                              const Spacer(),
+                              Text(data['catAmount'], style: AppTextStyles.bigText.copyWith(fontSize: 18, color: const Color(0xFFE11D48))),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      _sectionTitle("Recent Expenses"),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: const Color(0xFFE2E8F0)),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFFFF1F2),
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: const Color(0xFFFFC9C9), width: 1),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 32),
-
-              // Category Summary
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Category Summary", style: AppTextStyles.bigText.copyWith(fontSize: 18, fontWeight: FontWeight.w700)),
-                    const SizedBox(height: 16),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFFF1F2),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.build_outlined, color: Color(0xFFE11D48), size: 20),
-                          const SizedBox(width: 12),
-                          Text(data['category'], style: AppTextStyles.smallText.copyWith(fontWeight: FontWeight.w600)),
-                          const Spacer(),
-                          Text(data['catAmount'], style: AppTextStyles.bigText.copyWith(fontSize: 18, color: const Color(0xFFE11D48))),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 32),
-
-              // Recent Expenses
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Recent Expenses", style: AppTextStyles.bigText.copyWith(fontSize: 18, fontWeight: FontWeight.w700)),
-                    const SizedBox(height: 16),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: const Color(0xFFE2E8F0)),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFFFF1F2),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Icon(Icons.build_outlined, color: Color(0xFFE11D48), size: 20),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
+                                child: const Icon(Icons.build_outlined, color: Color(0xFFE11D48), size: 20),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(data['category'], style: AppTextStyles.smallText.copyWith(fontWeight: FontWeight.w700)),
-                                    Text(" - ${data['date']}", style: AppTextStyles.smallText.copyWith(fontSize: 12, color: Colors.grey)),
+                                    Row(
+                                      children: [
+                                        Text(data['category'], style: AppTextStyles.smallText.copyWith(fontWeight: FontWeight.w700)),
+                                        Text(" - ${data['date']}", style: AppTextStyles.smallText.copyWith(fontSize: 12, color: Colors.grey)),
+                                      ],
+                                    ),
+                                    Text("Vehicle", style: AppTextStyles.smallText.copyWith(fontSize: 12, color: Colors.grey)),
+                                    const SizedBox(height: 4),
+                                    Text(data['catAmount'], style: AppTextStyles.bigText.copyWith(fontSize: 18, color: const Color(0xFFE11D48))),
                                   ],
                                 ),
-                                Text("Vehicle", style: AppTextStyles.smallText.copyWith(fontSize: 12, color: Colors.grey)),
-                                const SizedBox(height: 4),
-                                Text(data['catAmount'], style: AppTextStyles.bigText.copyWith(fontSize: 18, color: const Color(0xFFE11D48))),
-                              ],
-                            ),
+                              ),
+                              IconButton(icon: const Icon(Icons.delete_outline, color: Color(0xFFE11D48)), onPressed: () {}),
+                            ],
                           ),
-                          IconButton(
-                            icon: const Icon(Icons.delete_outline, color: Color(0xFFE11D48)),
-                            onPressed: () {},
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-
               const SizedBox(height: 40),
             ],
           ),
@@ -513,9 +407,35 @@ class _ViewAllExpensesAddNewState extends State<ViewAllExpensesAddNew> {
     );
   }
 
-  Widget _axisLabel(String text) {
-    return Text(text, style: const TextStyle(fontSize: 10, color: Colors.grey));
+  Widget _sectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      child: Text(title, style: AppTextStyles.bigText.copyWith(fontSize: 18, fontWeight: FontWeight.w700)),
+    );
   }
+
+  Widget _buildSummaryCard({required Color color, required Color borderColor, required IconData icon, required Color iconColor, required String title, required Color titleColor, required String amount, required String subtitle, required Color subtitleColor}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(16), border: Border.all(color: borderColor)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(children: [Icon(icon, color: iconColor, size: 20), const SizedBox(width: 10), Text(title, style: AppTextStyles.smallText.copyWith(fontSize: 14, fontWeight: FontWeight.w600, color: titleColor))]),
+            const SizedBox(height: 8),
+            Text(amount, style: AppTextStyles.bigText.copyWith(fontSize: 32, fontWeight: FontWeight.w800)),
+            const SizedBox(height: 4),
+            Text(subtitle, style: AppTextStyles.smallText.copyWith(fontSize: 12, color: subtitleColor)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _axisLabel(String text) => Text(text, style: const TextStyle(fontSize: 10, color: Colors.grey));
 
   Widget _buildFilterTab(String title) {
     bool isSelected = selectedFilter == title;
@@ -524,19 +444,8 @@ class _ViewAllExpensesAddNewState extends State<ViewAllExpensesAddNew> {
         onTap: () => setState(() => selectedFilter = title),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 8),
-          decoration: BoxDecoration(
-            color: isSelected ? const Color(0xFF2563EB) : Colors.transparent,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            style: AppTextStyles.smallText.copyWith(
-              fontSize: 13,
-              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-              color: isSelected ? Colors.white : const Color(0xFF64748B),
-            ),
-          ),
+          decoration: BoxDecoration(color: isSelected ? const Color(0xFF2563EB) : Colors.transparent, borderRadius: BorderRadius.circular(10)),
+          child: Text(title, textAlign: TextAlign.center, style: AppTextStyles.smallText.copyWith(fontSize: 13, fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500, color: isSelected ? Colors.white : const Color(0xFF64748B))),
         ),
       ),
     );
@@ -548,34 +457,14 @@ class _ViewAllExpensesAddNewState extends State<ViewAllExpensesAddNew> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Container(
-            height: 180 * heightFactor,
-            margin: const EdgeInsets.symmetric(horizontal: 4),
-            decoration: BoxDecoration(
-              color: const Color(0xFF2563EB),
-              borderRadius: BorderRadius.circular(6),
-            ),
-          ),
-          SizedBox(
-            height: 40,
-            child: isPrimaryBar 
-              ? Center(
-                child: Transform.rotate(
-                  angle: -0.7,
-                  child: Text(date, style: const TextStyle(fontSize: 8, color: Colors.grey)),
-                ),
-              )
-              : const SizedBox(),
-          )
+          Container(height: 180 * heightFactor, margin: const EdgeInsets.symmetric(horizontal: 4), decoration: BoxDecoration(color: const Color(0xFF2563EB), borderRadius: BorderRadius.circular(6))),
+          SizedBox(height: 40, child: isPrimaryBar ? Center(child: Transform.rotate(angle: -0.7, child: Text(date, style: const TextStyle(fontSize: 8, color: Colors.grey)))) : const SizedBox()),
         ],
       ),
     );
   }
 
   void _showAddCostDialog(BuildContext context) {
-    final TextEditingController amountController = TextEditingController();
-    final TextEditingController purposeController = TextEditingController();
-
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -583,40 +472,14 @@ class _ViewAllExpensesAddNewState extends State<ViewAllExpensesAddNew> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(
-              controller: amountController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: "Amount (£)",
-                hintText: "e.g., 20.50",
-                filled: true,
-                fillColor: const Color(0xFFF1F5F9),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
-              ),
-            ),
+            TextField(decoration: InputDecoration(labelText: "Amount (£)", filled: true, fillColor: const Color(0xFFF1F5F9), border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none))),
             const SizedBox(height: 16),
-            TextField(
-              controller: purposeController,
-              decoration: InputDecoration(
-                labelText: "Purpose",
-                hintText: "e.g., Fuel, Repair, Parking",
-                filled: true,
-                fillColor: const Color(0xFFF1F5F9),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
-              ),
-            ),
+            TextField(decoration: InputDecoration(labelText: "Purpose", filled: true, fillColor: const Color(0xFFF1F5F9), border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none))),
           ],
         ),
         actions: [
           TextButton(onPressed: () => Get.back(), child: const Text("Cancel")),
-          ElevatedButton(
-            onPressed: () {
-              Get.back();
-              Get.snackbar("Success", "Expense added successfully!", backgroundColor: Colors.green, colorText: Colors.white, snackPosition: SnackPosition.BOTTOM);
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF2563EB)),
-            child: const Text("Add", style: TextStyle(color: Colors.white)),
-          ),
+          ElevatedButton(onPressed: () => Get.back(), style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF2563EB)), child: const Text("Add", style: TextStyle(color: Colors.white))),
         ],
       ),
     );
@@ -627,12 +490,10 @@ class _GridLine extends StatelessWidget {
   const _GridLine();
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: 1,
-      child: CustomPaint(
-        painter: _DashedLinePainter(),
-      ),
+      child: CustomPaint(painter: _DashedLinePainter()),
     );
   }
 }
@@ -641,15 +502,12 @@ class _DashedLinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     double dashWidth = 3, dashSpace = 3, startX = 0;
-    final paint = Paint()
-      ..color = Colors.grey.withValues(alpha: 0.1)
-      ..strokeWidth = 1;
+    final paint = Paint()..color = Colors.grey.withOpacity(0.1)..strokeWidth = 1;
     while (startX < size.width) {
       canvas.drawLine(Offset(startX, 0), Offset(startX + dashWidth, 0), paint);
       startX += dashWidth + dashSpace;
     }
   }
-
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }

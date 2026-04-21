@@ -98,6 +98,7 @@ class Profile extends StatelessWidget {
               SizedBox(height: 20),
 
               CustomButton(
+
                 text: "Edit Profile",
                 onTap: () {
                   Get.toNamed(AppRoutes.editprofile);
@@ -115,48 +116,50 @@ class Profile extends StatelessWidget {
               ),
               SizedBox(height: 10),
 
-              Column(
-                children: [
-                  CustomMenuTile(
-                    title: "Hilux 2026",
-                    subtitle: "2GD-FTV",
-                    leading: Image.asset('assets/icon/image 4.png'),
-                    onTap: () {},
-                  ),
+              CustomMenuTile(
+                title: "Hilux 2026",
+                subtitle: "2GD-FTV",
+                leading: Image.asset('assets/icon/image 4.png'),
+                onTap: () {},
+              ),
 
-                  // Notification card (Icon shoho)
-                  CustomMenuTile(
-                    title: "Notifications",
-                    leading: Image.asset("assets/icon/image 4 (1).png"),
-                    onTap: () {},
-                  ),
+              // Notification card (Icon shoho)
+              CustomMenuTile(
+                borderColor: Color.fromRGBO(182, 192, 209, 0.43),
 
-                  // Privacy & Policy card
-                  CustomMenuTile(
-                    title: "Privacy & Policy",
-                    leading: Image.asset("assets/icon/image 4 (2).png"),
-                    onTap: () {},
-                  ),
+                title: "Notifications",
+                leading: Image.asset("assets/icon/image 4 (1).png"),
+                onTap: () {},
+              ),
 
-                  // Terms & Conditions card
-                  CustomMenuTile(
-                    title: "Terms & Conditions",
-                    leading: Image.asset("assets/icon/image 4 (3).png"),
-                    onTap: () {},
-                  ),
+              // Privacy & Policy card
+              CustomMenuTile(
+                borderColor: Color.fromRGBO(182, 192, 209, 0.43),
 
-                  SizedBox(height: 30),
-                  CustomMenuTile(
-                    title: "Log Out",
-                    leading: Image.asset("assets/icon/material-symbols_logout.png"),
-                    onTap: () {},
-                    backgroundColor: Color.fromRGBO(255, 67, 67, 0.2),
+                title: "Privacy & Policy",
+                leading: Image.asset("assets/icon/image 4 (2).png"),
+                onTap: () {},
+              ),
+
+              // Terms & Conditions card
+              CustomMenuTile(
+                borderColor: Color.fromRGBO(182, 192, 209, 0.43),
+
+                title: "Terms & Conditions",
+                leading: Image.asset("assets/icon/image 4 (3).png"),
+                onTap: () {},
+              ),
+
+              SizedBox(height: 30),
+              CustomMenuTile(
+                borderColor: Color.fromRGBO(255, 67, 67, 0.2),
+
+                title: "Log Out",
+                leading: Image.asset("assets/icon/material-symbols_logout.png"),
+                onTap: () {},
+                backgroundColor: Color.fromRGBO(255, 67, 67, 0.2),
 
 
-                  ),
-
-
-                ],
               ),
             ],
           ),

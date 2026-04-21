@@ -139,7 +139,7 @@ class MotoringEmergencies extends StatelessWidget {
                 subtitle: "Police, Fire, Ambulance",
                 iconAsset: "assets/icon/Frame (8).png",
                 backgroundColor: const Color(0xffFFC8C8),
-                buttonColor: const Color(0xFFB71C1C),
+                buttonColor: const Color(0xffBD1D1D),
                 phoneNumber: "999",
               ),
               const SizedBox(height: 16),
@@ -148,7 +148,7 @@ class MotoringEmergencies extends StatelessWidget {
                 subtitle: "Road incidents & breakdowns on Motorways",
                 iconAsset: "assets/icon/Frame (9).png",
                 backgroundColor: const Color(0xffD9E6FF),
-                buttonColor: const Color(0xFF2196F3),
+                buttonColor: const Color(0xFF3073F1),
                 phoneNumber: "0300 123 5000",
               ),
               const SizedBox(height: 16),
@@ -346,7 +346,7 @@ class MotoringEmergencies extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
+            blurRadius: 6,
             offset: const Offset(0, 4),
           ),
         ],
@@ -370,12 +370,12 @@ class MotoringEmergencies extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Padding(
-            padding: const EdgeInsets.only(left: 40),
+            padding: const EdgeInsets.only(left: 20),
             child: Text(
               subtitle,
               style: AppTextStyles.smallText.copyWith(
                 fontSize: 14,
-                color: const Color(0xFF636E72),
+                color: const Color(0xff313131),
               ),
             ),
           ),
@@ -426,7 +426,7 @@ class MotoringEmergencies extends StatelessWidget {
   }) {
     return Container(
       width: double.infinity,
-      height: 80,
+      height: 60,
       decoration: BoxDecoration(
         color: const Color(0xFF0F9D58),
         borderRadius: BorderRadius.circular(12),
@@ -435,7 +435,7 @@ class MotoringEmergencies extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: () => _makePhoneCall(phoneNumber),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

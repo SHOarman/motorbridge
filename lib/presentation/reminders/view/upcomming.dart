@@ -16,6 +16,7 @@ class UpcomingData  extends StatelessWidget {
               SizedBox(height: 20,),
 
               CustomReminderCard(
+                dateColor: Color(0xff2A2A2A),
                 title: "MOT",
                 date: "26 Apr 2026",
                 expiryStatus: "Expires in 5 Days",
@@ -24,7 +25,7 @@ class UpcomingData  extends StatelessWidget {
                 iconPath: "assets/icon/Group (4).png",
                 backgroundColor: Colors.white,
                 titleColor: Colors.black87,
-                dateColor: Colors.grey.shade600,
+
                 expiryTextColor: Colors.grey.shade700,
                 buttonColor: const Color(0xFF1B4E9F),
                 badgeBackgroundColor: const Color(0xFFFFF4D0),
@@ -34,6 +35,7 @@ class UpcomingData  extends StatelessWidget {
               ),
               SizedBox(height: 10,),
               CustomReminderCard(
+                dateColor: Color(0xff2A2A2A),
                 title: "MOT",
                 date: "26 Apr 2026",
                 expiryStatus: "Expires in 5 Days",
@@ -42,7 +44,7 @@ class UpcomingData  extends StatelessWidget {
                 iconPath: "assets/icon/Group (4).png",
                 backgroundColor: Colors.white,
                 titleColor: Colors.black87,
-                dateColor: Colors.grey.shade600,
+
                 expiryTextColor: Colors.grey.shade700,
                 buttonColor: const Color(0xFF1B4E9F),
                 badgeBackgroundColor: const Color(0xFFFFF4D0),
@@ -52,6 +54,8 @@ class UpcomingData  extends StatelessWidget {
               ),
               SizedBox(height: 10,),
               CustomReminderCard(
+
+                dateColor: Color(0xff2A2A2A),
                 title: "MOT",
                 date: "26 Apr 2026",
                 expiryStatus: "Expires in 5 Days",
@@ -60,7 +64,7 @@ class UpcomingData  extends StatelessWidget {
                 iconPath: "assets/icon/Group (4).png",
                 backgroundColor: Colors.white,
                 titleColor: Colors.black87,
-                dateColor: Colors.grey.shade600,
+
                 expiryTextColor: Colors.grey.shade700,
                 buttonColor: const Color(0xFF1B4E9F),
                 badgeBackgroundColor: const Color(0xFFFFF4D0),

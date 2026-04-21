@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:motorbridge/utils/app_text_styles.dart';
 
 class CustomActionButton extends StatefulWidget {
   final String title;
@@ -43,8 +44,8 @@ class _CustomActionButtonState extends State<CustomActionButton> {
 
     final iconWidget = Image.asset(
       widget.iconPath,
-      width:  iconSize,
-      height: iconSize,
+      width: 22,
+      height: 22,
       color: widget.contentColor,
     );
 
@@ -77,7 +78,7 @@ class _CustomActionButtonState extends State<CustomActionButton> {
               highlightColor: Colors.white.withValues(alpha: 0.1),
               onTap: widget.onTap,
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: hPad, vertical: vPad),
+                padding: EdgeInsets.symmetric( vertical: 8),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -92,11 +93,11 @@ class _CustomActionButtonState extends State<CustomActionButton> {
                           child: Text(
                             widget.title,
                             textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: widget.contentColor,
-                              fontSize: titleSize,
-                              fontWeight: FontWeight.bold,
+                            style: AppTextStyles.bigText.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xffFCFDFF),
+                                fontSize: 16
+
                             ),
                           ),
                         ),
@@ -109,11 +110,14 @@ class _CustomActionButtonState extends State<CustomActionButton> {
                     SizedBox(height: sh * 0.004),
                     Text(
                       widget.subtitle,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: widget.contentColor.withValues(alpha: 0.8),
-                        fontSize: subSize,
+                       textAlign: TextAlign.center,
+                      style: AppTextStyles.smallText.copyWith(
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xffFCFDFF),
+                        fontSize: 14
+
                       ),
+
                     ),
                   ],
                 ),

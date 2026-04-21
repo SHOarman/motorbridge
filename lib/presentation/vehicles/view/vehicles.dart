@@ -17,38 +17,44 @@ class Vehicles extends StatelessWidget {
         backgroundImage: "assets/image/Image__3_-removebg-preview.png",
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 10),
-            VehicleCard(
-              vehicleName: "Hilux",
-              year: "2026",
-              engineCode: "2GD-FTV",
-              vehicleTag: "Vehicle 1",
-              registrationNumber: "AB12 CDE",
-              vehicleImage: "assets/image/Rectangle 2.png",
-              onTagTap: () {},
-              onViewDetails: () {
-                Get.toNamed(AppRoutes.vehicledetails);
-              },
-            ),
-            const SizedBox(height: 10),
-            VehicleCard(
-              vehicleName: "Hilux",
-              year: "2026",
-              engineCode: "2GD-FTV",
-              vehicleTag: "Vehicle 2",
-              registrationNumber: "AB12 CDE",
-              vehicleImage: "assets/image/Rectangle 2.png",
-              registrationColor: const Color(0xffE5EFF9),
-              registrationTextColor: const Color(0xff535353),
-              onTagTap: () {},
-              onViewDetails: () {
-                Get.toNamed(AppRoutes.vehicledetails);
-              },
-            ),
-            const SizedBox(height: 40),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              VehicleCard(
+                showDots: true,
+                activeDotIndex: 0,
+                hasBorder: true,
+                vehicleName: "Hilux",
+                year: "2026",
+                engineCode: "2GD-FTV",
+                vehicleTag: "Vehicle 1",
+                registrationNumber: "AB12 CDE",
+                vehicleImage: "assets/image/Rectangle_2-removebg-preview.png",
+                onTagTap: () {},
+                onViewDetails: () {
+                  Get.toNamed(AppRoutes.vehicledetails);
+                },
+              ),
+              const SizedBox(height: 10),
+              VehicleCard(
+                vehicleName: "Hilux",
+                year: "2026",
+                engineCode: "2GD-FTV",
+                vehicleTag: "Vehicle 2",
+                registrationNumber: "AB12 CDE",
+                vehicleImage: "assets/image/Rectangle_2-removebg-preview.png",
+                registrationColor: const Color(0xffE5EFF9),
+                registrationTextColor: const Color(0xff535353),
+                onTagTap: () {},
+                onViewDetails: () {
+                  Get.toNamed(AppRoutes.vehicledetails);
+                },
+              ),
+              const SizedBox(height: 40),
+            ],
+          ),
         ),
       ),
     );

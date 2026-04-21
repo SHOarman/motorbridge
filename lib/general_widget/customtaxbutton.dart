@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../utils/app_text_styles.dart';
+
 class CustomButton extends StatelessWidget {
   final String text;
   final VoidCallback onTap;
@@ -43,11 +45,12 @@ class CustomButton extends StatelessWidget {
             children: [
               Text(
                 text,
-                style: TextStyle(
-                  color: textColor,
+                style: AppTextStyles.bigText.copyWith(
                   fontSize: fontSize,
-                  fontWeight: FontWeight.w600,
-                ),
+                  fontWeight: FontWeight.w500,
+                  color: textColor,
+                )
+
               ),
               if (imagePath != null) ...[
                 SizedBox(width: sw * 0.022),

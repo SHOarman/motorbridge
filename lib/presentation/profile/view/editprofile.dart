@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:motorbridge/core/services/controller/profile_controller.dart';
 import 'package:motorbridge/general_widget/customappbar.dart';
 
+import '../../../utils/app_text_styles.dart';
 import '../../vehicles/widget/custom_vehicle_field.dart';
 
 class EditProfile extends StatelessWidget {
@@ -85,6 +86,7 @@ class EditProfile extends StatelessWidget {
                 label: "Full Name", 
                 hintText: "Tanvir Hasan",
                 controller: controller.fullNameController,
+
               ),
 
               CustomVehicleField(
@@ -121,8 +123,8 @@ class EditProfile extends StatelessWidget {
                         children: [
                           Obx(() => Text(
                             controller.dob.value.isEmpty ? "mm/dd/yyyy" : controller.dob.value,
-                            style: TextStyle(
-                              color: controller.dob.value.isEmpty ? const Color(0xffA0A0A0) : Colors.black,
+                            style: AppTextStyles.bigText.copyWith(
+                              color: controller.dob.value.isEmpty ? const Color(0xff454545) : Colors.black,
                               fontSize: 14,
                             ),
                           )),

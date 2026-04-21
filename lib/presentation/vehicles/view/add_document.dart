@@ -10,7 +10,6 @@ class AddDocument extends GetView<AddDocumentController> {
 
   @override
   Widget build(BuildContext context) {
-    // Ensuring controller is initialized
     Get.put(AddDocumentController());
 
     return Scaffold(

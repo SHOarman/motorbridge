@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../utils/app_text_styles.dart';
+
 class CustomActionCard extends StatelessWidget {
   final String title;
   final String iconPath;
@@ -51,11 +53,13 @@ class CustomActionCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     title,
-                    style: TextStyle(
-                      color: contentColor,
-                      fontSize: fontSize,
+                    style: AppTextStyles.bigText.copyWith(
+                      fontSize: 15,
                       fontWeight: FontWeight.w500,
+                      color: contentColor,
+                      letterSpacing: 0.7,
                     ),
+
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),

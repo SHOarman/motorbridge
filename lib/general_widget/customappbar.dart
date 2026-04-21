@@ -44,13 +44,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               Positioned(
                 right: -sw * 0.19,
                 top: -sw * 0.07,
-                child: Opacity(
-                  opacity: 0.5,
-                  child: Image.asset(
-                    backgroundImage!,
-                    width: sw * 0.40,
-                    fit: BoxFit.contain,
-                  ),
+                child: Image.asset(
+                  backgroundImage!,
+                  width: sw * 0.40,
+                  fit: BoxFit.contain,
                 ),
               ),
 

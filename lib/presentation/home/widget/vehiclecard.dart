@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:motorbridge/utils/app_sizes.dart';
+import 'package:motorbridge/utils/app_text_styles.dart';
 
 class VehicleCard extends StatelessWidget {
   final String vehicleName;
@@ -12,6 +13,10 @@ class VehicleCard extends StatelessWidget {
   final VoidCallback onTagTap;
   final Color registrationColor;
   final Color registrationTextColor;
+  final bool hasBorder;
+  final Color borderColor;
+  final bool showDots;
+  final int activeDotIndex;
 
   const VehicleCard({
     super.key,
@@ -24,7 +29,11 @@ class VehicleCard extends StatelessWidget {
     required this.onViewDetails,
     required this.onTagTap,
     this.registrationColor = const Color(0xFFFFD54F),
-    this.registrationTextColor = Colors.black87,
+    this.registrationTextColor = Colors.black,
+    this.hasBorder = false,
+    this.borderColor = const Color(0xFF000000),
+    this.showDots = false,
+    this.activeDotIndex = 0,
   });
 
   @override
@@ -36,18 +45,20 @@ class VehicleCard extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
+            color: Colors.black.withOpacity(0.11),
+            blurRadius: 6.6,
+            offset: const Offset(0, 4),
+            spreadRadius: 0,
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Header Section (Name, Year, Tag)
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,7 +106,15 @@ class VehicleCard extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: const Color(0xFFFFF8E1),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(6),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.15),
+                        blurRadius: 4,
+                        offset: const Offset(0, 4),
+                        spreadRadius: 0,
+                      ),
+                    ],
                   ),
                   child: Text(
                     vehicleTag,
@@ -117,37 +136,70 @@ class VehicleCard extends StatelessWidget {
             height: 48,
             decoration: BoxDecoration(
               color: registrationColor,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(4),
+              border: hasBorder ? Border.all(color: borderColor, width: 1.5) : null,
             ),
-            child: Row(
+            child: Center(
+              child: Text(
+                registrationNumber,
+                style: AppTextStyles.bigText.copyWith(
+                  color: registrationTextColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
+                  letterSpacing: 1.2,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: s.spaceM),
+
+          // Image Section with Border
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(7),
+              border: Border.all(
+                color: const Color(0xFF9DBDEE),
+                width: 1.5,
+              ),
+            ),
+            child: Column(
               children: [
-                Expanded(
-                  child: Center(
-                    child: Text(
-                      registrationNumber,
-                      style: TextStyle(
-                        fontSize: s.fontXL,
-                        fontWeight: FontWeight.w900,
-                        color: registrationTextColor,
-                        letterSpacing: 2.5,
-                      ),
-                    ),
+                SizedBox(
+                  height: s.vehicleCardImageHeight,
+                  width: double.infinity,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.asset(vehicleImage, fit: BoxFit.contain),
                   ),
                 ),
+
+                if (showDots) ...[
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(4, (index) {
+                      return Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                        width: 10,
+                        height: 10,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: activeDotIndex == index
+                              ? const Color(0xFF1B4E9F) // একটিভ কালার
+                              : const Color(0xFFB0C4DE), // ইনএকটিভ কালার
+                        ),
+                      );
+                    }),
+                  ),
+                ],
               ],
             ),
           ),
 
           SizedBox(height: s.spaceM),
-          SizedBox(
-            height: s.vehicleCardImageHeight,
-            width: double.infinity,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(15),
-              child: Image.asset(vehicleImage, fit: BoxFit.contain),
-            ),
-          ),
-          SizedBox(height: s.spaceM),
+
+          // View Details Button
           SizedBox(
             width: double.infinity,
             height: 52,

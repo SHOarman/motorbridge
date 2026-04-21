@@ -7,32 +7,51 @@ class BottomNavPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
-      ..color = const Color(0xFFD1E9FF)
+      ..color = const Color(0xFFC3E1FF)
       ..style = PaintingStyle.fill;
 
     ui.Path path = ui.Path();
-    path.moveTo(0.0, size.height * 0.50);
-    path.quadraticBezierTo(0.0, 0.0, 20.0, 0.0);
-    path.lineTo(size.width * 0.35, 0.0);
 
+    double cornerRadius = 35.0;
+    double notchStart = size.width * 0.35;
+    double notchEnd = size.width * 0.65;
+
+    // Start from bottom left
+    path.moveTo(0, size.height);
+
+    // Left side line and top-left corner
+    path.lineTo(0, cornerRadius);
+    path.quadraticBezierTo(0, 18, cornerRadius, 16);
+
+
+
+
+    // Line to the start of the notch
+    path.lineTo(notchStart, 0);
+
+    // Smooth Notch (Design Match)
     path.cubicTo(
-      size.width * 0.40, 0.0,
-      size.width * 0.40, size.height * 0.58,
-      size.width * 0.50, size.height * 0.58,
+      size.width * 0.44, 0,
+      size.width * 0.38, size.height * 0.50,
+      size.width * 0.49, size.height * 0.60,
     );
     path.cubicTo(
-      size.width * 0.60, size.height * 0.58,
-      size.width * 0.60, 0.0,
-      size.width * 0.65, 0.0,
+      size.width * 0.64, size.height * 0.60,
+      size.width * 0.55, 0,
+      size.width * 0.64, 0,
     );
 
-    path.lineTo(size.width - 20.0, 0.0);
-    path.quadraticBezierTo(size.width, 0.0, size.width, size.height * 0.50);
+    // Line to the top-right corner
+    path.lineTo(size.width - cornerRadius, 16);
+    path.quadraticBezierTo(size.width, 18, size.width, cornerRadius);
+
+    // Right side and bottom lines
     path.lineTo(size.width, size.height);
-    path.lineTo(0.0, size.height);
+    path.lineTo(0, size.height);
     path.close();
 
-    canvas.drawShadow(path, Colors.black.withValues(alpha: 0.5), 5.0, true);
+    // Soft Shadow
+    canvas.drawShadow(path, Colors.black.withOpacity(0.12), 8.0, true);
     canvas.drawPath(path, paint);
   }
 
@@ -70,79 +89,63 @@ class CustomBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sw = MediaQuery.of(context).size.width;
-    final sh = MediaQuery.of(context).size.height;
 
-    // Responsive dimensions
-    final double navHeight  = sh * 0.105;
-    final double barHeight  = navHeight * 0.85;
-    final double fabSize    = sw * 0.158;   // ~58px on 360px screen
-    final double iconSize   = sw * 0.065;   // ~23px
-    final double labelSize  = sw * 0.028;   // ~10px
-    final double fabIconSize = sw * 0.090;  // ~32px
+    // Dimensions based on design image
+    final double barHeight = 90.0;
+    final double fabSize = 55.0;
+    final double iconSize = 24.0;
 
     return SizedBox(
-      height: navHeight,
+      height: barHeight + 10,
       child: Stack(
         alignment: Alignment.bottomCenter,
         clipBehavior: Clip.none,
         children: [
-          // Custom painted background
+          // Background Painter
           CustomPaint(
             size: Size(sw, barHeight),
             painter: BottomNavPainter(),
           ),
 
-          // Nav items row
+          // Items Row
           Container(
             height: barHeight,
-            padding: EdgeInsets.symmetric(horizontal: sw * 0.025),
+            padding: const EdgeInsets.symmetric(horizontal: 25),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildNavItem(0, iconSize, labelSize),
-                _buildNavItem(1, iconSize, labelSize),
-                SizedBox(width: fabSize),
-                _buildNavItem(2, iconSize, labelSize),
-                _buildNavItem(3, iconSize, labelSize),
+                _buildNavItem(0, iconSize),
+                _buildNavItem(1, iconSize),
+                SizedBox(width: fabSize + 10), // Notch Space
+                _buildNavItem(2, iconSize),
+                _buildNavItem(3, iconSize),
               ],
             ),
           ),
 
-          // Floating "+" button
+          // Center FAB Button
           Positioned(
-            top: -fabSize * 0.12,
+            top: 0, // Adjusted for perfect notch fit
             child: GestureDetector(
-              onTap: () {
-                if (selectedIndex != 4) {
-                  Get.toNamed(AppRoutes.addvehicles);
-                }
-              },
+              onTap: () => Get.toNamed(AppRoutes.addvehicles),
               child: Container(
                 height: fabSize,
                 width: fabSize,
                 decoration: BoxDecoration(
-                  color: selectedIndex == 4
-                      ? const Color(0xFF0D2D5E)
-                      : const Color(0xFF1B4E9F),
+                  color: const Color(0xFF1B4E9F),
                   shape: BoxShape.circle,
-                  border: Border.all(
-                    color: selectedIndex == 4
-                        ? Colors.lightBlueAccent
-                        : Colors.white,
-                    width: sw * 0.010,
-                  ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.2),
-                      blurRadius: 8,
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 10,
                       offset: const Offset(0, 4),
                     )
                   ],
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.add,
                   color: Colors.white,
-                  size: fabIconSize,
+                  size: 38,
                 ),
               ),
             ),
@@ -152,12 +155,13 @@ class CustomBottomNavBar extends StatelessWidget {
     );
   }
 
-  Widget _buildNavItem(int index, double iconSize, double labelSize) {
+  Widget _buildNavItem(int index, double iconSize) {
     final item = _navItems[index];
     final bool isSelected = selectedIndex == index;
+
     return GestureDetector(
       onTap: () {
-        if (!isSelected) Get.toNamed(item.route);
+        if (!isSelected) Get.offAllNamed(item.route);
       },
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -167,14 +171,15 @@ class CustomBottomNavBar extends StatelessWidget {
             isSelected ? item.activeIcon : item.inactiveIcon,
             height: iconSize,
             width: iconSize,
+            color: isSelected ? const Color(0xFF1B4E9F) : Colors.black54,
           ),
-          const SizedBox(height: 3),
+          const SizedBox(height: 5),
           Text(
             item.label,
             style: TextStyle(
-              fontSize: labelSize,
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              color: isSelected ? const Color(0xFF1B4E9F) : Colors.black54,
+              fontSize: 12,
+              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w700,
+              color: isSelected ? const Color(0xFF1B4E9F) : Color(0xff313131),
             ),
           ),
         ],

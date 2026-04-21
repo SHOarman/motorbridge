@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import '../../../utils/app_text_styles.dart';
 
 class CustomMenuTile extends StatelessWidget {
   final String title;
   final String? subtitle;
   final Widget? leading;
   final VoidCallback onTap;
-  final Color? backgroundColor; // Background color dynamic korar jonno
+  final Color? backgroundColor;
+  final Color? borderColor;
 
   const CustomMenuTile({
     super.key,
@@ -13,7 +15,8 @@ class CustomMenuTile extends StatelessWidget {
     this.subtitle,
     this.leading,
     required this.onTap,
-    this.backgroundColor, // Optional parameter
+    this.backgroundColor,
+    this.borderColor,
   });
 
   @override
@@ -23,7 +26,10 @@ class CustomMenuTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor ?? const Color(0xFFF8FAFC),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        border: Border.all(
+          color: borderColor ?? const Color(0xFFB6C0D1),
+          width: 2,
+        ),
       ),
       child: Material(
         color: Colors.transparent,
@@ -51,10 +57,10 @@ class CustomMenuTile extends StatelessWidget {
                     children: [
                       Text(
                         title,
-                        style: const TextStyle(
+                        style: AppTextStyles.bigText.copyWith(
                           fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF1E293B),
+                          fontWeight: FontWeight.w700,
+                          color: const Color(0xFF2A2A2A),
                         ),
                       ),
                       if (subtitle != null) ...[
