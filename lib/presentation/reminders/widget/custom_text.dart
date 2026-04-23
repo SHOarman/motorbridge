@@ -72,7 +72,6 @@ class CustomReminderCard extends StatelessWidget {
             children: [
               Image.asset(iconPath, height: 40, width: 40),
               const SizedBox(width: 12),
-
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,10 +97,10 @@ class CustomReminderCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(6),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.15), // #000000 এর 15% অপাসিটি
-                                offset: const Offset(0, 4),           // X = 0, Y = 4
-                                blurRadius: 4,                        // Blur = 4
-                                spreadRadius: 0,                      // Spread = 0
+                                color: Colors.black.withOpacity(0.15),
+                                offset: const Offset(0, 4),
+                                blurRadius: 4,
+                                spreadRadius: 0,
                               ),
                             ],
                           ),
@@ -125,7 +124,6 @@ class CustomReminderCard extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-
                     if (expiryStatus != null && expiryStatus!.isNotEmpty) ...[
                       const SizedBox(height: 8),
                       Text(
@@ -170,9 +168,9 @@ class CustomReminderCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   Image.asset(
                     buttonIconPath,
-                    height: 18,
-                    width: 18,
-                    color: customButtonTextColor ?? Colors.white,
+                    height: 30,
+                    width: 30,
+                    color: Colors.white,
                   ),
                 ],
               ),

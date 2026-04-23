@@ -41,7 +41,7 @@ class Splashscreen2 extends StatelessWidget {
                           bgColor.withValues(alpha: 0.2),
                           bgColor,
                         ],
-                        stops:  [0.13, 0.15, 0.4],
+                        stops: [0.13, 0.15, 0.4],
                       ),
                     ),
                   ),
@@ -55,18 +55,30 @@ class Splashscreen2 extends StatelessWidget {
                 children: [
                   Text(
                     "Automatic MOT, Tax &",
-                    style: AppTextStyles.bigText.copyWith(fontSize: 30,fontWeight: FontWeight.w800),
+                    style: AppTextStyles.bigText.copyWith(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                   Row(
                     children: [
-                      Text("Insurance", style: AppTextStyles.bigText.copyWith(fontSize: 30,fontWeight: FontWeight.w800,color: const Color(0xFF154da1))),
+                      Text(
+                        "Insurance",
+                        style: AppTextStyles.bigText.copyWith(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w800,
+                          color: const Color(0xFF154da1),
+                        ),
+                      ),
                       Text(
                         " Reminders",
-                        style: AppTextStyles.bigText.copyWith(color: const Color(0xFF154da1)),
+                        style: AppTextStyles.bigText.copyWith(
+                          color: const Color(0xFF154da1),
+                        ),
                       ),
                     ],
                   ),
-                   SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Text(
                     "We notify you before your important vehicle\ndates expire.",
                     style: AppTextStyles.smallText.copyWith(fontSize: 16),

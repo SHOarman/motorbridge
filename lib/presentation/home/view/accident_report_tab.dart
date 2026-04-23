@@ -91,7 +91,7 @@ class AccidentReportTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Check if controller is already registered, if not, put it
+
     final AccidentReportTabController controller = Get.put(AccidentReportTabController());
 
     final List<Map<String, dynamic>> tabs = [
@@ -132,7 +132,6 @@ class AccidentReportTab extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // Header Section
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Column(
@@ -183,7 +182,7 @@ class AccidentReportTab extends StatelessWidget {
                   ),
                   const SizedBox(height: 15),
                   
-                  // ONLY the Icon Tab area is now a Card
+
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),

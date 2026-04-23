@@ -33,7 +33,7 @@ class AllData extends StatelessWidget {
                 buttonIconPath: 'assets/icon/fluent_share-20-filled.png',
               ),
 
-              SizedBox(height: 10,),
+              SizedBox(height: 10),
 
               CustomReminderCard(
                 dateColor: Color(0xff2A2A2A),
@@ -54,7 +54,7 @@ class AllData extends StatelessWidget {
                 buttonIconPath: 'assets/icon/fluent_share-20-filled.png',
               ),
 
-              SizedBox(height: 10,),
+              SizedBox(height: 10),
 
               CustomReminderCard(
                 dateColor: Color(0xff2A2A2A),
@@ -75,8 +75,7 @@ class AllData extends StatelessWidget {
                 buttonIconPath: 'assets/icon/fluent_share-20-filled.png',
               ),
 
-
-              SizedBox(height: 10,),
+              SizedBox(height: 10),
 
               CustomReminderCard(
                 dateColor: Color(0xff2A2A2A),

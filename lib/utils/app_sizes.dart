@@ -43,7 +43,7 @@ class AppSizes {
   double get homeAppBarHeight => screenHeight * 0.30;
 
   // ─── Padding / margin ──────────────────────────────────────
-  double get pagePadding => screenWidth * 0.05; // ~18–20px
+  double get pagePadding => screenWidth * 0.05;
 
   // ─── Border radius ─────────────────────────────────────────
   double get radiusM => 12.0;
