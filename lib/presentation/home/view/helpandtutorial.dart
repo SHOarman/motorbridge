@@ -68,14 +68,14 @@ class _HelpAndTutorialViewState extends State<HelpAndTutorialView>
                           ),
                         ],
                       ),
-                      IconButton(
-                        onPressed: () => Get.back(),
-                        icon: const Icon(
-                          Icons.close,
-                          color: Colors.white,
-                          size: 28,
-                        ),
-                      ),
+                      // IconButton(
+                      //   onPressed: () => Get.back(),
+                      //   icon: const Icon(
+                      //     Icons.close,
+                      //     color: Colors.white,
+                      //     size: 28,
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
@@ -591,11 +591,11 @@ class _HelpAndTutorialViewState extends State<HelpAndTutorialView>
       "question": "Can I see my total running costs?",
       "answer": "Yes! The Expenses dashboard providing daily, weekly, monthly, and yearly summaries of all your automotive spending.",
     },
-    {
-      "category": "Features",
-      "question": "What is the information carousel?",
-      "answer": "The top carousel on your home screen provides quick, actionable insights like 'All Documents Safe' or 'Action Required for MOT'.",
-    },
+    // {
+    //   "category": "Features",
+    //   "question": "What is the information carousel?",
+    //   "answer": "The top carousel on your home screen provides quick, actionable insights like 'All Documents Safe' or 'Action Required for MOT'.",
+    // },
     {
       "category": "Features",
       "question": "What are the legal warnings about?",

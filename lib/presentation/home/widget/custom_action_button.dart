@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:motorbridge/utils/app_text_styles.dart';
 
 class CustomActionButton extends StatefulWidget {
@@ -42,9 +43,10 @@ class _CustomActionButtonState extends State<CustomActionButton> {
     final double hPad       = sw * 0.050;
     final double vPad       = sh * 0.016;
 
-    final iconWidget = Image.asset(
+    final iconWidget = SvgPicture.asset(
+
       widget.iconPath,
-      width: 22,
+        width: 22,
       height: 22,
       color: widget.contentColor,
     );

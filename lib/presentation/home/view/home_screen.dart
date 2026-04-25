@@ -11,6 +11,7 @@ import 'package:motorbridge/presentation/home/widget/custom_action_button.dart';
 import 'package:motorbridge/presentation/home/widget/custom_action_card.dart';
 import 'package:motorbridge/utils/app_text_styles.dart';
 import 'package:motorbridge/utils/app_sizes.dart';
+import 'package:motorbridge/utils/app_colors.dart';
 import '../../../core/services/controller/home_controller.dart';
 import '../widget/vehiclecard.dart';
 import 'helpandtutorial.dart';
@@ -24,37 +25,37 @@ final List<Map<String, String>> whyChooseData = [
   },
   {
     "title": "All Dates in One Place",
-    "desc": "Track MOT expiry, road tax, and service schedules for all your vehicles from a single dashboard.",
+    "desc": "Track MOT expiry, road tax, insurance renewal, and service schedules for all your vehicles from a single dashboard. No more searching through emails or paperwork.",
     "image": "assets/image/Rectangle 11 (8).png",
     "icon": "assets/icon/uis_calender.png",
   },
   {
     "title": "Stay Road Legal",
-    "desc": "Driving without valid MOT, tax, or insurance can result in fines up to £1,000, points on your licence, or even vehicle seizure.",
+    "desc": "Driving without valid MOT, tax, or insurance can result in fines up to £1,000, points on your licence, or even vehicle seizure. We keep you protected and compliant.",
     "image": "assets/image/Rectangle 11 (9).png",
     "icon": "assets/icon/image 3.png",
   },
   {
     "title": "Digital Document Storage",
-    "desc": "Upload and store all your vehicle documents securely in the cloud. Access certificates anytime, anywhere.",
+    "desc": "Upload and store all your vehicle documents securely in the cloud. Access MOT certificates, insurance papers, and service records anytime, anywhere.",
     "image": "assets/image/Rectangle 11 (10).png",
     "icon": "assets/icon/calendar 1.png",
   },
   {
     "title": "Multi-Vehicle Management",
-    "desc": "Whether you have a car, van, bike, or HGV, manage unlimited vehicles from one account.",
+    "desc": "Whether you have a car, van, bike, or HGV, manage unlimited vehicles from one account. Perfect for families, car enthusiasts, or small businesses.",
     "image": "assets/image/Rectangle 11 (11).png",
     "icon": "assets/icon/calendar 1 (1).png",
   },
   {
     "title": "Access Anywhere",
-    "desc": "Your virtual garage is accessible from any device. Check expiry dates on your phone while at the garage.",
+    "desc": "Your virtual garage is accessible from any device. Check expiry dates on your phone while at the garage, or renew insurance from your laptop at home.",
     "image": "assets/image/Rectangle 11 (12).png",
     "icon": "assets/icon/calendar 1 (2).png",
   },
   {
     "title": "Track Running Costs",
-    "desc": "Monitor all your vehicle expenses including fuel, servicing, MOT, insurance, and repairs.",
+    "desc": "Monitor all your vehicle expenses including fuel, servicing, MOT, insurance, and repairs. See your total spending and average costs per day, week, month, or year to understand your true cost of ownership.",
     "image": "assets/image/Rectangle 11 (13).png",
     "icon": "assets/icon/calendar 1 (3).png",
   },
@@ -72,141 +73,237 @@ class HomeScreen extends GetView<HomeController> {
 
   void showWhyChoosePopup(BuildContext context) {
     int currentIndex = 0;
-    final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
-
-    final dialogPageHeight = screenHeight * 0.52;
-    final imageHeight = screenHeight * 0.20;
-    final headerSpacing = screenHeight * 0.025;
+    final sh = MediaQuery.of(context).size.height;
+    final sw = MediaQuery.of(context).size.width;
+    final imageHeight = sh * 0.20;
 
     Get.dialog(
       Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         backgroundColor: Colors.white,
         insetPadding: EdgeInsets.symmetric(
-          horizontal: screenWidth * 0.04,
-          vertical: screenHeight * 0.03,
+          horizontal: sw * 0.04,
+          vertical: sh * 0.06,
         ),
         child: StatefulBuilder(
           builder: (context, setState) {
-            return SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                      height: dialogPageHeight,
-                      child: PageView.builder(
-                        itemCount: whyChooseData.length,
-                        onPageChanged: (index) => setState(() => currentIndex = index),
-                        itemBuilder: (context, index) {
-                          var item = whyChooseData[index];
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Column(
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // ── Slider area ────────────────────────────────────────
+                SizedBox(
+                  height: sh * 0.50,
+                  child: PageView.builder(
+                    itemCount: whyChooseData.length,
+                    onPageChanged: (i) => setState(() => currentIndex = i),
+                    itemBuilder: (context, index) {
+                      final item = whyChooseData[index];
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Header row
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Flexible(
-                                      child: RichText(
-                                        text: TextSpan(
-                                          style: AppTextStyles.bigText.copyWith(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w800,
-                                            color: Colors.black,
-                                          ),
-                                          children: const [
-                                            TextSpan(text: "Why choose "),
-                                            TextSpan(
-                                              text: "Motor Bridge\nUK?",
-                                              style: TextStyle(color: Color(0xFF1B4E9F)),
-                                            ),
-                                          ],
+                                Flexible(
+                                  child: RichText(
+                                    text: TextSpan(
+                                      style: AppTextStyles.bigText.copyWith(
+                                        fontSize: sw * 0.052,
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.black,
+                                      ),
+                                      children: const [
+                                        TextSpan(text: 'Why choose '),
+                                        TextSpan(
+                                          text: 'Motor Bridge\nUK?',
+                                          style: TextStyle(color: Color(0xFF1B4E9F)),
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                    Container(
-                                      padding: const EdgeInsets.all(6),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
-                                        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 10)],
-                                      ),
-                                      child: Image.asset(item['icon']!, width: 26, height: 26),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: headerSpacing),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFF1B4E9F),
-                                    borderRadius: BorderRadius.circular(20),
                                   ),
-                                  clipBehavior: Clip.antiAlias,
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        color: Colors.white,
-                                        width: double.infinity,
-                                        height: imageHeight,
-                                        margin: const EdgeInsets.all(12),
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(12),
-                                          child: Image.asset(item['image']!, fit: BoxFit.cover),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              item['title']!,
-                                              style: AppTextStyles.bigText.copyWith(fontSize: 16, color: Colors.white),
-                                            ),
-                                            const SizedBox(height: 6),
-                                            Text(
-                                              item['desc']!,
-                                              maxLines: 3,
-                                              style: AppTextStyles.smallText.copyWith(fontSize: 11, color: const Color(0xffD8D8D8)),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
+                                ),
+                                const SizedBox(width: 8),
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFF0F4FA),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Image.asset(
+                                    item['icon']!,
+                                    width: 26,
+                                    height: 26,
                                   ),
                                 ),
                               ],
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(whyChooseData.length, (index) {
-                        return AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          height: 8,
-                          width: currentIndex == index ? 24 : 8,
-                          decoration: BoxDecoration(
-                            color: currentIndex == index ? const Color(0xFF1B4E9F) : Colors.grey[300],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        );
-                      }),
-                    ),
-                  ],
+                            SizedBox(height: sh * 0.022),
+                            // Blue feature card
+                            Expanded(
+                              child: Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF1B4E9F),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                clipBehavior: Clip.antiAlias,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Image
+                                    Container(
+                                      margin: const EdgeInsets.all(12),
+                                      height: imageHeight,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(14),
+                                      ),
+                                      clipBehavior: Clip.antiAlias,
+                                      child: Image.asset(
+                                        item['image']!,
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    // Title + description
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            item['title']!,
+                                            style: AppTextStyles.bigText.copyWith(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 6),
+                                          Text(
+                                            item['desc']!,
+                                            maxLines: 5,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: AppTextStyles.smallText.copyWith(
+                                              fontSize: 11.5,
+                                              color: const Color(0xFFCDD8EC),
+                                              height: 1.5,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
+
+                // ── Page dots ──────────────────────────────────────────
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(whyChooseData.length, (i) {
+                    final active = i == currentIndex;
+                    return AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      height: 8,
+                      width: active ? 26 : 8,
+                      decoration: BoxDecoration(
+                        color: active ? const Color(0xFF1B4E9F) : const Color(0xFFD0DBF0),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    );
+                  }),
+                ),
+
+                // ── Social proof banner ────────────────────────────────
+                const SizedBox(height: 14),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(sw * 0.04, 0, sw * 0.04, 16),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF3F6FB),
+                      borderRadius: BorderRadius.circular(14),
+                      border:Border.all(
+                        color: Color(0xffDDDDDD)
+                      )
+                    ),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 76,
+                          height: 34,
+                          child: Stack(
+                            children: [
+                              _stackedAvatar('assets/image/Ellipse 13.png', 0),
+                              _stackedAvatar('assets/image/Ellipse 14.png', 22),
+                              _stackedAvatar('assets/image/Ellipse 15.png', 44),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: RichText(
+                            text: TextSpan(
+                              style: AppTextStyles.smallText.copyWith(
+                                fontSize: 12,
+                                color: const Color(0xFF444444),
+                              ),
+                              children:  [
+                                TextSpan(
+                                  text: 'Thousands of UK Motorists ',
+                                  style:AppTextStyles.internt.copyWith(
+                                    
+                                  fontSize:14,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xff1B4E9F)
+                                    
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: 'managing their vehicles smarter with Motor Bridge UK',
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             );
           },
+        ),
+      ),
+    );
+  }
+
+  Widget _stackedAvatar(String path, double left) {
+    return Positioned(
+      left: left,
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          // border: Border.all(color: Colors.white, width: 2),
+        ),
+        child: CircleAvatar(
+          radius: 15,
+          backgroundImage: AssetImage(path),
+          backgroundColor: const Color(0xFFD0DBF0),
         ),
       ),
     );
@@ -328,8 +425,8 @@ class HomeScreen extends GetView<HomeController> {
                 const SizedBox(height: 30),
                 CustomActionButton(
                   title: "Motoring Emergencies",
-                  subtitle: "Quick access to emergency contact & insurance details",
-                  iconPath: "assets/icon/Frame (6).png",
+                  subtitle: "Quick access to emergency contact\n & insurance details",
+                  iconPath: "assets/icon/Frame.svg",
                   bgColor: const Color(0xffBD1D1D),
                   contentColor: const Color(0xffFCFDFF),
                   onTap: () => Get.toNamed(AppRoutes.motoringemergencies),
@@ -338,7 +435,7 @@ class HomeScreen extends GetView<HomeController> {
                 CustomActionButton(
                   title: "Visit Motor Bridge UK",
                   subtitle: "All of your motoring solutions",
-                  iconPath: 'assets/icon/Frame (7).png',
+                  iconPath: 'assets/icon/Frame (1).svg',
                   bgColor: const Color(0xFF283593),
                   contentColor: Colors.white,
                   iconAfterText: true,
@@ -363,18 +460,26 @@ class HomeScreen extends GetView<HomeController> {
                   onViewDetails: () => Get.toNamed(AppRoutes.vehicledetails),
                 ),
                 const SizedBox(height: 30),
-                const Text(
-                  "Important: Motor Bridge UK is a reminder tool only...",
-                  style: TextStyle(color: Color(0xff888888), fontSize: 14),
+                Text(
+                  "Important: Motor Bridge UK is a reminder tool only. We accept no liability for missed renewals, fines, or any decisions made using this app. You are solely responsible for maintaining valid MOT, tax, and insurance. Always verify dates with official sources.",
+                  style: AppTextStyles.smallText.copyWith(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.subtleText,
+                  ),
                 ),
                 const SizedBox(height: 15),
-                const Text("© 2026 Motor Bridge UK. All rights reserved.", style: TextStyle(color: Color(0xff888888), fontSize: 14)),
+                Text("© 2026 Motor Bridge UK. All rights reserved.", style: AppTextStyles.smallText.copyWith(fontSize: 14, color: AppColors.subtleText)),
                 const SizedBox(height: 5),
                 GestureDetector(
                   onTap: () => _launchUrl("https://motor-bridge.co.uk"),
-                  child: const Text(
+                  child: Text(
                     "| motor-bridge.co.uk",
-                    style: TextStyle(color: Color(0xff888888), fontSize: 14, decoration: TextDecoration.underline),
+                    style: AppTextStyles.smallText.copyWith(
+                      fontSize: 14,
+                      color: AppColors.subtleText,
+                      decoration: TextDecoration.underline,
+                    ),
                   ),
                 ),
               ],

@@ -10,4 +10,5 @@ class AppColors {
   // App main colors
   static const Color backgroundColor = Color(0xFFFFFFFF);
   static const Color primaryColor = Color(0xFF3876B3);
+  static const Color subtleText = Color(0xFF888888);
 }

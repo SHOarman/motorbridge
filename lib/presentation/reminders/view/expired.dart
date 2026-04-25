@@ -32,7 +32,7 @@ class ExpiredData extends StatelessWidget {
                 badgeBackgroundColor: const Color(0xFFFFD0D0),
                 badgeTextColor: const Color(0xFFFD0909),
                 onButtonPressed: () {},
-                buttonIconPath: 'assets/icon/fluent_share-20-filled.png',
+                buttonIconPath: 'assets/icon/fluent_share-20-filled.svg',
               ),
             ],
           ),

@@ -133,6 +133,13 @@ class MotoringEmergencies extends StatelessWidget {
                   ),
                 ),
               ),
+
+
+              SizedBox(height: 20,),
+
+              Text("Emergency Contacts",style: AppTextStyles.internt.copyWith(
+                fontWeight: FontWeight.w500,fontSize: 24,color: Color(0xff0A0A0A)
+              )),
               const SizedBox(height: 20),
               _buildEmergencyCard(
                 title: "UK Emergency Services",

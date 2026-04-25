@@ -31,7 +31,7 @@ class UpcomingData  extends StatelessWidget {
                 badgeBackgroundColor: const Color(0xFFFFF4D0),
                 badgeTextColor: const Color(0xFFFDC209),
                 onButtonPressed: () {},
-                buttonIconPath: 'assets/icon/fluent_share-20-filled.png',
+                buttonIconPath: 'assets/icon/fluent_share-20-filled.svg',
               ),
               SizedBox(height: 10,),
               CustomReminderCard(
@@ -50,7 +50,7 @@ class UpcomingData  extends StatelessWidget {
                 badgeBackgroundColor: const Color(0xFFFFF4D0),
                 badgeTextColor: const Color(0xFFFDC209),
                 onButtonPressed: () {},
-                buttonIconPath: 'assets/icon/fluent_share-20-filled.png',
+                buttonIconPath: 'assets/icon/fluent_share-20-filled.svg',
               ),
               SizedBox(height: 10,),
               CustomReminderCard(
@@ -70,7 +70,7 @@ class UpcomingData  extends StatelessWidget {
                 badgeBackgroundColor: const Color(0xFFFFF4D0),
                 badgeTextColor: const Color(0xFFFDC209),
                 onButtonPressed: () {},
-                buttonIconPath: 'assets/icon/fluent_share-20-filled.png',
+                buttonIconPath: 'assets/icon/fluent_share-20-filled.svg',
               ),
 
 

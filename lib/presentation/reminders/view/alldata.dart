@@ -30,7 +30,7 @@ class AllData extends StatelessWidget {
                 badgeBackgroundColor: const Color(0xFFFFF4D0),
                 badgeTextColor: const Color(0xFFFDC209),
                 onButtonPressed: () {},
-                buttonIconPath: 'assets/icon/fluent_share-20-filled.png',
+                buttonIconPath: 'assets/icon/fluent_share-20-filled.svg',
               ),
 
               SizedBox(height: 10),
@@ -51,7 +51,7 @@ class AllData extends StatelessWidget {
                 badgeBackgroundColor: const Color(0xFFD0FFDF),
                 badgeTextColor: const Color(0xFF109D59),
                 onButtonPressed: () {},
-                buttonIconPath: 'assets/icon/fluent_share-20-filled.png',
+                buttonIconPath: 'assets/icon/fluent_share-20-filled.svg',
               ),
 
               SizedBox(height: 10),
@@ -72,7 +72,7 @@ class AllData extends StatelessWidget {
                 badgeBackgroundColor: const Color(0xFFFFF4D0),
                 badgeTextColor: const Color(0xFFFDC209),
                 onButtonPressed: () {},
-                buttonIconPath: 'assets/icon/fluent_share-20-filled.png',
+                buttonIconPath: 'assets/icon/fluent_share-20-filled.svg',
               ),
 
               SizedBox(height: 10),
@@ -93,7 +93,7 @@ class AllData extends StatelessWidget {
                 badgeBackgroundColor: const Color(0xFFFFD0D0),
                 badgeTextColor: const Color(0xFFFD0909),
                 onButtonPressed: () {},
-                buttonIconPath: 'assets/icon/fluent_share-20-filled.png',
+                buttonIconPath: 'assets/icon/fluent_share-20-filled.svg',
               ),
             ],
           ),

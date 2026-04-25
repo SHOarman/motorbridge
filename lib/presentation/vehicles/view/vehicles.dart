@@ -39,14 +39,16 @@ class Vehicles extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               VehicleCard(
+                hasBorder: true,
+
                 vehicleName: "Hilux",
                 year: "2026",
                 engineCode: "2GD-FTV",
                 vehicleTag: "Vehicle 2",
                 registrationNumber: "AB12 CDE",
                 vehicleImage: "assets/image/Rectangle_2-removebg-preview.png",
-                registrationColor: const Color(0xffE5EFF9),
-                registrationTextColor: const Color(0xff535353),
+                // registrationColor: const Color(0xffE5EFF9),
+                // registrationTextColor: const Color(0xff535353),
                 onTagTap: () {},
                 onViewDetails: () {
                   Get.toNamed(AppRoutes.vehicledetails);

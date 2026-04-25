@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:motorbridge/utils/app_text_styles.dart';
 
 class CustomReminderCard extends StatelessWidget {
@@ -70,8 +71,14 @@ class CustomReminderCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset(iconPath, height: 40, width: 40),
-              const SizedBox(width: 12),
+              // --- BIG MAIN ICON ---
+              Image.asset(
+                iconPath,
+                height: 55, // Big and prominent
+                width: 55,
+                fit: BoxFit.contain,
+              ),
+              const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,12 +86,14 @@ class CustomReminderCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          title,
-                          style: AppTextStyles.bigText.copyWith(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: titleColor,
+                        Flexible(
+                          child: Text(
+                            title,
+                            style: AppTextStyles.bigText.copyWith(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: titleColor,
+                            ),
                           ),
                         ),
                         Container(
@@ -97,10 +106,9 @@ class CustomReminderCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(6),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.15),
+                                color: Colors.black.withValues(alpha: 0.15),
                                 offset: const Offset(0, 4),
                                 blurRadius: 4,
-                                spreadRadius: 0,
                               ),
                             ],
                           ),
@@ -115,7 +123,7 @@ class CustomReminderCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: 4),
                     Text(
                       "Due: $date",
                       style: AppTextStyles.smallText.copyWith(
@@ -140,10 +148,10 @@ class CustomReminderCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           SizedBox(
             width: double.infinity,
-            height: 48,
+            height: 56, // Increased height to accommodate larger button icon
             child: ElevatedButton(
               onPressed: onButtonPressed,
               style: ElevatedButton.styleFrom(
@@ -151,7 +159,7 @@ class CustomReminderCard extends StatelessWidget {
                 elevation: 0,
                 side: buttonBorder,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
               child: Row(
@@ -162,15 +170,16 @@ class CustomReminderCard extends StatelessWidget {
                     style: AppTextStyles.smallText.copyWith(
                       color: customButtonTextColor ?? Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: 18, // Slightly larger text to match big icon
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  Image.asset(
+                  const SizedBox(width: 12),
+                  // --- BIG BUTTON ICON ---
+                SvgPicture.asset(
                     buttonIconPath,
-                    height: 30,
-                    width: 30,
-                    color: Colors.white,
+                     height: 25, // Scaled up icon
+                     width: 25,
+                    color: customButtonTextColor ?? Colors.white,
                   ),
                 ],
               ),
