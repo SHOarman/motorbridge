@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../utils/app_text_styles.dart';
 
 class HelpAndTutorialView extends StatefulWidget {
@@ -68,14 +69,14 @@ class _HelpAndTutorialViewState extends State<HelpAndTutorialView>
                           ),
                         ],
                       ),
-                      // IconButton(
-                      //   onPressed: () => Get.back(),
-                      //   icon: const Icon(
-                      //     Icons.close,
-                      //     color: Colors.white,
-                      //     size: 28,
-                      //   ),
-                      // ),
+                      IconButton(
+                        onPressed: () => Get.back(),
+                        icon: const Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 28,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -132,12 +133,23 @@ class _HelpAndTutorialViewState extends State<HelpAndTutorialView>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      "support@motorbridge.uk",
-                      style: AppTextStyles.smallText.copyWith(
-                        color: const Color(0xFF10B981),
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
+                    GestureDetector(
+                      onTap: () async {
+                        final Uri emailLaunchUri = Uri(
+                          scheme: 'mailto',
+                          path: 'support@motor-bridge.co.uk',
+                        );
+                        if (await canLaunchUrl(emailLaunchUri)) {
+                          await launchUrl(emailLaunchUri);
+                        }
+                      },
+                      child: Text(
+                        "support@motor-bridge.co.uk",
+                        style: AppTextStyles.smallText.copyWith(
+                          color: const Color(0xFF10B981),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -791,12 +803,23 @@ class _HelpAndTutorialViewState extends State<HelpAndTutorialView>
                               style: AppTextStyles.smallText.copyWith(color: const Color(0xFF2E7D32), fontWeight: FontWeight.w600),
                             ),
                             const SizedBox(height: 4),
-                            Text(
-                              "support@motorbridge.co.uk",
-                              style: AppTextStyles.smallText.copyWith(
-                                color: const Color(0xFF1B5E20),
-                                fontWeight: FontWeight.w800,
-                                decoration: TextDecoration.underline,
+                            GestureDetector(
+                              onTap: () async {
+                                final Uri emailLaunchUri = Uri(
+                                  scheme: 'mailto',
+                                  path: 'support@motor-bridge.co.uk',
+                                );
+                                if (await canLaunchUrl(emailLaunchUri)) {
+                                  await launchUrl(emailLaunchUri);
+                                }
+                              },
+                              child: Text(
+                                "support@motor-bridge.co.uk",
+                                style: AppTextStyles.smallText.copyWith(
+                                  color: const Color(0xFF1B5E20),
+                                  fontWeight: FontWeight.w800,
+                                  decoration: TextDecoration.underline,
+                                ),
                               ),
                             ),
                           ],
