@@ -134,14 +134,12 @@ class _HelpAndTutorialViewState extends State<HelpAndTutorialView>
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     GestureDetector(
-                      onTap: () async {
+                      onTap: () {
                         final Uri emailLaunchUri = Uri(
                           scheme: 'mailto',
                           path: 'support@motor-bridge.co.uk',
                         );
-                        if (await canLaunchUrl(emailLaunchUri)) {
-                          await launchUrl(emailLaunchUri);
-                        }
+                        launchUrl(emailLaunchUri);
                       },
                       child: Text(
                         "support@motor-bridge.co.uk",
@@ -804,14 +802,12 @@ class _HelpAndTutorialViewState extends State<HelpAndTutorialView>
                             ),
                             const SizedBox(height: 4),
                             GestureDetector(
-                              onTap: () async {
+                              onTap: () {
                                 final Uri emailLaunchUri = Uri(
                                   scheme: 'mailto',
                                   path: 'support@motor-bridge.co.uk',
                                 );
-                                if (await canLaunchUrl(emailLaunchUri)) {
-                                  await launchUrl(emailLaunchUri);
-                                }
+                                launchUrl(emailLaunchUri);
                               },
                               child: Text(
                                 "support@motor-bridge.co.uk",
