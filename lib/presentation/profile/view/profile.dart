@@ -1,16 +1,19 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:motorbridge/core/route/app_routes.dart';
 import 'package:motorbridge/general_widget/customtaxbutton.dart';
 import 'package:motorbridge/utils/app_text_styles.dart';
+import '../../../core/services/controller/profile_controller.dart';
 import '../../../general_widget/custom_bottom_nav_bar.dart';
 import '../../../general_widget/customappbar.dart';
 import '../widget/custom_menu_tile.dart';
 
 class Profile extends StatelessWidget {
-  const Profile({super.key});
+  Profile({super.key});
 
-  // ── Log Out confirmation ───────────────────────────────────────────────────
+  final ProfileController controller = Get.put(ProfileController());
+
   void _showLogoutDialog(BuildContext context) {
     Get.dialog(
       AlertDialog(
@@ -102,7 +105,6 @@ class Profile extends StatelessWidget {
     );
   }
 
-  // ── Delete Account confirmation ────────────────────────────────────────────
   void _showDeleteDialog(BuildContext context) {
     Get.dialog(
       AlertDialog(
@@ -169,7 +171,7 @@ class Profile extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     Get.back();
-                    Get.offAllNamed(AppRoutes.singin);
+                    controller.deleteAccount();
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFFF4343),
@@ -204,141 +206,154 @@ class Profile extends StatelessWidget {
         title: "Profile",
         backgroundImage: "assets/image/Image__3_-removebg-preview.png",
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-              Container(
-                width: double.infinity,
-                height: 120,
-                decoration: BoxDecoration(
-                  color: const Color(0xffF6F6F6),
-                  borderRadius: BorderRadius.circular(9),
-                  border: Border.all(color: const Color(0xffB0CEFF), width: 1),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF000000).withValues(alpha: 0.05),
-                      blurRadius: 4,
-                      offset: const Offset(0, 4),
-                      spreadRadius: 2,
-                    ),
-                  ],
-                ),
-                child: Stack(
-                  children: [
-                    Positioned(
-                      left: 20,
-                      top: 20,
-                      child: Image.asset("assets/image/Ellipse 7.png"),
-                    ),
-                    Positioned(
-                      top: 20,
-                      left: 140,
-                      child: Text(
-                        "Tanvir Hasan",
-                        style: AppTextStyles.bigText.copyWith(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xff2A2A2A),
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20),
+                Container(
+                  width: double.infinity,
+                  height: 120,
+                  decoration: BoxDecoration(
+                    color: const Color(0xffF6F6F6),
+                    borderRadius: BorderRadius.circular(9),
+                    border: Border.all(color: const Color(0xffB0CEFF), width: 1),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF000000).withValues(alpha: 0.05),
+                        blurRadius: 4,
+                        offset: const Offset(0, 4),
+                        spreadRadius: 2,
+                      ),
+                    ],
+                  ),
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        left: 20,
+                        top: 20,
+                        child: CircleAvatar(
+                          radius: 40,
+                          backgroundColor: Colors.grey[200],
+                          backgroundImage: controller.profileImageData.value != null
+                              ? MemoryImage(controller.profileImageData.value!)
+                              : const AssetImage("assets/image/Ellipse 7.png") as ImageProvider,
                         ),
                       ),
-                    ),
-                    Positioned(
-                      top: 50,
-                      left: 140,
-                      child: Text(
-                        "tanvirhasan@gmail.com",
-                        style: AppTextStyles.smallText.copyWith(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: const Color(0xff2A2A2A),
+                      Positioned(
+                        top: 20,
+                        left: 120,
+                        child: Text(
+                          controller.fullNameController.text.isEmpty
+                              ? "User Name"
+                              : controller.fullNameController.text,
+                          style: AppTextStyles.bigText.copyWith(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xff2A2A2A),
+                          ),
                         ),
                       ),
-                    ),
-                    Positioned(
-                      top: 70,
-                      left: 140,
-                      child: Text(
-                        "+44 113 529 5112",
-                        style: AppTextStyles.smallText.copyWith(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: const Color(0xff2A2A2A),
+                      Positioned(
+                        top: 50,
+                        left: 120,
+                        child: Text(
+                          controller.emailController.text,
+                          style: AppTextStyles.smallText.copyWith(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: const Color(0xff2A2A2A),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                      Positioned(
+                        top: 70,
+                        left: 120,
+                        child: Text(
+                          controller.phoneController.text.isEmpty
+                              ? "Phone Number"
+                              : controller.phoneController.text,
+                          style: AppTextStyles.smallText.copyWith(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: const Color(0xff2A2A2A),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              CustomButton(
-                text: "Edit Profile",
-                onTap: () => Get.toNamed(AppRoutes.editprofile),
-                imagePath: "assets/icon/Group.svg",
-              ),
-              const SizedBox(height: 20),
-              Text(
-                "My Vehicles",
-                style: AppTextStyles.bigText.copyWith(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
+                const SizedBox(height: 20),
+                CustomButton(
+                  text: "Edit Profile",
+                  onTap: () => Get.toNamed(AppRoutes.editprofile),
+                  imagePath: "assets/icon/Group.svg",
                 ),
-              ),
-              const SizedBox(height: 10),
-              CustomMenuTile(
-                title: "Hilux 2026",
-                subtitle: "2GD-FTV",
-                leading: Image.asset('assets/icon/image 4.png'),
-                onTap: () {},
-              ),
-              CustomMenuTile(
-                borderColor: const Color.fromRGBO(182, 192, 209, 0.43),
-                title: "Notifications",
-                leading: Image.asset("assets/icon/image 4 (1).png"),
-                onTap: () {},
-              ),
-              CustomMenuTile(
-                borderColor: const Color.fromRGBO(182, 192, 209, 0.43),
-                title: "Privacy & Policy",
-                leading: Image.asset("assets/icon/image 4 (2).png"),
-                onTap: () {},
-              ),
-              CustomMenuTile(
-                borderColor: const Color.fromRGBO(182, 192, 209, 0.43),
-                title: "Terms & Conditions",
-                leading: Image.asset("assets/icon/image 4 (3).png"),
-                onTap: () {},
-              ),
-              const SizedBox(height: 10),
-              // ── Log Out ──────────────────────────────────────────────────
-              CustomMenuTile(
-                borderColor: const Color.fromRGBO(255, 67, 67, 0.2),
-                title: "Log Out",
-                leading: Image.asset("assets/icon/material-symbols_logout.png"),
-                onTap: () => _showLogoutDialog(context),
-                backgroundColor: const Color.fromRGBO(255, 67, 67, 0.2),
-              ),
-              const SizedBox(height: 5),
-              // ── Delete Account ───────────────────────────────────────────
-              CustomMenuTile(
-                borderColor: const Color.fromRGBO(255, 67, 67, 0.2),
-                title: "Delete Account",
-                leading: const Icon(
-                  Icons.delete_forever_rounded,
-                  color: Color(0xFFFF4343),
-                  size: 22,
+                const SizedBox(height: 20),
+                Text(
+                  "My Vehicles",
+                  style: AppTextStyles.bigText.copyWith(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-                onTap: () => _showDeleteDialog(context),
-                backgroundColor: const Color.fromRGBO(255, 67, 67, 0.2),
-              ),
-              const SizedBox(height: 30),
-            ],
+                const SizedBox(height: 10),
+                CustomMenuTile(
+                  title: "Hilux 2026",
+                  subtitle: "2GD-FTV",
+                  leading: Image.asset('assets/icon/image 4.png'),
+                  onTap: () {},
+                ),
+                CustomMenuTile(
+                  borderColor: const Color.fromRGBO(182, 192, 209, 0.43),
+                  title: "Notifications",
+                  leading: Image.asset("assets/icon/image 4 (1).png"),
+                  onTap: () {},
+                ),
+                CustomMenuTile(
+                  borderColor: const Color.fromRGBO(182, 192, 209, 0.43),
+                  title: "Privacy & Policy",
+                  leading: Image.asset("assets/icon/image 4 (2).png"),
+                  onTap: () {},
+                ),
+                CustomMenuTile(
+                  borderColor: const Color.fromRGBO(182, 192, 209, 0.43),
+                  title: "Terms & Conditions",
+                  leading: Image.asset("assets/icon/image 4 (3).png"),
+                  onTap: () {},
+                ),
+                const SizedBox(height: 10),
+                CustomMenuTile(
+                  borderColor: const Color.fromRGBO(255, 67, 67, 0.2),
+                  title: "Log Out",
+                  leading: Image.asset("assets/icon/material-symbols_logout.png"),
+                  onTap: () => _showLogoutDialog(context),
+                  backgroundColor: const Color.fromRGBO(255, 67, 67, 0.2),
+                ),
+                const SizedBox(height: 5),
+                CustomMenuTile(
+                  borderColor: const Color.fromRGBO(255, 67, 67, 0.2),
+                  title: "Delete Account",
+                  leading: const Icon(
+                    Icons.delete_forever_rounded,
+                    color: Color(0xFFFF4343),
+                    size: 22,
+                  ),
+                  onTap: () => _showDeleteDialog(context),
+                  backgroundColor: const Color.fromRGBO(255, 67, 67, 0.2),
+                ),
+                const SizedBox(height: 30),
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }

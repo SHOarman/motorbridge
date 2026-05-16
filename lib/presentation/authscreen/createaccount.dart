@@ -9,24 +9,23 @@ import '../../utils/app_colors.dart';
 import '../../utils/app_text_styles.dart';
 
 class Createaccount extends StatelessWidget {
-  const Createaccount({super.key});
+  Createaccount({super.key});
+
+  final AuthController controller = Get.put(AuthController());
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final Authcontroller controller = Get.put(Authcontroller());
-
     return Scaffold(
       appBar: AppBar(
-
-
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Get.back(),
         ),
-
       ),
       body: SingleChildScrollView(
-
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
@@ -57,25 +56,22 @@ class Createaccount extends StatelessWidget {
               CustomTextField(
                 title: "Name",
                 hintText: "Type your name...",
-                controller: TextEditingController(),
+                controller: nameController,
               ),
               const SizedBox(height: 10),
               CustomTextField(
                 title: "Email",
                 hintText: "Enter your mail...",
-                controller: TextEditingController(),
+                controller: emailController,
               ),
               const SizedBox(height: 10),
               CustomTextField(
                 title: "Password",
                 hintText: "**********",
-                controller: TextEditingController(),
+                controller: passwordController,
                 isPassword: true,
               ),
-
               const SizedBox(height: 10),
-
-              //============================= Agree Terms & Conditions ===================================
               Row(
                 children: [
                   Obx(
@@ -112,9 +108,7 @@ class Createaccount extends StatelessWidget {
                     ),
                   ),
                   InkWell(
-                    onTap: () {
-
-                    },
+                    onTap: () {},
                     child: Text(
                       "Terms & Conditions",
                       style: AppTextStyles.smallText.copyWith(
@@ -127,19 +121,32 @@ class Createaccount extends StatelessWidget {
                   ),
                 ],
               ),
-
-              //========================================================================================
               const SizedBox(height: 30),
-              CustomButton(
-                text: "Sign Up",
-                onTap: () {
-                  Get.toNamed(AppRoutes.singin);
-                },
-                backgroundColor: AppColors.primaryColor,
+              Obx(
+                () => CustomButton(
+                  text: "Sign Up",
+                  isLoading: controller.isLoading.value,
+                  onTap: () async {
+                    if (!controller.isAgreed.value) {
+                      Get.snackbar("Error", "Please agree to Terms & Conditions");
+                      return;
+                    }
+                    bool success = await controller.registerUser(
+                      name: nameController.text.trim(),
+                      email: emailController.text.trim(),
+                      password: passwordController.text,
+                    );
+                    if (success) {
+                      Get.toNamed(AppRoutes.verificationcode, arguments: {
+                        'email': emailController.text.trim(),
+                        'fromForgot': false,
+                      });
+                    }
+                  },
+                  backgroundColor: AppColors.primaryColor,
+                ),
               ),
-
               const SizedBox(height: 40),
-
               Row(
                 children: [
                   const Expanded(
@@ -166,7 +173,6 @@ class Createaccount extends StatelessWidget {
                   ),
                 ],
               ),
-
               const SizedBox(height: 40),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -182,7 +188,6 @@ class Createaccount extends StatelessWidget {
                   ),
                 ],
               ),
-
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

@@ -8,6 +8,7 @@ class CustomVehicleField extends StatelessWidget {
   final TextInputType keyboardType;
   final TextStyle? labelStyle;
   final TextStyle? style;
+  final bool readOnly;
 
   const CustomVehicleField({
     super.key,
@@ -17,6 +18,7 @@ class CustomVehicleField extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.labelStyle,
     this.style,
+    this.readOnly = false,
   });
 
   @override
@@ -36,10 +38,11 @@ class CustomVehicleField extends StatelessWidget {
         TextField(
           controller: controller,
           keyboardType: keyboardType,
+          readOnly: readOnly,
           style: style ?? AppTextStyles.bigText.copyWith(
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: Colors.black,
+            color: readOnly ? Colors.grey : Colors.black,
           ),
           decoration: InputDecoration(
             hintText: hintText,
@@ -50,7 +53,7 @@ class CustomVehicleField extends StatelessWidget {
             ),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             filled: true,
-            fillColor: Colors.white,
+            fillColor: readOnly ? const Color(0xffF9F9F9) : Colors.white,
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(color: Color(0xffD0D0D0), width: 1),

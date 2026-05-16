@@ -2,13 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:motorbridge/core/route/app_routes.dart';
 import 'package:motorbridge/general_widget/customtaxbutton.dart';
+import 'package:motorbridge/core/services/controller/authcontroller.dart';
 import 'package:motorbridge/presentation/authscreen/widget/customtextfield.dart';
 import 'package:motorbridge/presentation/authscreen/widget/socialloginbutton.dart';
 import 'package:motorbridge/utils/app_colors.dart';
 import 'package:motorbridge/utils/app_text_styles.dart';
 
 class Singin extends StatelessWidget {
-  const Singin({super.key});
+  Singin({super.key});
+
+  final AuthController controller = Get.put(AuthController());
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -43,13 +48,13 @@ class Singin extends StatelessWidget {
               CustomTextField(
                 title: "Email",
                 hintText: "Enter your mail...",
-                controller: TextEditingController(),
+                controller: emailController,
               ),
               const SizedBox(height: 10),
               CustomTextField(
                 title: "Password",
                 hintText: "**********",
-                controller: TextEditingController(),
+                controller: passwordController,
                 isPassword: true,
               ),
               Align(
@@ -68,16 +73,23 @@ class Singin extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 30),
-              CustomButton(
-                text: "Sign In",
-                onTap: () {
-                  Get.toNamed(AppRoutes.home);
-                },
-                backgroundColor: AppColors.primaryColor,
+              Obx(
+                () => CustomButton(
+                  text: "Sign In",
+                  isLoading: controller.isLoading.value,
+                  onTap: () async {
+                    bool success = await controller.loginUser(
+                      email: emailController.text.trim(),
+                      password: passwordController.text,
+                    );
+                    if (success) {
+                      Get.offAllNamed(AppRoutes.home);
+                    }
+                  },
+                  backgroundColor: AppColors.primaryColor,
+                ),
               ),
               const SizedBox(height: 40),
-
-
               Row(
                 children: [
                   const Expanded(

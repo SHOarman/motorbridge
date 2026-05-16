@@ -6,8 +6,13 @@ import 'package:motorbridge/presentation/authscreen/widget/customtextfield.dart'
 
 import '../../utils/app_text_styles.dart';
 
+import 'package:motorbridge/core/services/controller/authcontroller.dart';
+
 class Forgotpassword extends StatelessWidget {
-  const Forgotpassword({super.key});
+  Forgotpassword({super.key});
+
+  final AuthController controller = Get.find<AuthController>();
+  final TextEditingController emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -52,14 +57,23 @@ class Forgotpassword extends StatelessWidget {
               CustomTextField(
                 title: "Email",
                 hintText: "Enter your mail...",
-                controller: TextEditingController(),
+                controller: emailController,
               ),
               const SizedBox(height: 46),
-              CustomButton(
-                text: "Send Code",
-                onTap: () {
-                  Get.toNamed(AppRoutes.verificationcode);
-                },
+              Obx(
+                () => CustomButton(
+                  text: "Send Code",
+                  isLoading: controller.isLoading.value,
+                  onTap: () async {
+                    bool success = await controller.forgotPassword(email: emailController.text.trim());
+                    if (success) {
+                      Get.toNamed(AppRoutes.verificationcode, arguments: {
+                        'email': emailController.text.trim(),
+                        'fromForgot': true,
+                      });
+                    }
+                  },
+                ),
               ),
             ],
           ),

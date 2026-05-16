@@ -9,6 +9,7 @@ class CustomButton extends StatelessWidget {
   final String? imagePath;
   final Color backgroundColor;
   final Color textColor;
+  final bool isLoading;
 
   const CustomButton({
     super.key,
@@ -17,6 +18,7 @@ class CustomButton extends StatelessWidget {
     this.imagePath,
     this.backgroundColor = const Color(0xFF154da1),
     this.textColor = Colors.white,
+    this.isLoading = false,
   });
 
   @override
@@ -24,15 +26,15 @@ class CustomButton extends StatelessWidget {
     final sw = MediaQuery.of(context).size.width;
     final sh = MediaQuery.of(context).size.height;
 
-    final double fontSize  = sw * 0.042; // ~15px on 360 screen
-    final double iconSize  = sw * 0.050; // ~18px
-    final double vPad      = sh * 0.018; // ~14px on 760 screen
+    final double fontSize = sw * 0.042; // ~15px on 360 screen
+    final double iconSize = sw * 0.050; // ~18px
+    final double vPad = sh * 0.018; // ~14px on 760 screen
 
     return Material(
       color: backgroundColor,
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
-        onTap: onTap,
+        onTap: isLoading ? null : onTap,
         borderRadius: BorderRadius.circular(12),
         child: Container(
           width: double.infinity,
@@ -40,30 +42,39 @@ class CustomButton extends StatelessWidget {
             vertical: vPad,
             horizontal: sw * 0.044,
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                text,
-                style: AppTextStyles.bigText.copyWith(
-                  fontSize: fontSize,
-                  fontWeight: FontWeight.w500,
-                  color: textColor,
+          child: isLoading
+              ? Center(
+                  child: SizedBox(
+                    height: iconSize,
+                    width: iconSize,
+                    child: CircularProgressIndicator(
+                      color: textColor,
+                      strokeWidth: 2,
+                    ),
+                  ),
                 )
-
-              ),
-              if (imagePath != null) ...[
-                SizedBox(width: sw * 0.022),
-                SvgPicture.asset(
-
-                  imagePath!,
-                  height: iconSize,
-                  width: iconSize,
+              : Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      text,
+                      style: AppTextStyles.bigText.copyWith(
+                        fontSize: fontSize,
+                        fontWeight: FontWeight.w500,
+                        color: textColor,
+                      ),
+                    ),
+                    if (imagePath != null) ...[
+                      SizedBox(width: sw * 0.022),
+                      SvgPicture.asset(
+                        imagePath!,
+                        height: iconSize,
+                        width: iconSize,
+                      ),
+                    ],
+                  ],
                 ),
-              ],
-            ],
-          ),
         ),
       ),
     );

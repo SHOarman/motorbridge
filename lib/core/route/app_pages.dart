@@ -33,11 +33,11 @@ class AppPages {
 
     //===========================authscsrn================================================
 
-    GetPage(name: AppRoutes.singin, page: () => const Singin()),
-    GetPage(name: AppRoutes.createaccount, page: () => const Createaccount()),
-    GetPage(name: AppRoutes.forgotpassword, page: () => const Forgotpassword()),
-    GetPage(name: AppRoutes.resetpassword, page: () => const Resetpassword()),
-    GetPage(name: AppRoutes.verificationcode, page: () => const Verificationcode()),
+    GetPage(name: AppRoutes.singin, page: () =>  Singin()),
+    GetPage(name: AppRoutes.createaccount, page: () =>  Createaccount()),
+    GetPage(name: AppRoutes.forgotpassword, page: () =>  Forgotpassword()),
+    GetPage(name: AppRoutes.resetpassword, page: () =>  Resetpassword()),
+    GetPage(name: AppRoutes.verificationcode, page: () =>  Verificationcode()),
 
     //===============================home==================================
     GetPage(
@@ -60,7 +60,7 @@ class AppPages {
 
 
     //=======================================profile======================================================
-    GetPage(name: AppRoutes.profile, page: ()=> const Profile(), transitionDuration: Duration.zero),
-    GetPage(name: AppRoutes.editprofile, page: ()=> const EditProfile(), transitionDuration: Duration.zero),
+    GetPage(name: AppRoutes.profile, page: ()=>  Profile(), transitionDuration: Duration.zero),
+    GetPage(name: AppRoutes.editprofile, page: ()=>  EditProfile(), transitionDuration: Duration.zero),
   ];
 }
