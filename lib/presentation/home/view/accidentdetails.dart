@@ -116,39 +116,38 @@ class AccidentDetailsView extends StatelessWidget {
 
                 const SizedBox(height: 20),
                 // --- FIXED ROW ALIGNMENT ---
+                // --- PERFECT HORIZONTAL ALIGNMENT ---
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.start, // Top align columns
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Weather Conditions",
-                            style: _labelStyle(),
-                            maxLines: 2, // Ensure same space for both
-                          ),
-                          const SizedBox(height: 8),
-                          _buildDropdown(controller.weatherCondition, [
-                            "Clear", "Rainy", "Foggy", "Snowy", "Windy"
-                          ]),
-                        ],
+                      child: Text(
+                        "Weather Conditions",
+                        style: _labelStyle(),
                       ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Road Conditions",
-                            style: _labelStyle(),
-                            maxLines: 2,
-                          ),
-                          const SizedBox(height: 8),
-                          _buildDropdown(controller.roadCondition, [
-                            "Dry", "Wet", "Icy", "Loose Gravel", "Uneven"
-                          ]),
-                        ],
+                      child: Text(
+                        "Road Conditions",
+                        style: _labelStyle(),
                       ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildDropdown(controller.weatherCondition, [
+                        "Clear", "Rainy", "Foggy", "Snowy", "Windy"
+                      ]),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _buildDropdown(controller.roadCondition, [
+                        "Dry", "Wet", "Icy", "Loose Gravel", "Uneven"
+                      ]),
                     ),
                   ],
                 ),
@@ -193,7 +192,9 @@ class AccidentDetailsView extends StatelessWidget {
                 child: SizedBox(
                   height: 56,
                   child: Obx(() {
-                    bool isValid = controller.accidentDate.value.isNotEmpty && controller.location.value.isNotEmpty;
+                    bool isValid = controller.accidentDate.value.isNotEmpty &&
+                        controller.accidentTime.value.isNotEmpty &&
+                        controller.location.value.isNotEmpty;
                     return ElevatedButton(
                       onPressed: isValid ? () => controller.nextTab() : null,
                       style: ElevatedButton.styleFrom(

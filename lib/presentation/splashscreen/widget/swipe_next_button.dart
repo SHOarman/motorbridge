@@ -59,20 +59,24 @@ class SwipeNextButton extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(width: 5),
-
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: List.generate(5, (index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 16),
-                      child: Icon(
-                        Icons.arrow_forward_ios,
-                        size: 20,
-                        color: const Color(0xFF00C853).withValues(alpha: 0.2 + (index * 0.15)),
-                      ),
-                    );
-                  }),
+                Expanded(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: List.generate(5, (index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: Icon(
+                            Icons.arrow_forward_ios,
+                            size: 16,
+                            color: const Color(0xFF00C853).withValues(alpha: 0.2 + (index * 0.15)),
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
                 ),
               ],
             ),

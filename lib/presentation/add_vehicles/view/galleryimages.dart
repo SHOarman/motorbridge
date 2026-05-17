@@ -156,10 +156,14 @@ class GalleryImagesStep extends GetView<AddVehicleController> {
             const SizedBox(height: 40),
             
             // Save Button
-            CustomButton(text: "Save & Continue", onTap: (){
-              Get.snackbar("Success", "Vehicle saved successfully!");
-              Get.toNamed(AppRoutes.home);
-            },backgroundColor: Color(0xff3876B3),),
+            Obx(() => CustomButton(
+                  text: "Save & Continue",
+                  isLoading: controller.isSubmitLoading.value,
+                  onTap: controller.isSubmitLoading.value
+                      ? () {}
+                      : () => controller.submitVehicle(),
+                  backgroundColor: const Color(0xff3876B3),
+                )),
             const SizedBox(height: 30),
           ],
         ),

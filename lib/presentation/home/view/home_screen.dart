@@ -13,6 +13,7 @@ import 'package:motorbridge/utils/app_text_styles.dart';
 import 'package:motorbridge/utils/app_sizes.dart';
 import 'package:motorbridge/utils/app_colors.dart';
 import '../../../core/services/controller/home_controller.dart';
+import '../../../core/services/controller/profile_controller.dart';
 import '../widget/vehiclecard.dart';
 import 'helpandtutorial.dart';
 
@@ -313,6 +314,10 @@ class HomeScreen extends GetView<HomeController> {
   Widget build(BuildContext context) {
     final s = AppSizes(context);
     const Color primaryColor = Color(0xFF1B4E9F);
+    final profileController = Get.isRegistered<ProfileController>()
+        ? Get.find<ProfileController>()
+        : Get.put(ProfileController());
+    profileController.getProfile(showLoader: false);
 
     return Scaffold(
       extendBody: true,
@@ -347,7 +352,12 @@ class HomeScreen extends GetView<HomeController> {
                           child: Image.asset('assets/image/img.png', height: 40, fit: BoxFit.cover),
                         ),
                         const Spacer(),
-                        const Text("Hi Tanvir", style: TextStyle(color: Colors.white, fontSize: 16)),
+                        Obx(() => Text(
+                              profileController.userName.value.isEmpty
+                                  ? "Hi User"
+                                  : "Hi ${profileController.userName.value}",
+                              style: const TextStyle(color: Colors.white, fontSize: 16),
+                            )),
                         const SizedBox(height: 4),
                         const Text("Welcome to your", style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
                         const Row(
@@ -441,24 +451,40 @@ class HomeScreen extends GetView<HomeController> {
                   iconAfterText: true,
                   onTap: () => _launchUrl("https://motor-bridge.co.uk/"),
                 ),
-                const SizedBox(height: 20),
-                Text(
-                  "Added Vehicles",
-                  style: AppTextStyles.bigText.copyWith(fontSize: 22, fontWeight: FontWeight.w500, color: const Color(0xff525252)),
-                ),
-                const SizedBox(height: 10),
-                VehicleCard(
-                  hasBorder: true,
-                  registrationTextColor: const Color(0xff000000),
-                  vehicleName: "Hilux",
-                  year: "2026",
-                  engineCode: "2GD-FTV",
-                  vehicleTag: "Vehicle 1",
-                  registrationNumber: "AB12 CDE",
-                  vehicleImage: "assets/image/Rectangle_2-removebg-preview.png",
-                  onTagTap: () {},
-                  onViewDetails: () => Get.toNamed(AppRoutes.vehicledetails),
-                ),
+                 const SizedBox(height: 20),
+                Obx(() {
+                  if (controller.vehiclesList.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Added Vehicles",
+                        style: AppTextStyles.bigText.copyWith(fontSize: 22, fontWeight: FontWeight.w500, color: const Color(0xff525252)),
+                      ),
+                      const SizedBox(height: 10),
+                      Builder(builder: (context) {
+                        final vehicle = controller.vehiclesList[0];
+                        final List<dynamic> gallery = vehicle['galleryImages'] is List ? vehicle['galleryImages'] : [];
+                        final String imgPath = gallery.isNotEmpty ? gallery[0].toString() : '';
+
+                        return VehicleCard(
+                          hasBorder: true,
+                          registrationTextColor: const Color(0xff000000),
+                          vehicleName: "${vehicle['make'] ?? ''} ${vehicle['model'] ?? ''}",
+                          year: (vehicle['year'] ?? '').toString(),
+                          engineCode: vehicle['engineCode'] ?? '',
+                          vehicleTag: "Vehicle 1",
+                          registrationNumber: vehicle['registration'] ?? '',
+                          vehicleImage: imgPath,
+                          onTagTap: () {},
+                          onViewDetails: () => Get.toNamed(AppRoutes.vehicledetails, arguments: vehicle),
+                        );
+                      }),
+                    ],
+                  );
+                }),
                 const SizedBox(height: 30),
                 Text(
                   "Important: Motor Bridge UK is a reminder tool only. We accept no liability for missed renewals, fines, or any decisions made using this app. You are solely responsible for maintaining valid MOT, tax, and insurance. Always verify dates with official sources.",

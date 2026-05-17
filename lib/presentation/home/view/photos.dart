@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'accident_report_tab.dart';
@@ -122,24 +123,84 @@ class PhotosVideosView extends StatelessWidget {
                 Obx(() {
                   if (controller.accidentPhotos.isEmpty) return const SizedBox();
                   return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 20),
                       const Divider(),
                       const SizedBox(height: 10),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Icon(Icons.check_circle,
-                              color: Color(0xFF00C950), size: 20),
-                          const SizedBox(width: 8),
                           Text(
-                            "${controller.accidentPhotos.length} Photos Taken",
-                            style: AppTextStyles.smallText.copyWith(
-                              fontWeight: FontWeight.w700,
-                              color: const Color(0xFF00C950),
+                            "Selected Photos (${controller.accidentPhotos.length})",
+                            style: AppTextStyles.internt.copyWith(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: const Color(0xFF1E293B),
                             ),
                           ),
+                          Row(
+                            children: [
+                              const Icon(Icons.check_circle,
+                                  color: Color(0xFF00C950), size: 16),
+                              const SizedBox(width: 4),
+                              Text(
+                                "Valid Formats",
+                                style: AppTextStyles.smallText.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: const Color(0xFF00C950),
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
+                      ),
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        height: 90,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: controller.accidentPhotos.length,
+                          itemBuilder: (context, index) {
+                            final photo = controller.accidentPhotos[index];
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 12),
+                              child: Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Image.file(
+                                      File(photo.path),
+                                      width: 90,
+                                      height: 90,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 4,
+                                    right: 4,
+                                    child: GestureDetector(
+                                      onTap: () => controller.accidentPhotos.removeAt(index),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: const BoxDecoration(
+                                          color: Colors.black54,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: const Icon(
+                                          Icons.close,
+                                          color: Colors.white,
+                                          size: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ],
                   );

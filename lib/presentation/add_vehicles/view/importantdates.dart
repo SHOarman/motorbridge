@@ -10,7 +10,7 @@ class ImportantDatesStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(AddVehicleController());
+    final controller = Get.find<AddVehicleController>();
 
     return Scaffold(
       backgroundColor: Colors.white,

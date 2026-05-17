@@ -1,6 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import '../../../core/services/api_sevices/api_services.dart';
 import '../../../utils/app_text_styles.dart';
 
 import 'saftyfast.dart';
@@ -14,6 +20,7 @@ class AccidentReportTabController extends GetxController {
   var selectedIndex = 0.obs;
   var isAccepted = false.obs;
   var completedTabs = <int>{}.obs;
+  var isLoading = false.obs;
 
   void changeTab(int index) {
     selectedIndex.value = index;
@@ -36,7 +43,6 @@ class AccidentReportTabController extends GetxController {
     }
   }
 
-  // Accident Details Form Data
   var accidentDate = "".obs;
   var accidentTime = "".obs;
   var location = "".obs;
@@ -56,6 +62,7 @@ class AccidentReportTabController extends GetxController {
   var partyFullName = "".obs;
   var partyPhone = "".obs;
   var partyEmail = "".obs;
+  var partyAddress = "".obs;
   var partyRegistration = "".obs;
   var partyMake = "".obs;
   var partyModel = "".obs;
@@ -74,12 +81,96 @@ class AccidentReportTabController extends GetxController {
   Future<void> pickImages() async {
     try {
       final ImagePicker picker = ImagePicker();
-      final List<XFile> images = await picker.pickMultiImage();
+      final List<XFile> images = await picker.pickMultiImage(
+        imageQuality: 50, // Compresses image to drastically reduce upload size
+        maxWidth: 1080,   // Limits maximum width to standard high definition width
+      );
       if (images.isNotEmpty) {
         accidentPhotos.addAll(images);
       }
     } catch (e) {
       debugPrint("Error picking images: $e");
+    }
+  }
+
+  var lastErrorMessage = "".obs;
+
+  Future<bool> submitReport() async {
+    try {
+      isLoading.value = true;
+      lastErrorMessage.value = "";
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse(ApiServices.create_Repot),
+      );
+
+      request.headers.addAll({
+        "Authorization": "Bearer $token",
+      });
+
+      if (accidentDate.value.isNotEmpty) request.fields['accidentDetails.date'] = accidentDate.value;
+      if (accidentTime.value.isNotEmpty) request.fields['accidentDetails.time'] = accidentTime.value;
+      if (location.value.isNotEmpty) request.fields['accidentDetails.location'] = location.value;
+      if (whatHappened.value.isNotEmpty) request.fields['accidentDetails.description'] = whatHappened.value;
+      if (weatherCondition.value.isNotEmpty) request.fields['accidentDetails.weatherConditions'] = weatherCondition.value;
+      if (roadCondition.value.isNotEmpty) request.fields['accidentDetails.roadConditions'] = roadCondition.value;
+      if (damageDescription.value.isNotEmpty) request.fields['accidentDetails.damageDescription'] = damageDescription.value;
+      request.fields['accidentDetails.injuries'] = hasInjuries.value.toString();
+      request.fields['accidentDetails.policeAttended'] = policeAttended.value.toString();
+
+      if (partyFullName.value.isNotEmpty) request.fields['thirdParties.fullName'] = partyFullName.value;
+      if (partyPhone.value.isNotEmpty) request.fields['thirdParties.phoneNumber'] = partyPhone.value;
+      if (partyEmail.value.isNotEmpty) request.fields['thirdParties.emailAddress'] = partyEmail.value;
+      if (partyRegistration.value.isNotEmpty) request.fields['thirdParties.registration'] = partyRegistration.value;
+      if (partyMake.value.isNotEmpty) request.fields['thirdParties.make'] = partyMake.value;
+      if (partyModel.value.isNotEmpty) request.fields['thirdParties.model'] = partyModel.value;
+      if (partyInsurance.value.isNotEmpty) request.fields['thirdParties.insuranceCompany'] = partyInsurance.value;
+      if (partyPolicyNumber.value.isNotEmpty) request.fields['thirdParties.policyNumber'] = partyPolicyNumber.value;
+
+      if (witnessFullName.value.isNotEmpty) request.fields['witnesses.fullName'] = witnessFullName.value;
+      if (witnessPhone.value.isNotEmpty) request.fields['witnesses.phoneNumber'] = witnessPhone.value;
+      if (witnessEmail.value.isNotEmpty) request.fields['witnesses.emailAddress'] = witnessEmail.value;
+      if (witnessStatement.value.isNotEmpty) request.fields['witnesses.statement'] = witnessStatement.value;
+
+      // Photos
+      for (var photo in accidentPhotos) {
+        String ext = photo.path.split('.').last.toLowerCase();
+        if (ext != 'jpg' && ext != 'jpeg' && ext != 'png' && ext != 'gif' && ext != 'webp') {
+          ext = 'jpeg'; // Fallback
+        }
+        request.files.add(await http.MultipartFile.fromPath(
+          'scenePhotos',
+          photo.path,
+          contentType: MediaType('image', ext == 'jpg' ? 'jpeg' : ext),
+        ));
+      }
+
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+
+      debugPrint("submitReport status: ${response.statusCode}");
+      debugPrint("submitReport body: ${response.body}");
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      } else {
+        try {
+          var resData = jsonDecode(response.body);
+          lastErrorMessage.value = resData['message'] ?? resData['error'] ?? "Server error: ${response.statusCode}";
+        } catch (_) {
+          lastErrorMessage.value = "Server error: ${response.statusCode}";
+        }
+        return false;
+      }
+    } catch (e) {
+      debugPrint("Error in submitReport: $e");
+      lastErrorMessage.value = "Connection error: $e";
+      return false;
+    } finally {
+      isLoading.value = false;
     }
   }
 

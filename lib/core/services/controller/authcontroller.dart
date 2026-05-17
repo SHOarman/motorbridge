@@ -24,7 +24,7 @@ class AuthController extends GetxController {
     isLoading.value = true;
     try {
       final response = await http.post(
-        Uri.parse("${ApiServices.baseurl}${ApiServices.register}"),
+        Uri.parse(ApiServices.register),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "name": name,
@@ -53,7 +53,7 @@ class AuthController extends GetxController {
     isLoading.value = true;
     try {
       final response = await http.post(
-        Uri.parse("${ApiServices.baseurl}${ApiServices.verif_email}"),
+        Uri.parse(ApiServices.verif_email),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "email": email,
@@ -81,7 +81,7 @@ class AuthController extends GetxController {
     isLoading.value = true;
     try {
       final response = await http.post(
-        Uri.parse("${ApiServices.baseurl}${ApiServices.login}"),
+        Uri.parse(ApiServices.login),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "email": email,
@@ -128,7 +128,7 @@ class AuthController extends GetxController {
     isLoading.value = true;
     try {
       final response = await http.post(
-        Uri.parse("${ApiServices.baseurl}${ApiServices.forgotPassword}"),
+        Uri.parse(ApiServices.forgotPassword),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "email": email
@@ -155,7 +155,7 @@ class AuthController extends GetxController {
     isLoading.value = true;
     try {
       final response = await http.post(
-        Uri.parse("${ApiServices.baseurl}${ApiServices.verify_code}"),
+        Uri.parse(ApiServices.verify_code),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "email": email,
@@ -183,7 +183,7 @@ class AuthController extends GetxController {
     isLoading.value = true;
     try {
       final response = await http.post(
-        Uri.parse("${ApiServices.baseurl}${ApiServices.resetPassword}"),
+        Uri.parse(ApiServices.resetPassword),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "email": email,

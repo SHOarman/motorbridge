@@ -22,7 +22,7 @@ class Splashscreen2 extends StatelessWidget {
                 Image.asset(
                   "assets/image/carbackround2.png",
                   width: MediaQuery.of(context).size.width,
-                  height: 550,
+                  height: 480,
                   fit: BoxFit.cover,
                 ),
                 Positioned(
@@ -31,7 +31,7 @@ class Splashscreen2 extends StatelessWidget {
                   right: 0,
 
                   child: Container(
-                    height: 150,
+                    height: 130,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
@@ -78,7 +78,7 @@ class Splashscreen2 extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: 2),
                   Text(
                     "We notify you before your important vehicle\ndates expire.",
                     style: AppTextStyles.smallText.copyWith(fontSize: 16),

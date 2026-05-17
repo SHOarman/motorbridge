@@ -12,7 +12,9 @@ import '../widget/custom_menu_tile.dart';
 class Profile extends StatelessWidget {
   Profile({super.key});
 
-  final ProfileController controller = Get.put(ProfileController());
+  final ProfileController controller = Get.isRegistered<ProfileController>()
+      ? Get.find<ProfileController>()
+      : Get.put(ProfileController());
 
   void _showLogoutDialog(BuildContext context) {
     Get.dialog(
@@ -200,6 +202,7 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    controller.getProfile(showLoader: false);
     return Scaffold(
       bottomNavigationBar: const CustomBottomNavBar(selectedIndex: 3),
       appBar: CustomAppBar(
@@ -243,16 +246,18 @@ class Profile extends StatelessWidget {
                           backgroundColor: Colors.grey[200],
                           backgroundImage: controller.profileImageData.value != null
                               ? MemoryImage(controller.profileImageData.value!)
-                              : const AssetImage("assets/image/Ellipse 7.png") as ImageProvider,
+                              : (controller.profileImageUrl.value.isNotEmpty
+                                  ? NetworkImage(controller.profileImageUrl.value)
+                                  : const AssetImage("assets/image/Ellipse 7.png")) as ImageProvider,
                         ),
                       ),
                       Positioned(
                         top: 20,
                         left: 120,
                         child: Text(
-                          controller.fullNameController.text.isEmpty
+                          controller.userName.value.isEmpty
                               ? "User Name"
-                              : controller.fullNameController.text,
+                              : controller.userName.value,
                           style: AppTextStyles.bigText.copyWith(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
@@ -264,7 +269,9 @@ class Profile extends StatelessWidget {
                         top: 50,
                         left: 120,
                         child: Text(
-                          controller.emailController.text,
+                          controller.email.value.isEmpty
+                              ? "Email Address"
+                              : controller.email.value,
                           style: AppTextStyles.smallText.copyWith(
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
@@ -276,9 +283,9 @@ class Profile extends StatelessWidget {
                         top: 70,
                         left: 120,
                         child: Text(
-                          controller.phoneController.text.isEmpty
+                          controller.phone.value.isEmpty
                               ? "Phone Number"
-                              : controller.phoneController.text,
+                              : controller.phone.value,
                           style: AppTextStyles.smallText.copyWith(
                             fontSize: 14,
                             fontWeight: FontWeight.w400,

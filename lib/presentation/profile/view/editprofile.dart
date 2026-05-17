@@ -48,7 +48,9 @@ class EditProfile extends StatelessWidget {
                           image: DecorationImage(
                             image: controller.profileImageData.value != null
                                 ? MemoryImage(controller.profileImageData.value!)
-                                : const AssetImage("assets/image/Ellipse 7.png") as ImageProvider,
+                                : (controller.profileImageUrl.value.isNotEmpty
+                                    ? NetworkImage(controller.profileImageUrl.value)
+                                    : const AssetImage("assets/image/Ellipse 7.png")) as ImageProvider,
                             fit: BoxFit.cover,
                           ),
                         ),

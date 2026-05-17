@@ -53,10 +53,7 @@ class _AddVehiclesScreenState extends State<AddVehiclesScreen> {
       appBar: CustomAppBar(
         backgroundImage: "assets/image/Image__3_-removebg-preview.png",
         title: 'Add Vehicle',
-        // leftIcon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
-        // onLeftTap: (){
-        //   Get.back();
-        // },
+
       ),
       body: Column(
         children: [

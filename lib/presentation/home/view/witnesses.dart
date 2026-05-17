@@ -17,7 +17,7 @@ class WitnessesView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
@@ -36,14 +36,19 @@ class WitnessesView extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      "Witness Information",
-                      style: AppTextStyles.internt.copyWith(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xff0A0A0A),
+                    Expanded(
+                      child: Text(
+                        "Witness Information",
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.internt.copyWith(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: const Color(0xff0A0A0A),
+                        ),
                       ),
                     ),
+                    const SizedBox(width: 8),
                     ElevatedButton(
                       onPressed: () {
                         // Logic to add more witnesses could go here

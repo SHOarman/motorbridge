@@ -170,7 +170,7 @@ class VehicleCard extends StatelessWidget {
                   width: double.infinity,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(vehicleImage, fit: BoxFit.contain),
+                    child: _buildVehicleImage(vehicleImage),
                   ),
                 ),
 
@@ -230,5 +230,24 @@ class VehicleCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildVehicleImage(String imagePath) {
+    if (imagePath.isEmpty) {
+      return Image.asset("assets/image/Rectangle_2-removebg-preview.png", fit: BoxFit.contain);
+    }
+    
+    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+      return Image.network(imagePath, fit: BoxFit.contain, errorBuilder: (context, error, stackTrace) {
+        return Image.asset("assets/image/Rectangle_2-removebg-preview.png", fit: BoxFit.contain);
+      });
+    } else if (imagePath.startsWith("/uploads/")) {
+      final String fullUrl = "https://9cx6xd5z-5000.inc1.devtunnels.ms$imagePath";
+      return Image.network(fullUrl, fit: BoxFit.contain, errorBuilder: (context, error, stackTrace) {
+        return Image.asset("assets/image/Rectangle_2-removebg-preview.png", fit: BoxFit.contain);
+      });
+    } else {
+      return Image.asset(imagePath, fit: BoxFit.contain);
+    }
   }
 }

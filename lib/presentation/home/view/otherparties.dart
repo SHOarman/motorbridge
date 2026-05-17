@@ -16,7 +16,7 @@ class OtherPartiesView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
@@ -35,23 +35,43 @@ class OtherPartiesView extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      "Third Party Information",
-                      style: AppTextStyles.bigText.copyWith(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFF1E293B),
+                    Expanded(
+                      child: Text(
+                        "Third Party Information",
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.bigText.copyWith(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: const Color(0xFF1E293B),
+                        ),
                       ),
                     ),
+                    const SizedBox(width: 8),
                     ElevatedButton(
                       onPressed: () {
-
-                        //===================================
+                        if (controller.partyFullName.value.isEmpty ||
+                            controller.partyPhone.value.isEmpty ||
+                            controller.partyRegistration.value.isEmpty) {
+                          Get.snackbar(
+                            "Error",
+                            "Please fill in Name, Phone, and Registration first!",
+                            backgroundColor: Colors.redAccent,
+                            colorText: Colors.white,
+                          );
+                        } else {
+                          Get.snackbar(
+                            "Success",
+                            "Third Party details added successfully!",
+                            backgroundColor: const Color(0xFF00C950),
+                            colorText: Colors.white,
+                          );
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF2563EB),
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 8),
+                            horizontal: 12, vertical: 8),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
                         minimumSize: Size.zero,
@@ -124,6 +144,12 @@ class OtherPartiesView extends StatelessWidget {
                       const SizedBox(height: 8),
                       _buildTextField("john@example.com",
                           (v) => controller.partyEmail.value = v),
+
+                      const SizedBox(height: 16),
+                      _buildLabel("Address"),
+                      const SizedBox(height: 8),
+                      _buildTextField("Enter Address...",
+                          (v) => controller.partyAddress.value = v),
 
                       const SizedBox(height: 16),
                       Row(
@@ -296,3 +322,4 @@ class OtherPartiesView extends StatelessWidget {
     );
   }
 }
+

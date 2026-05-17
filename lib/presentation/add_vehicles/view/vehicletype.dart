@@ -10,14 +10,14 @@ class VehicleTypeStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(AddVehicleController());
+    final controller = Get.find<AddVehicleController>();
 
     final sw = MediaQuery.of(context).size.width;
     final sh = MediaQuery.of(context).size.height;
 
     // Responsive dimensions
-    final double hPad        = sw * 0.050;   // horizontal page padding ~18px
-    final double cardWidth   = (sw - hPad * 2 - 12 * 3) / 4; // 4 cards fit evenly
+    final double hPad        = sw * 0.050;
+    final double cardWidth   = (sw - hPad * 2 - 12 * 3) / 4;
     final double cardHeight  = cardWidth * 0.94;
     final double imgSize     = cardWidth * 0.46;
     final double cardFont    = sw * 0.032;   // ~11–12px
@@ -111,24 +111,35 @@ class VehicleTypeStep extends StatelessWidget {
                 ),
               ),
               SizedBox(width: sw * 0.025),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryColor,
-                  foregroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: sw * 0.038,
-                    vertical: sh * 0.018,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: Text(
-                  "Find Vehicle",
-                  style: TextStyle(fontSize: fieldFont),
-                ),
-              ),
+              Obx(() => ElevatedButton(
+                    onPressed: controller.isDvlaLoading.value
+                        ? null
+                        : () => controller.fetchAndAutofillVehicle(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryColor,
+                      foregroundColor: Colors.white,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: sw * 0.038,
+                        vertical: sh * 0.018,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: controller.isDvlaLoading.value
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : Text(
+                            "Find Vehicle",
+                            style: TextStyle(fontSize: fieldFont),
+                          ),
+                  )),
             ],
           ),
 
@@ -208,9 +219,7 @@ class VehicleTypeStep extends StatelessWidget {
     );
   }
 
-  // ─────────────────────────────────────────────────────────
-  // Vehicle type card
-  // ─────────────────────────────────────────────────────────
+
   Widget _buildVehicleCard({
     required BuildContext context,
     required String type,
