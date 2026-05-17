@@ -14,6 +14,7 @@ import 'package:motorbridge/utils/app_sizes.dart';
 import 'package:motorbridge/utils/app_colors.dart';
 import '../../../core/services/controller/home_controller.dart';
 import '../../../core/services/controller/profile_controller.dart';
+import '../../../core/services/api_sevices/api_services.dart';
 import '../widget/vehiclecard.dart';
 import 'helpandtutorial.dart';
 
@@ -466,8 +467,7 @@ class HomeScreen extends GetView<HomeController> {
                       const SizedBox(height: 10),
                       Builder(builder: (context) {
                         final vehicle = controller.vehiclesList[0];
-                        final List<dynamic> gallery = vehicle['galleryImages'] is List ? vehicle['galleryImages'] : [];
-                        final String imgPath = gallery.isNotEmpty ? gallery[0].toString() : '';
+                        final String imgPath = ApiServices.getFirstImageUrl(vehicle['galleryImages']);
 
                         return VehicleCard(
                           hasBorder: true,

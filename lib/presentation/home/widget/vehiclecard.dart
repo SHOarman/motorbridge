@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:motorbridge/utils/app_sizes.dart';
 import 'package:motorbridge/utils/app_text_styles.dart';
+import 'package:motorbridge/core/services/api_sevices/api_services.dart';
 
 class VehicleCard extends StatelessWidget {
   final String vehicleName;
@@ -48,7 +49,7 @@ class VehicleCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.11),
+            color: Colors.black.withValues(alpha: 0.11),
             blurRadius: 6.6,
             offset: const Offset(0, 4),
             spreadRadius: 0,
@@ -109,7 +110,7 @@ class VehicleCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(6),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.15),
+                        color: Colors.black.withValues(alpha: 0.15),
                         blurRadius: 4,
                         offset: const Offset(0, 4),
                         spreadRadius: 0,
@@ -242,7 +243,7 @@ class VehicleCard extends StatelessWidget {
         return Image.asset("assets/image/Rectangle_2-removebg-preview.png", fit: BoxFit.contain);
       });
     } else if (imagePath.startsWith("/uploads/")) {
-      final String fullUrl = "https://9cx6xd5z-5000.inc1.devtunnels.ms$imagePath";
+      final String fullUrl = "${ApiServices.baseurl}$imagePath";
       return Image.network(fullUrl, fit: BoxFit.contain, errorBuilder: (context, error, stackTrace) {
         return Image.asset("assets/image/Rectangle_2-removebg-preview.png", fit: BoxFit.contain);
       });

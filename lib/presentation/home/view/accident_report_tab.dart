@@ -137,13 +137,15 @@ class AccidentReportTabController extends GetxController {
 
       // Photos
       for (var photo in accidentPhotos) {
-        String ext = photo.path.split('.').last.toLowerCase();
+        String ext = photo.name.split('.').last.toLowerCase();
         if (ext != 'jpg' && ext != 'jpeg' && ext != 'png' && ext != 'gif' && ext != 'webp') {
           ext = 'jpeg'; // Fallback
         }
-        request.files.add(await http.MultipartFile.fromPath(
+        var fileBytes = await photo.readAsBytes();
+        request.files.add(http.MultipartFile.fromBytes(
           'scenePhotos',
-          photo.path,
+          fileBytes,
+          filename: photo.name,
           contentType: MediaType('image', ext == 'jpg' ? 'jpeg' : ext),
         ));
       }

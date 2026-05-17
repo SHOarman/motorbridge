@@ -42,7 +42,7 @@ class AddVehicleCard extends StatelessWidget {
                 height: s.screenWidth * 0.85,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.05),
+                  color: Colors.white.withValues(alpha: 0.05),
                 ),
               ),
             ),
@@ -54,7 +54,7 @@ class AddVehicleCard extends StatelessWidget {
                 height: s.screenWidth * 0.5,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.07),
+                  color: Colors.white.withValues(alpha: 0.07),
                 ),
               ),
             ),
@@ -118,7 +118,7 @@ class AddVehicleCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
+                              color: Colors.black.withValues(alpha: 0.2),
                               blurRadius: 10,
                               offset: const Offset(0, 4),
                             )

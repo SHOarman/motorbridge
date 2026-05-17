@@ -175,11 +175,11 @@ class CustomReminderCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 12),
                   // --- BIG BUTTON ICON ---
-                SvgPicture.asset(
+                  SvgPicture.asset(
                     buttonIconPath,
                      height: 25, // Scaled up icon
                      width: 25,
-                    color: customButtonTextColor ?? Colors.white,
+                    colorFilter: ColorFilter.mode(customButtonTextColor ?? Colors.white, BlendMode.srcIn),
                   ),
                 ],
               ),

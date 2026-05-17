@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -380,11 +379,11 @@ class _HelpAndTutorialViewState extends State<HelpAndTutorialView>
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Color(0xffFFFFFF),
+        color: const Color(0xFFFFFFFF),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Color(0xff2C2F300F),
+            color: const Color(0x0F2C2F30),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),

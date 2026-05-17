@@ -7,9 +7,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:motorbridge/core/route/app_routes.dart';
+import '../api_sevices/api_services.dart';
 
 class AddVehicleController extends GetxController {
-  final String baseUrl = "https://9cx6xd5z-5000.inc1.devtunnels.ms";
+  final String baseUrl = "https://jvmlmf1r-5000.inc1.devtunnels.ms";
 
   var currentStep = 0.obs;
 
@@ -133,12 +134,12 @@ class AddVehicleController extends GetxController {
 
     try {
       isDvlaLoading.value = true;
-      String dvlaUrl = "https://driver-vehicle-licensing.api.gov.uk/vehicle-enquiry/v1/vehicles";
+      String dvlaUrl = ApiServices.find_vehicle;
 
       var response = await http.post(
         Uri.parse(dvlaUrl),
         headers: {
-          "x-api-key": "3DjRFayoUyawqYIZWW9qN3H0fUVKh3Xj5lB0lPOf",
+          "x-api-key": const String.fromEnvironment('DVLA_API_KEY'),
           "Content-Type": "application/json",
         },
         body: jsonEncode({"registrationNumber": regNumber}),
@@ -149,7 +150,7 @@ class AddVehicleController extends GetxController {
 
         makeController.text = data['make'] ?? '';
         selectedYear.value = data['yearOfManufacture']?.toString();
-        selectedFuelType.value = data['fuelType'] != null ? data['fuelType'].toString().toLowerCase().capitalizeFirst : null;
+        selectedFuelType.value = data['fuelType']?.toString().toLowerCase().capitalizeFirst;
         engineSizeController.text = data['engineCapacity'] != null ? "${data['engineCapacity']}cc" : '';
 
         motExpiryDate.value = _formatDvlaDate(data['motExpiryDate']);
@@ -157,69 +158,8 @@ class AddVehicleController extends GetxController {
 
         Get.snackbar("Success", "Vehicle details loaded from DVLA!",
             snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.green, colorText: Colors.white);
-      } else if (response.statusCode == 403 || response.statusCode == 401) {
-        // --- DEVELOPMENT / TEST FALLBACK AUTOFILL ---
-        String regUpper = regNumber.toUpperCase().replaceAll(' ', '');
-        
-        if (regUpper == "RU55TRE") {
-          // Exact BMW data requested by the user
-          makeController.text = "BMW";
-          selectedYear.value = "2016";
-          selectedFuelType.value = "Diesel";
-          selectedBodyType.value = "Sedan";
-          engineSizeController.text = "1995cc";
-          
-          motExpiryDate.value = "05/12/2027"; // From 2027-05-12
-          roadTaxExpiryDate.value = "08/01/2026"; // From 2026-08-01
-        } else if (regUpper == "LC19VVO") {
-          // Exact FORD data from Postman call
-          makeController.text = "FORD";
-          selectedYear.value = "2019";
-          selectedFuelType.value = "Diesel";
-          selectedBodyType.value = "Van";
-          engineSizeController.text = "1995cc";
-          
-          motExpiryDate.value = "06/18/2026"; // From 2026-06-18
-          roadTaxExpiryDate.value = "07/01/2026"; // From 2026-07-01
-        } else {
-          // Deterministic dynamic generator based on registration number hash
-          int hash = regUpper.hashCode;
-          List<String> makes = ['Toyota', 'Ford', 'Honda', 'Mercedes', 'Audi', 'Volkswagen', 'Nissan', 'Hyundai', 'Kia', 'BMW'];
-          List<String> fuelTypes = ['Petrol', 'Diesel', 'Hybrid', 'Electric'];
-          List<String> bodyTypes = ['Sedan', 'Hatchback', 'SUV', 'Coupe', 'Convertible'];
-          
-          String make = makes[hash.abs() % makes.length];
-          String year = (2015 + (hash.abs() % 10)).toString();
-          String fuel = fuelTypes[hash.abs() % fuelTypes.length];
-          String body = bodyTypes[hash.abs() % bodyTypes.length];
-          String engineSize = "${1200 + (hash.abs() % 14) * 100}cc";
-          
-          int motMonth = 1 + (hash.abs() % 12);
-          int motDay = 1 + (hash.abs() % 28);
-          int taxMonth = 1 + ((hash.abs() + 3) % 12);
-          int taxDay = 1 + (hash.abs() % 28);
-          
-          String formatTwoDigits(int val) => val.toString().padLeft(2, '0');
-          
-          makeController.text = make;
-          selectedYear.value = year;
-          selectedFuelType.value = fuel;
-          selectedBodyType.value = body;
-          engineSizeController.text = engineSize;
-          
-          motExpiryDate.value = "${formatTwoDigits(motMonth)}/${formatTwoDigits(motDay)}/2027";
-          roadTaxExpiryDate.value = "${formatTwoDigits(taxMonth)}/${formatTwoDigits(taxDay)}/2026";
-        }
-        
-        // Populate standard dummy dates for other details
-        insuranceExpiryDate.value = "08/20/2026";
-        serviceDueDate.value = "09/05/2026";
-        breakdownExpiryDate.value = "11/30/2026";
-
-        Get.snackbar("Demo Mode", "Autofilled custom vehicle details for $regNumber!",
-            snackPosition: SnackPosition.BOTTOM, backgroundColor: const Color(0xFF2563EB), colorText: Colors.white, duration: const Duration(seconds: 4));
       } else {
-        Get.snackbar("Error", "Vehicle not found",
+        Get.snackbar("Error", "Vehicle not found on server",
             snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.orange, colorText: Colors.white);
       }
     } catch (e) {
@@ -314,9 +254,10 @@ class AddVehicleController extends GetxController {
       request.fields['engineCode'] = engineCodeController.text.trim();
 
       for (var file in galleryImages) {
-        var multipartFile = await http.MultipartFile.fromPath(
+        var fileBytes = await file.readAsBytes();
+        var multipartFile = http.MultipartFile.fromBytes(
           'galleryImages',
-          file.path,
+          fileBytes,
           filename: file.name,
           contentType: MediaType('image', 'jpeg'),
         );
@@ -329,7 +270,7 @@ class AddVehicleController extends GetxController {
       if (response.statusCode == 200 || response.statusCode == 201) {
         Get.snackbar("Success", "Vehicle created successfully!",
             snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.green, colorText: Colors.white);
-        
+
         Future.delayed(const Duration(seconds: 1), () {
           Get.offAllNamed(AppRoutes.home);
         });
@@ -345,15 +286,4 @@ class AddVehicleController extends GetxController {
     }
   }
 
-  @override
-  void onClose() {
-    registrationController.dispose();
-    makeController.dispose();
-    modelController.dispose();
-    vinController.dispose();
-    v5cController.dispose();
-    engineSizeController.dispose();
-    engineCodeController.dispose();
-    super.onClose();
-  }
 }

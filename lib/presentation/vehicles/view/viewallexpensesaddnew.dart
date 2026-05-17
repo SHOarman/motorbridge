@@ -113,7 +113,7 @@ class _ViewAllExpensesAddNewState extends State<ViewAllExpensesAddNew> {
                           Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.1),
+                              color: Colors.white.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: const Icon(Icons.directions_car, color: Colors.white, size: 28),
@@ -132,7 +132,7 @@ class _ViewAllExpensesAddNewState extends State<ViewAllExpensesAddNew> {
                               Text(
                                 "2024",
                                 style: AppTextStyles.smallText.copyWith(
-                                  color: Colors.white.withOpacity(0.7),
+                                  color: Colors.white.withValues(alpha: 0.7),
                                 ),
                               ),
                             ],
@@ -170,13 +170,13 @@ class _ViewAllExpensesAddNewState extends State<ViewAllExpensesAddNew> {
                     borderRadius: BorderRadius.circular(24),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Colors.black.withValues(alpha: 0.1),
                         offset: const Offset(0, 2),
                         blurRadius: 4,
                         spreadRadius: -2,
                       ),
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Colors.black.withValues(alpha: 0.1),
                         offset: const Offset(0, 4),
                         blurRadius: 6,
                         spreadRadius: -1,
@@ -502,7 +502,7 @@ class _DashedLinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     double dashWidth = 3, dashSpace = 3, startX = 0;
-    final paint = Paint()..color = Colors.grey.withOpacity(0.1)..strokeWidth = 1;
+    final paint = Paint()..color = Colors.grey.withValues(alpha: 0.1)..strokeWidth = 1;
     while (startX < size.width) {
       canvas.drawLine(Offset(startX, 0), Offset(startX + dashWidth, 0), paint);
       startX += dashWidth + dashSpace;

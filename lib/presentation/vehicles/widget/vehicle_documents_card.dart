@@ -2,21 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:motorbridge/utils/app_text_styles.dart';
 
 class VehicleDocumentsCard extends StatelessWidget {
+  final List<dynamic> documents;
+  final bool isLoading;
   final VoidCallback onAddTap;
-  final Function(String) onViewTap;
+  final Function(Map<String, dynamic>) onViewTap;
 
   const VehicleDocumentsCard({
     super.key,
+    required this.documents,
+    required this.isLoading,
     required this.onAddTap,
     required this.onViewTap,
   });
+
+  String? getFileUrl(Map<String, dynamic> doc) {
+    if (doc['files'] is List && (doc['files'] as List).isNotEmpty) {
+      final first = doc['files'][0];
+      if (first is String) return first;
+      if (first is Map) return first['url']?.toString() ?? first['path']?.toString();
+    }
+    if (doc['files'] is String) return doc['files'];
+    if (doc['file'] is String) return doc['file'];
+    if (doc['url'] is String) return doc['url'];
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
-      // margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
@@ -41,15 +56,54 @@ class VehicleDocumentsCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          DocumentItem(
-            title: "MOT Certificate",
-            onViewTap: () => onViewTap("MOT Certificate"),
-          ),
-          const SizedBox(height: 12),
-          DocumentItem(
-            title: "Insurance Certificate",
-            onViewTap: () => onViewTap("Insurance Certificate"),
-          ),
+          if (isLoading) ...[
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 20),
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF1B4E9F)),
+                ),
+              ),
+            ),
+          ] else if (documents.isEmpty) ...[
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 24),
+                child: Column(
+                  children: [
+                    Icon(Icons.folder_open, size: 48, color: Colors.grey.shade400),
+                    const SizedBox(height: 8),
+                    Text(
+                      "No documents uploaded for this vehicle",
+                      style: AppTextStyles.smallText.copyWith(
+                        color: Colors.grey.shade600,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ] else ...[
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: documents.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 12),
+              itemBuilder: (context, index) {
+                final Map<String, dynamic> doc = Map<String, dynamic>.from(documents[index]);
+                final title = doc['title']?.toString() ?? 'Unnamed Document';
+                final fileUrl = getFileUrl(doc) ?? '';
+                final isPdf = fileUrl.toLowerCase().endsWith('.pdf') || title.toLowerCase().contains('pdf');
+
+                return DocumentItem(
+                  title: title,
+                  isPdf: isPdf,
+                  onViewTap: () => onViewTap(doc),
+                );
+              },
+            ),
+          ],
           const SizedBox(height: 20),
           SizedBox(
             width: double.infinity,
@@ -88,11 +142,13 @@ class VehicleDocumentsCard extends StatelessWidget {
 
 class DocumentItem extends StatelessWidget {
   final String title;
+  final bool isPdf;
   final VoidCallback onViewTap;
 
   const DocumentItem({
     super.key,
     required this.title,
+    required this.isPdf,
     required this.onViewTap,
   });
 
@@ -108,15 +164,15 @@ class DocumentItem extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
             decoration: BoxDecoration(
-              color: const Color(0xffFFEBEE),
+              color: isPdf ? const Color(0xffFFEBEE) : const Color(0xffE3F2FD),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Text(
-              "PDF",
+            child: Text(
+              isPdf ? "PDF" : "IMG",
               style: TextStyle(
-                color: Color(0xffE53935),
+                color: isPdf ? const Color(0xffE53935) : const Color(0xff1976D2),
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
               ),

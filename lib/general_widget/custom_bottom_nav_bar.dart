@@ -14,7 +14,6 @@ class BottomNavPainter extends CustomPainter {
 
     double cornerRadius = 35.0;
     double notchStart = size.width * 0.35;
-    double notchEnd = size.width * 0.65;
 
     // Start from bottom left
     path.moveTo(0, size.height);
@@ -51,7 +50,7 @@ class BottomNavPainter extends CustomPainter {
     path.close();
 
     // Soft Shadow
-    canvas.drawShadow(path, Colors.black.withOpacity(0.12), 8.0, true);
+    canvas.drawShadow(path, Colors.black.withValues(alpha: 0.12), 8.0, true);
     canvas.drawPath(path, paint);
   }
 
@@ -136,7 +135,7 @@ class CustomBottomNavBar extends StatelessWidget {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
+                      color: Colors.black.withValues(alpha: 0.2),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     )

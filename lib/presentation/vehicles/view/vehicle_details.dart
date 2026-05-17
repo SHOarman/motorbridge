@@ -5,6 +5,7 @@ import 'package:motorbridge/general_widget/customappbar.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:motorbridge/presentation/vehicles/widget/running_costs_card.dart';
 import 'package:motorbridge/presentation/vehicles/widget/vehicle_documents_card.dart';
 import 'package:motorbridge/utils/app_text_styles.dart';
@@ -26,6 +27,9 @@ class _VehicleDetailsState extends State<VehicleDetails> {
   late Map<String, dynamic> vehicle;
   bool isEditing = true;
   bool isSaving = false;
+
+  List<dynamic> documents = [];
+  bool isLoadingDocs = false;
 
   late TextEditingController makeController;
   late TextEditingController modelController;
@@ -55,6 +59,115 @@ class _VehicleDetailsState extends State<VehicleDetails> {
     fuelTypeController = TextEditingController(text: vehicle['fuelType']?.toString() ?? '');
     bodyTypeController = TextEditingController(text: vehicle['bodyType']?.toString() ?? '');
     engineCodeController = TextEditingController(text: vehicle['engineCode']?.toString() ?? '');
+
+    fetchDocuments();
+  }
+
+  Future<void> fetchDocuments() async {
+    setState(() {
+      isLoadingDocs = true;
+    });
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+      String vehicleId = vehicle['id'] ?? vehicle['_id'] ?? '';
+      
+      final response = await http.get(
+        Uri.parse(ApiServices.get_document),
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      );
+
+      debugPrint("Fetch documents status: ${response.statusCode}");
+      debugPrint("Fetch documents body: ${response.body}");
+
+      debugPrint("fetchDocuments vehicleId: '$vehicleId', vehicle Keys: ${vehicle.keys.toList()}");
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['success'] == true && data['data'] != null) {
+          final List<dynamic> allDocs = data['data'];
+          
+          setState(() {
+            documents = allDocs.where((doc) {
+              final v = doc['vehicle'] ?? doc['vehicleId'];
+              if (v == null) {
+                // Strictly do not show if not associated with a specific vehicle
+                return false;
+              }
+              
+              String docVehicleId = '';
+              if (v is Map) {
+                docVehicleId = (v['id'] ?? v['_id'] ?? '').toString();
+              } else {
+                docVehicleId = v.toString();
+              }
+              
+              final targetVehicleId = vehicleId.trim();
+              final sourceVehicleId = docVehicleId.trim();
+              
+              debugPrint("Comparing doc title '${doc['title']}' vehicle: '$sourceVehicleId' with target: '$targetVehicleId'");
+              
+              return sourceVehicleId.isNotEmpty && 
+                     targetVehicleId.isNotEmpty && 
+                     sourceVehicleId.toLowerCase() == targetVehicleId.toLowerCase();
+            }).toList();
+          });
+        }
+      }
+    } catch (e) {
+      debugPrint("Error fetching documents: $e");
+    } finally {
+      setState(() {
+        isLoadingDocs = false;
+      });
+    }
+  }
+
+  Future<void> viewDocument(Map<String, dynamic> doc) async {
+    String? fileUrl;
+    if (doc['files'] is List && (doc['files'] as List).isNotEmpty) {
+      final first = doc['files'][0];
+      if (first is String) fileUrl = first;
+      if (first is Map) fileUrl = first['url']?.toString() ?? first['path']?.toString();
+    } else if (doc['files'] is String) {
+      fileUrl = doc['files'];
+    } else if (doc['file'] is String) {
+      fileUrl = doc['file'];
+    } else if (doc['url'] is String) {
+      fileUrl = doc['url'];
+    }
+
+    if (fileUrl == null || fileUrl.isEmpty) {
+      Get.snackbar("Error", "No document link available",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
+      return;
+    }
+
+    String fullFileUrl = fileUrl;
+    if (fileUrl.startsWith('/uploads/')) {
+      fullFileUrl = "${ApiServices.baseurl}$fileUrl";
+    }
+
+    try {
+      final uri = Uri.parse(fullFileUrl);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else {
+        Get.snackbar("Error", "Could not open document link",
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white);
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong opening the link: $e",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
+    }
   }
 
   @override
@@ -97,8 +210,8 @@ class _VehicleDetailsState extends State<VehicleDetails> {
         }),
       );
 
-      print("Update vehicle status: ${response.statusCode}");
-      print("Update vehicle response: ${response.body}");
+      debugPrint("Update vehicle status: ${response.statusCode}");
+      debugPrint("Update vehicle response: ${response.body}");
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         Get.snackbar("Success", "Vehicle updated successfully!",
@@ -173,7 +286,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
         return Image.asset("assets/image/Rectangle_2-removebg-preview.png", fit: BoxFit.contain);
       });
     } else if (imagePath.startsWith("/uploads/")) {
-      final String fullUrl = "https://9cx6xd5z-5000.inc1.devtunnels.ms$imagePath";
+      final String fullUrl = "${ApiServices.baseurl}$imagePath";
       return Image.network(fullUrl, fit: BoxFit.contain, errorBuilder: (context, error, stackTrace) {
         return Image.asset("assets/image/Rectangle_2-removebg-preview.png", fit: BoxFit.contain);
       });
@@ -187,8 +300,16 @@ class _VehicleDetailsState extends State<VehicleDetails> {
     final s = AppSizes(context);
     const Color primaryColor = Color(0xFF1B4E9F);
 
-    final List<dynamic> gallery = vehicle['galleryImages'] is List ? vehicle['galleryImages'] : [];
-    final String imgPath = gallery.isNotEmpty ? gallery[0].toString() : '';
+    final String imgPath = ApiServices.getFirstImageUrl(vehicle['galleryImages']);
+
+    final homeController = Get.isRegistered<HomeController>()
+        ? Get.find<HomeController>()
+        : Get.put(HomeController());
+
+    final vehicleIndex = homeController.vehiclesList.indexWhere(
+      (v) => (v['id'] ?? v['_id'] ?? '').toString() == (vehicle['id'] ?? vehicle['_id'] ?? '').toString()
+    );
+    final String vehicleTag = vehicleIndex != -1 ? "Vehicle ${vehicleIndex + 1}" : "Vehicle 1";
 
     // Badges
     final motStyles = getBadgeStyles(vehicle['expiryStatus']?['motExpiry']?['status']?.toString());
@@ -245,7 +366,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                           color: const Color(0xffFFF4D0),
                         ),
                         child: Text(
-                          "Vehicle 1",
+                          vehicleTag,
                           style: AppTextStyles.smallText.copyWith(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -502,11 +623,15 @@ class _VehicleDetailsState extends State<VehicleDetails> {
               ),
               const SizedBox(height: 20),
               VehicleDocumentsCard(
-                onAddTap: () {
-                  Get.toNamed(AppRoutes.addDocuments);
+                documents: documents,
+                isLoading: isLoadingDocs,
+                onAddTap: () async {
+                  String vehicleId = vehicle['id'] ?? vehicle['_id'] ?? '';
+                  await Get.toNamed(AppRoutes.addDocuments, arguments: vehicleId);
+                  fetchDocuments();
                 },
-                onViewTap: (String p1) {
-                  debugPrint(p1);
+                onViewTap: (doc) {
+                  viewDocument(doc);
                 },
               ),
               const SizedBox(height: 30),

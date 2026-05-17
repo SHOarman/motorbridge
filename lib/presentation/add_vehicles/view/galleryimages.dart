@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dotted_border/dotted_border.dart';
-import 'package:motorbridge/core/route/app_routes.dart';
 import 'package:motorbridge/core/services/controller/add_vehicle_controller.dart';
 
 

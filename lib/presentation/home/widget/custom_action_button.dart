@@ -37,18 +37,11 @@ class _CustomActionButtonState extends State<CustomActionButton> {
     final sw = MediaQuery.of(context).size.width;
     final sh = MediaQuery.of(context).size.height;
 
-    final double iconSize   = sw * 0.050;  // ~18px
-    final double titleSize  = sw * 0.042;  // ~15px
-    final double subSize    = sw * 0.030;  // ~11px
-    final double hPad       = sw * 0.050;
-    final double vPad       = sh * 0.016;
-
     final iconWidget = SvgPicture.asset(
-
       widget.iconPath,
-        width: 22,
+      width: 22,
       height: 22,
-      color: widget.contentColor,
+      colorFilter: ColorFilter.mode(widget.contentColor, BlendMode.srcIn),
     );
 
     return GestureDetector(

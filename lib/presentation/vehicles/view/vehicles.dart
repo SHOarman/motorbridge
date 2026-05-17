@@ -5,6 +5,7 @@ import '../../../general_widget/custom_bottom_nav_bar.dart';
 import '../../../general_widget/customappbar.dart';
 import '../../home/widget/vehiclecard.dart';
 import '../../../core/services/controller/home_controller.dart';
+import '../../../core/services/api_sevices/api_services.dart';
 
 class Vehicles extends StatelessWidget {
   const Vehicles({super.key});
@@ -42,8 +43,7 @@ class Vehicles extends StatelessWidget {
                 const SizedBox(height: 10),
                 ...List.generate(controller.vehiclesList.length, (index) {
                   final vehicle = controller.vehiclesList[index];
-                  final List<dynamic> gallery = vehicle['galleryImages'] is List ? vehicle['galleryImages'] : [];
-                  final String imgPath = gallery.isNotEmpty ? gallery[0].toString() : '';
+                  final String imgPath = ApiServices.getFirstImageUrl(vehicle['galleryImages']);
 
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 15),

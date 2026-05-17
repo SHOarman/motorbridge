@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -57,8 +57,8 @@ class HomeController extends GetxController {
         headers: {"Authorization": "Bearer $token"},
       );
 
-      print("fetchVehicles status: ${response.statusCode}");
-      print("fetchVehicles body: ${response.body}");
+      debugPrint("fetchVehicles status: ${response.statusCode}");
+      debugPrint("fetchVehicles body: ${response.body}");
 
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
@@ -67,7 +67,7 @@ class HomeController extends GetxController {
         }
       }
     } catch (e) {
-      print("Error fetching vehicles: $e");
+      debugPrint("Error fetching vehicles: $e");
     } finally {
       isLoading.value = false;
     }

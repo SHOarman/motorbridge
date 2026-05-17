@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart';
 import 'package:motorbridge/core/route/app_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http_parser/http_parser.dart';
@@ -26,6 +26,7 @@ class ProfileController extends GetxController {
   var isLoading = false.obs;
   var profileImageData = Rxn<Uint8List>();
   File? selectedImageFile;
+  XFile? selectedXFile;
   String userId = "";
 
   final ImagePicker _picker = ImagePicker();
@@ -39,7 +40,10 @@ class ProfileController extends GetxController {
   Future<void> pickProfileImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
-      selectedImageFile = File(image.path);
+      selectedXFile = image;
+      if (!kIsWeb) {
+        selectedImageFile = File(image.path);
+      }
       profileImageData.value = await image.readAsBytes();
     }
   }
@@ -72,8 +76,8 @@ class ProfileController extends GetxController {
         },
       );
 
-      print("getProfile status: ${response.statusCode}");
-      print("getProfile body: ${response.body}");
+      debugPrint("getProfile status: ${response.statusCode}");
+      debugPrint("getProfile body: ${response.body}");
 
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
@@ -109,7 +113,7 @@ class ProfileController extends GetxController {
         }
       }
     } catch (e) {
-      print("Error in getProfile: $e");
+      debugPrint("Error in getProfile: $e");
     } finally {
       if (showLoader) {
         isLoading.value = false;
@@ -142,14 +146,15 @@ class ProfileController extends GetxController {
       request.fields['address'] = addressController.text;
       request.fields['city'] = cityController.text;
 
-      if (selectedImageFile != null) {
-        String ext = selectedImageFile!.path.split('.').last.toLowerCase();
+      if (profileImageData.value != null && selectedXFile != null) {
+        String ext = selectedXFile!.name.split('.').last.toLowerCase();
         if (ext != 'jpg' && ext != 'jpeg' && ext != 'png' && ext != 'gif' && ext != 'webp') {
           ext = 'jpeg'; // Fallback to jpeg if extension is unrecognized
         }
-        request.files.add(await http.MultipartFile.fromPath(
+        request.files.add(http.MultipartFile.fromBytes(
           'profileImage',
-          selectedImageFile!.path,
+          profileImageData.value!,
+          filename: selectedXFile!.name,
           contentType: MediaType('image', ext == 'jpg' ? 'jpeg' : ext),
         ));
       }
@@ -157,8 +162,8 @@ class ProfileController extends GetxController {
       var streamedResponse = await request.send();
       var response = await http.Response.fromStream(streamedResponse);
 
-      print("saveProfile status: ${response.statusCode}");
-      print("saveProfile body: ${response.body}");
+      debugPrint("saveProfile status: ${response.statusCode}");
+      debugPrint("saveProfile body: ${response.body}");
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         Get.snackbar("Success", "Profile updated successfully");
@@ -178,7 +183,7 @@ class ProfileController extends GetxController {
         Get.snackbar("Error", errorMsg);
       }
     } catch (e) {
-      print("Error in saveProfile: $e");
+      debugPrint("Error in saveProfile: $e");
       Get.snackbar("Error", "Something went wrong");
     } finally {
       isLoading.value = false;
@@ -206,14 +211,10 @@ class ProfileController extends GetxController {
         Get.toNamed(AppRoutes.home);
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {
       isLoading.value = false;
     }
   }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 }

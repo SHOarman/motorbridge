@@ -44,8 +44,8 @@ class Splashscreen1 extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.white.withOpacity(0.0),
-                    const Color(0xfff3f6f8).withOpacity(0.8),
+                    Colors.white.withValues(alpha: 0.0),
+                    const Color(0xfff3f6f8).withValues(alpha: 0.8),
                     const Color(0xfff3f6f8),
                   ],
 

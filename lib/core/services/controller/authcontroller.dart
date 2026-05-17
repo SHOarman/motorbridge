@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -89,7 +90,7 @@ class AuthController extends GetxController {
         }),
       );
 
-      print("Response Body: ${response.body}");
+      debugPrint("Response Body: ${response.body}");
 
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
@@ -99,9 +100,9 @@ class AuthController extends GetxController {
           token = responseData['data']['accessToken'];
         }
 
-        print("================ User Token ================");
-        print(token.isEmpty ? "Token missing in response structure" : token);
-        print("============================================");
+        debugPrint("================ User Token ================");
+        debugPrint(token.isEmpty ? "Token missing in response structure" : token);
+        debugPrint("============================================");
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', token);

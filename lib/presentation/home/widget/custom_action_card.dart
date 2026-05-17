@@ -25,7 +25,6 @@ class CustomActionCard extends StatelessWidget {
 
     final double cardHeight = sh * 0.052;   // ~40px on 760px screen
     final double iconSize   = sw * 0.052;   // ~19px on 360px screen
-    final double fontSize   = sw * 0.038;   // ~14px on 360px screen
 
     return Container(
       height: cardHeight,
@@ -34,7 +33,7 @@ class CustomActionCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(7),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.15),
+            color: Colors.black.withValues(alpha: 0.15),
             blurRadius: 4,
             offset: const Offset(0, 4),
           )

@@ -29,9 +29,10 @@ class AddDocument extends GetView<AddDocumentController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
-              const CustomVehicleField(
+              CustomVehicleField(
                 label: "Document Label",
                 hintText: "e.g., MOT Certificate , Insurance",
+                controller: controller.titleController,
               ),
               const SizedBox(height: 10),
               const Text(
@@ -43,47 +44,88 @@ class AddDocument extends GetView<AddDocumentController> {
                 ),
               ),
               const SizedBox(height: 12),
-              Obx(() => GestureDetector(
-                    onTap: () => controller.pickFile(),
-                    child: DottedBorder(
-                      color: const Color(0xffD0D0D0),
-                      strokeWidth: 1,
-                      dashPattern: const [6, 3],
-                      borderType: BorderType.RRect,
-                      radius: const Radius.circular(12),
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(vertical: 40),
-                        child: Column(
-                          children: [
-                            Icon(
-                              controller.selectedFile.value == null
-                                  ? Icons.file_upload_outlined
-                                  : Icons.insert_drive_file_outlined,
+              Obx(() {
+                final file = controller.selectedFile.value;
+                final bytes = controller.fileBytes.value;
+                final isPdf = file != null && file.name.toLowerCase().endsWith('.pdf');
+
+                return GestureDetector(
+                  onTap: () => controller.pickFile(),
+                  child: DottedBorder(
+                    color: const Color(0xffD0D0D0),
+                    strokeWidth: 1,
+                    dashPattern: const [6, 3],
+                    borderType: BorderType.RRect,
+                    radius: const Radius.circular(12),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 16),
+                      child: Column(
+                        children: [
+                          if (file == null) ...[
+                            const Icon(
+                              Icons.file_upload_outlined,
                               size: 32,
-                              color: controller.selectedFile.value == null
-                                  ? const Color(0xff4A4A4A)
-                                  : const Color(0xFF1B4E9F),
+                              color: Color(0xff4A4A4A),
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              controller.selectedFile.value == null
-                                  ? "Upload File"
-                                  : controller.selectedFile.value!.name,
-                              textAlign: TextAlign.center,
+                              "Upload File (PDF, PNG, JPG)",
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
-                                color: controller.selectedFile.value == null
-                                    ? const Color(0xff4A4A4A).withValues(alpha: 0.8)
-                                    : const Color(0xFF1B4E9F),
+                                color: const Color(0xff4A4A4A).withValues(alpha: 0.8),
+                              ),
+                            ),
+                          ] else ...[
+                            if (isPdf) ...[
+                              const Icon(
+                                Icons.picture_as_pdf,
+                                size: 48,
+                                color: Color(0xffE53935),
+                              ),
+                            ] else if (bytes != null) ...[
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.memory(
+                                  bytes,
+                                  width: 80,
+                                  height: 80,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ] else ...[
+                              const Icon(
+                                Icons.insert_drive_file_outlined,
+                                size: 48,
+                                color: Color(0xFF1B4E9F),
+                              ),
+                            ],
+                            const SizedBox(height: 12),
+                            Text(
+                              file.name,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF1B4E9F),
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              "${(file.size / 1024).toStringAsFixed(1)} KB",
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
                               ),
                             ),
                           ],
-                        ),
+                        ],
                       ),
                     ),
-                  )),
+                  ),
+                );
+              }),
               const SizedBox(height: 40),
               Row(
                 children: [
@@ -112,25 +154,36 @@ class AddDocument extends GetView<AddDocumentController> {
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: ElevatedButton(
-                      onPressed: () => controller.uploadDocument(),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        backgroundColor: const Color(0xFF1B4E9F),
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: const Text(
-                        "Upload",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
+                    child: Obx(() => ElevatedButton(
+                          onPressed: controller.isLoading.value
+                              ? null
+                              : () => controller.uploadDocument(),
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            backgroundColor: const Color(0xFF1B4E9F),
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: controller.isLoading.value
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                  ),
+                                )
+                              : const Text(
+                                  "Upload",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                        )),
                   ),
                 ],
               ),
