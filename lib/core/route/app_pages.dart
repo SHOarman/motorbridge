@@ -11,6 +11,8 @@ import '../../presentation/authscreen/singin.dart';
 import '../../presentation/authscreen/verificationcode.dart';
 import '../../presentation/home/view/home_screen.dart';
 import '../../presentation/home/view/motoring_emergencies.dart';
+import '../../presentation/profile/view/all_reports_view.dart';
+import '../../presentation/profile/view/report_detail_view.dart';
 import '../../presentation/profile/view/profile.dart';
 import '../../presentation/home/view/helpandtutorial.dart';
 import '../../presentation/reminders/view/reminders.dart';
@@ -28,16 +30,18 @@ class AppPages {
     //===============================splashscreen==================================
     GetPage(name: AppRoutes.splashscreen1, page: () => const Splashscreen1()),
     GetPage(name: AppRoutes.splashscreen2, page: () => const Splashscreen2()),
-    
-    GetPage(name: AppRoutes.accidentReport, page: () => const AccidentReportTab()),
+
+    GetPage(
+      name: AppRoutes.accidentReport,
+      page: () => const AccidentReportTab(),
+    ),
 
     //===========================authscsrn================================================
-
-    GetPage(name: AppRoutes.singin, page: () =>  Singin()),
-    GetPage(name: AppRoutes.createaccount, page: () =>  Createaccount()),
-    GetPage(name: AppRoutes.forgotpassword, page: () =>  Forgotpassword()),
-    GetPage(name: AppRoutes.resetpassword, page: () =>  Resetpassword()),
-    GetPage(name: AppRoutes.verificationcode, page: () =>  Verificationcode()),
+    GetPage(name: AppRoutes.singin, page: () => Singin()),
+    GetPage(name: AppRoutes.createaccount, page: () => Createaccount()),
+    GetPage(name: AppRoutes.forgotpassword, page: () => Forgotpassword()),
+    GetPage(name: AppRoutes.resetpassword, page: () => Resetpassword()),
+    GetPage(name: AppRoutes.verificationcode, page: () => Verificationcode()),
 
     //===============================home==================================
     GetPage(
@@ -46,21 +50,65 @@ class AppPages {
       transition: Transition.noTransition,
       transitionDuration: Duration.zero,
     ),
-    GetPage(name: AppRoutes.motoringemergencies, page: () => const MotoringEmergencies(), transitionDuration: Duration.zero),
-    GetPage(name: "/HelpAndTutorialView", page: () => const HelpAndTutorialView(), transitionDuration: Duration.zero),
-
+    GetPage(
+      name: AppRoutes.motoringemergencies,
+      page: () => const MotoringEmergencies(),
+      transitionDuration: Duration.zero,
+    ),
+    GetPage(
+      name: "/HelpAndTutorialView",
+      page: () => const HelpAndTutorialView(),
+      transitionDuration: Duration.zero,
+    ),
 
     //=============================================vehicles===============================
-    GetPage(name: AppRoutes.vehicles, page: () => const Vehicles(), transitionDuration: Duration.zero),
-    GetPage(name: AppRoutes.addvehicles, page: ()=> const AddVehiclesScreen(), transitionDuration: Duration.zero),
-    GetPage(name: AppRoutes.reminders, page: ()=> const Reminders(), transitionDuration: Duration.zero),
-     GetPage(name: AppRoutes.vehicledetails, page: ()=> const VehicleDetails(), transitionDuration: Duration.zero),
+    GetPage(
+      name: AppRoutes.vehicles,
+      page: () => const Vehicles(),
+      transitionDuration: Duration.zero,
+    ),
+    GetPage(
+      name: AppRoutes.addvehicles,
+      page: () => const AddVehiclesScreen(),
+      transitionDuration: Duration.zero,
+    ),
+    GetPage(
+      name: AppRoutes.reminders,
+      page: () => const Reminders(),
+      transitionDuration: Duration.zero,
+    ),
+    GetPage(
+      name: AppRoutes.vehicledetails,
+      page: () => const VehicleDetails(),
+      transitionDuration: Duration.zero,
+    ),
 
-    GetPage(name: AppRoutes.addDocuments, page: ()=> const AddDocument(), transitionDuration: Duration.zero),
-
+    GetPage(
+      name: AppRoutes.addDocuments,
+      page: () => const AddDocument(),
+      transitionDuration: Duration.zero,
+    ),
 
     //=======================================profile======================================================
-    GetPage(name: AppRoutes.profile, page: ()=>  Profile(), transitionDuration: Duration.zero),
-    GetPage(name: AppRoutes.editprofile, page: ()=>  EditProfile(), transitionDuration: Duration.zero),
+    GetPage(
+      name: AppRoutes.profile,
+      page: () => Profile(),
+      transitionDuration: Duration.zero,
+    ),
+    GetPage(
+      name: AppRoutes.editprofile,
+      page: () => EditProfile(),
+      transitionDuration: Duration.zero,
+    ),
+    GetPage(
+      name: AppRoutes.allReports,
+      page: () => const AllReportsView(),
+      transitionDuration: Duration.zero,
+    ),
+    GetPage(
+      name: AppRoutes.accidentReportDetail,
+      page: () => const ReportDetailView(),
+      transitionDuration: Duration.zero,
+    ),
   ];
 }

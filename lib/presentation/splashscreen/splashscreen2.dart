@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:motorbridge/core/route/app_routes.dart';
 import 'package:motorbridge/presentation/splashscreen/widget/swipe_next_button.dart';
-import 'package:motorbridge/utils/app_text_styles.dart';
+import '../../core/route/app_routes.dart';
+import '../../utils/app_text_styles.dart';
 
 class Splashscreen2 extends StatelessWidget {
   const Splashscreen2({super.key});
@@ -10,93 +10,83 @@ class Splashscreen2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const bgColor = Color(0xFFF5F6F8);
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       backgroundColor: bgColor,
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
-              children: [
-                Image.asset(
-                  "assets/image/carbackround2.png",
-                  width: MediaQuery.of(context).size.width,
-                  height: 480,
-                  fit: BoxFit.cover,
-                ),
-                Positioned(
-                  bottom: -50,
-                  left: 0,
-                  right: 0,
-
-                  child: Container(
-                    height: 130,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          bgColor.withValues(alpha: 0.0),
-                          bgColor.withValues(alpha: 0.2),
-                          bgColor,
-                        ],
-                        stops: [0.13, 0.15, 0.4],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+      body: Stack(
+        children: [
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            height: size.height * 0.60,
+            child: Image.asset(
+              "assets/image/carbackround2.png",
+              fit: BoxFit.cover,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: size.height * 0.50,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    bgColor.withValues(alpha: 0.0),
+                    bgColor,
+                  ],
+                  stops: const [0.0, 0.3],
+                ),
+              ),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     "Automatic MOT, Tax &",
                     style: AppTextStyles.bigText.copyWith(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w800,
+                      fontSize: 28,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF1D2939),
                     ),
                   ),
-                  Row(
-                    children: [
-                      Text(
-                        "Insurance",
-                        style: AppTextStyles.bigText.copyWith(
-                          fontSize: 30,
-                          fontWeight: FontWeight.w800,
-                          color: const Color(0xFF154da1),
-                        ),
-                      ),
-                      Text(
-                        " Reminders",
-                        style: AppTextStyles.bigText.copyWith(
-                          color: const Color(0xFF154da1),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 2),
                   Text(
-                    "We notify you before your important vehicle\ndates expire.",
-                    style: AppTextStyles.smallText.copyWith(fontSize: 16),
+                    "Insurance Reminders",
+                    style: AppTextStyles.bigText.copyWith(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF154da1),
+                    ),
                   ),
-
-                  const SizedBox(height: 20),
-
-                  SwipeNextButton(
-                    onTap: () {
-                      Get.toNamed(AppRoutes.singin);
-                    },
+                  const SizedBox(height: 12),
+                  Text(
+                    "We notify you before your important vehicle dates expire.",
+                    style: AppTextStyles.smallText.copyWith(
+                      fontSize: 15,
+                      color: const Color(0xFF667085),
+                      height: 1.5,
+                    ),
                   ),
+                  const SizedBox(height: 40),
+                  Center(
+                    child: SwipeNextButton(
+                      onTap: () {
+                        Get.toNamed(AppRoutes.singin);
+                      },
+                    ),
+                  ),
+                  SizedBox(height: size.height * 0.05),
                 ],
               ),
             ),
-            const SizedBox(height: 40),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get.dart';
 import 'package:motorbridge/presentation/splashscreen/widget/swipe_next_button.dart';
-
 import '../../core/route/app_routes.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_text_styles.dart';
@@ -15,13 +13,11 @@ class Splashscreen1 extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      // ব্যাকগ্রাউন্ড কালারটি গ্রেডিয়েন্টের নিচের কালারের সাথে ম্যাচ করানো হয়েছে
       backgroundColor: const Color(0xfff3f6f8),
       body: Stack(
         children: [
-          // ১. ব্যাকগ্রাউন্ড ইমেজ
           Positioned(
-            top: 0, // টপ ০ করে দিন যাতে ইমেজটি উপরে লেগে থাকে
+            top: 0,
             left: 0,
             right: 0,
             height: size.height * 0.60,
@@ -30,26 +26,22 @@ class Splashscreen1 extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-
-          // ২. টেক্সট এবং গ্রেডিয়েন্ট এরিয়া
           Positioned(
             bottom: 0,
             left: 0,
             right: 0,
-            height: size.height * 0.55,
+            height: size.height * 0.50,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 30.0),
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.white.withValues(alpha: 0.0),
-                    const Color(0xfff3f6f8).withValues(alpha: 0.8),
+                    const Color(0xfff3f6f8).withValues(alpha: 0.0),
                     const Color(0xfff3f6f8),
                   ],
-
-                  stops: const [0.0, 0.20, 0.40],
+                  stops: const [0.0, 0.3],
                 ),
               ),
               child: Column(
@@ -73,10 +65,7 @@ class Splashscreen1 extends StatelessWidget {
                       ],
                     ),
                   ),
-
                   const SizedBox(height: 12),
-
-                  // ডেসক্রিপশন
                   Text(
                     "Manage all your vehicles in one secure virtual garage.",
                     style: AppTextStyles.smallText.copyWith(
@@ -85,10 +74,7 @@ class Splashscreen1 extends StatelessWidget {
                       height: 1.5,
                     ),
                   ),
-
                   const SizedBox(height: 40),
-
-                  // সোয়াইপ বাটন
                   Center(
                     child: SwipeNextButton(
                       onTap: () {
@@ -96,8 +82,7 @@ class Splashscreen1 extends StatelessWidget {
                       },
                     ),
                   ),
-
-                  const SizedBox(height: 20),
+                  SizedBox(height: size.height * 0.05),
                 ],
               ),
             ),

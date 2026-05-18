@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../core/services/controller/home_controller.dart';
 
 class MyEmergencyButton extends StatefulWidget {
   const MyEmergencyButton({super.key});
@@ -10,8 +11,21 @@ class MyEmergencyButton extends StatefulWidget {
 
 class _MyEmergencyButtonState extends State<MyEmergencyButton> {
   double _scale = 1.0;
+  final HomeController homeController = Get.find<HomeController>();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _numberController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _numberController.dispose();
+    super.dispose();
+  }
 
   void _showAddContactDialog() {
+    _nameController.clear();
+    _numberController.clear();
+    
     Get.defaultDialog(
       title: "",
       titlePadding: EdgeInsets.zero,
@@ -30,6 +44,7 @@ class _MyEmergencyButtonState extends State<MyEmergencyButton> {
           ),
           const SizedBox(height: 10),
           TextField(
+            controller: _nameController,
             decoration: InputDecoration(
               hintText: "example - insurance provider",
               hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
@@ -54,6 +69,7 @@ class _MyEmergencyButtonState extends State<MyEmergencyButton> {
           ),
           const SizedBox(height: 10),
           TextField(
+            controller: _numberController,
             keyboardType: TextInputType.phone,
             decoration: InputDecoration(
               hintText: "example - insurance contact number",
@@ -73,8 +89,23 @@ class _MyEmergencyButtonState extends State<MyEmergencyButton> {
             width: double.infinity,
             height: 50,
             child: ElevatedButton(
-              onPressed: () {
-                Get.back();
+              onPressed: () async {
+                if (_nameController.text.trim().isEmpty || _numberController.text.trim().isEmpty) {
+                  Get.snackbar("Error", "Please fill all fields", backgroundColor: Colors.red, colorText: Colors.white);
+                  return;
+                }
+                
+                bool success = await homeController.addEmergencyContact(
+                  contactName: _nameController.text.trim(),
+                  contactNumber: _numberController.text.trim(),
+                );
+                
+                if (success) {
+                  Get.back();
+                  Get.snackbar("Success", "Contact added successfully", backgroundColor: Colors.green, colorText: Colors.white);
+                } else {
+                  Get.snackbar("Error", "Failed to add contact", backgroundColor: Colors.red, colorText: Colors.white);
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xff2664A3),
@@ -108,7 +139,7 @@ class _MyEmergencyButtonState extends State<MyEmergencyButton> {
           scale: _scale,
           duration: const Duration(milliseconds: 100),
           child: Container(
-            height: 48, // হাইট একটু বাড়িয়েছি দেখতে ভালো লাগবে
+            height: 48,
             width: 260,
             decoration: BoxDecoration(
               color: const Color(0xff2664A3),
@@ -118,8 +149,8 @@ class _MyEmergencyButtonState extends State<MyEmergencyButton> {
               color: Colors.transparent,
               child: InkWell(
                 borderRadius: BorderRadius.circular(7),
-                onTap: _showAddContactDialog, // এখানে ফাংশনটি কল করা হয়েছে
-                splashColor: Colors.white.withValues(alpha: 0.2),
+                onTap: _showAddContactDialog,
+                splashColor: Colors.white.withAlpha(51),
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

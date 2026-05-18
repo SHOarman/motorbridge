@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:motorbridge/general_widget/customappbar.dart';
+import '../../../core/services/controller/home_controller.dart';
 import '../../../utils/app_text_styles.dart';
 import '../widget/my_emergency_button.dart';
 import 'accident_report_tab.dart';
@@ -11,6 +12,8 @@ class MotoringEmergencies extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final HomeController homeController = Get.find<HomeController>();
+
     return Scaffold(
       appBar: CustomAppBar(
         title: "Motoring Emergencies",
@@ -72,11 +75,11 @@ class MotoringEmergencies extends StatelessWidget {
                           children: [
                             const TextSpan(
                               text:
-                              "This page provides quick access to emergency contact numbers and your stored vehicle information. ",
+                                  "This page provides quick access to emergency contact numbers and your stored vehicle information. ",
                             ),
-                            TextSpan(
+                            const TextSpan(
                               text:
-                              "Always call 999 in a life-threatening emergency.",
+                                  "Always call 999 in a life-threatening emergency.",
                               style: TextStyle(
                                 fontWeight: FontWeight.w800,
                                 fontSize: 14,
@@ -96,7 +99,7 @@ class MotoringEmergencies extends StatelessWidget {
                           children: [
                             const TextSpan(
                               text:
-                              "Motor Bridge UK is a reminder and information storage tool only. ",
+                                  "Motor Bridge UK is a reminder and information storage tool only. ",
                             ),
                             const TextSpan(
                               text: "We take no liability",
@@ -104,7 +107,7 @@ class MotoringEmergencies extends StatelessWidget {
                             ),
                             const TextSpan(
                               text:
-                              " for the accuracy of contact numbers, policy details, or any decisions made using information stored in this app.",
+                                  " for the accuracy of contact numbers, policy details, or any decisions made using information stored in this app.",
                             ),
                           ],
                         ),
@@ -115,7 +118,7 @@ class MotoringEmergencies extends StatelessWidget {
                           style: AppTextStyles.smallText.copyWith(
                             fontSize: 14,
                             height: 1.4,
-                              color: Colors.black
+                            color: Colors.black,
                           ),
                           children: [
                             const TextSpan(
@@ -124,7 +127,7 @@ class MotoringEmergencies extends StatelessWidget {
                             ),
                             const TextSpan(
                               text:
-                              " for ensuring your stored information is accurate and up-to-date. Always verify insurance coverage and breakdown membership details directly with your providers.",
+                                  " for ensuring your stored information is accurate and up-to-date. Always verify insurance coverage and breakdown membership details directly with your providers.",
                             ),
                           ],
                         ),
@@ -134,12 +137,13 @@ class MotoringEmergencies extends StatelessWidget {
                 ),
               ),
 
+              const SizedBox(height: 20),
 
-              SizedBox(height: 20,),
-
-              Text("Emergency Contacts",style: AppTextStyles.internt.copyWith(
-                fontWeight: FontWeight.w500,fontSize: 24,color: Color(0xff0A0A0A)
-              )),
+              Text("Emergency Contacts",
+                  style: AppTextStyles.internt.copyWith(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 24,
+                      color: const Color(0xff0A0A0A))),
               const SizedBox(height: 20),
               _buildEmergencyCard(
                 title: "UK Emergency Services",
@@ -163,13 +167,36 @@ class MotoringEmergencies extends StatelessWidget {
                 phoneNumber: "08000000000",
                 iconAsset: "assets/icon/Frame (10).png",
               ),
+
+              // Dynamic Contacts
+              Obx(() {
+                if (homeController.isLoadingContacts.value) {
+                  return const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
+                return Column(
+                  children: homeController.emergencyContacts.map((contact) {
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: _buildEmergencyCard(
+                        title: contact['contactName'] ?? 'No Name',
+                        subtitle: "Personal Emergency Contact",
+                        iconAsset: "assets/icon/Frame (8).png",
+                        backgroundColor: const Color(0xffE8F5E9),
+                        buttonColor: const Color(0xFF2E7D32),
+                        phoneNumber: contact['contactNumber'] ?? '',
+                      ),
+                    );
+                  }).toList(),
+                );
+              }),
+
               const SizedBox(height: 20),
 
               //====================================addenergebcybutton============================
-              MyEmergencyButton(),
-
-              
-
+              const MyEmergencyButton(),
 
               const SizedBox(height: 40),
               Text(
@@ -180,16 +207,16 @@ class MotoringEmergencies extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              const SizedBox(height: 16),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
                 decoration: BoxDecoration(
                   color: const Color(0xffFFFFFF),
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
+                      color: Colors.black.withAlpha(13),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                       spreadRadius: 2,
@@ -243,7 +270,7 @@ class MotoringEmergencies extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
+                      color: Colors.black.withAlpha(13),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                       spreadRadius: 2,
@@ -352,7 +379,7 @@ class MotoringEmergencies extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withAlpha(13),
             blurRadius: 6,
             offset: const Offset(0, 4),
           ),
@@ -377,7 +404,7 @@ class MotoringEmergencies extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Padding(
-            padding: const EdgeInsets.only(left: 20),
+            padding: const EdgeInsets.only(left: 40),
             child: Text(
               subtitle,
               style: AppTextStyles.smallText.copyWith(

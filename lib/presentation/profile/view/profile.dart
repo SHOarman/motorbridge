@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:motorbridge/core/route/app_routes.dart';
 import 'package:motorbridge/general_widget/customtaxbutton.dart';
 import 'package:motorbridge/utils/app_text_styles.dart';
+import '../../../core/services/controller/home_controller.dart';
 import '../../../core/services/controller/profile_controller.dart';
 import '../../../general_widget/custom_bottom_nav_bar.dart';
 import '../../../general_widget/customappbar.dart';
@@ -14,6 +15,10 @@ class Profile extends StatelessWidget {
   final ProfileController controller = Get.isRegistered<ProfileController>()
       ? Get.find<ProfileController>()
       : Get.put(ProfileController());
+
+  final HomeController homeController = Get.isRegistered<HomeController>()
+      ? Get.find<HomeController>()
+      : Get.put(HomeController());
 
   void _showLogoutDialog(BuildContext context) {
     Get.dialog(
@@ -202,6 +207,8 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     controller.getProfile(showLoader: false);
+    homeController.fetchVehicles();
+
     return Scaffold(
       bottomNavigationBar: const CustomBottomNavBar(selectedIndex: 3),
       appBar: CustomAppBar(
@@ -225,10 +232,13 @@ class Profile extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: const Color(0xffF6F6F6),
                     borderRadius: BorderRadius.circular(9),
-                    border: Border.all(color: const Color(0xffB0CEFF), width: 1),
+                    border: Border.all(
+                      color: const Color(0xffB0CEFF),
+                      width: 1,
+                    ),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF000000).withValues(alpha: 0.05),
+                        color: Colors.black.withAlpha(13),
                         blurRadius: 4,
                         offset: const Offset(0, 4),
                         spreadRadius: 2,
@@ -243,11 +253,17 @@ class Profile extends StatelessWidget {
                         child: CircleAvatar(
                           radius: 40,
                           backgroundColor: Colors.grey[200],
-                          backgroundImage: controller.profileImageData.value != null
+                          backgroundImage:
+                              controller.profileImageData.value != null
                               ? MemoryImage(controller.profileImageData.value!)
                               : (controller.profileImageUrl.value.isNotEmpty
-                                  ? NetworkImage(controller.profileImageUrl.value)
-                                  : const AssetImage("assets/image/Ellipse 7.png")) as ImageProvider,
+                                        ? NetworkImage(
+                                            controller.profileImageUrl.value,
+                                          )
+                                        : const AssetImage(
+                                            "assets/image/Ellipse 7.png",
+                                          ))
+                                    as ImageProvider,
                         ),
                       ),
                       Positioned(
@@ -310,12 +326,64 @@ class Profile extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-                CustomMenuTile(
-                  title: "Hilux 2026",
-                  subtitle: "2GD-FTV",
-                  leading: Image.asset('assets/icon/image 4.png'),
-                  onTap: () {},
+                Obx(() {
+                  if (homeController.isLoading.value &&
+                      homeController.vehiclesList.isEmpty) {
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  }
+                  if (homeController.vehiclesList.isEmpty) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Text(
+                        "No vehicles added yet.",
+                        style: AppTextStyles.smallText,
+                      ),
+                    );
+                  }
+                  return Column(
+                    children: homeController.vehiclesList.map((vehicle) {
+                      return CustomMenuTile(
+                        title:
+                            "${vehicle['make'] ?? ''} ${vehicle['model'] ?? ''}",
+                        subtitle: vehicle['registrationNumber'] ?? '',
+                        leading: Image.asset('assets/icon/image 4.png'),
+                        onTap: () {},
+                      );
+                    }).toList(),
+                  );
+                }),
+                const SizedBox(height: 20),
+                Text(
+                  "Reports & Documents",
+                  style: AppTextStyles.bigText.copyWith(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
+                const SizedBox(height: 10),
+                CustomMenuTile(
+                  borderColor: const Color.fromRGBO(182, 192, 209, 0.43),
+                  title: "View all reports",
+                  leading: const Icon(
+                    Icons.description,
+                    color: Color(0xff2664A3),
+                  ),
+                  onTap: () => Get.toNamed(AppRoutes.allReports),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  "Settings",
+                  style: AppTextStyles.bigText.copyWith(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 10),
                 CustomMenuTile(
                   borderColor: const Color.fromRGBO(182, 192, 209, 0.43),
                   title: "Notifications",
@@ -338,7 +406,9 @@ class Profile extends StatelessWidget {
                 CustomMenuTile(
                   borderColor: const Color.fromRGBO(255, 67, 67, 0.2),
                   title: "Log Out",
-                  leading: Image.asset("assets/icon/material-symbols_logout.png"),
+                  leading: Image.asset(
+                    "assets/icon/material-symbols_logout.png",
+                  ),
                   onTap: () => _showLogoutDialog(context),
                   backgroundColor: const Color.fromRGBO(255, 67, 67, 0.2),
                 ),

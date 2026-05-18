@@ -81,6 +81,8 @@ static const String delete_account = "$baseurl/api/user";
 
 //===========================crete_Repot========================================
 static const String create_Repot="$baseurl/api/report/create";
+static const String get_reports = "$baseurl/api/report";
+static const String get_single_report = "$baseurl/api/report"; // usage: /api/report/:id/summary
 
 
 
@@ -107,6 +109,12 @@ static const String get_const ="$baseurl/api/cost";
 static const String delete_cost = "$baseurl/api/cost";
 static const String available_costs = "$baseurl/api/cost/summary/?period=yearly";
 static const String get_vehicle_costs = "$baseurl/api/cost/vehicle/";
+
+
+//===============================emergncyconted====================
+ static const String add_number= "$baseurl/api/contact/create";
+ static const String get_number="$baseurl/api/contact";
+
 
 
 

@@ -8,11 +8,16 @@ import '../api_sevices/api_services.dart';
 class HomeController extends GetxController {
   var vehiclesList = <dynamic>[].obs;
   var isLoading = false.obs;
+  
+  // Emergency Contacts
+  var emergencyContacts = <dynamic>[].obs;
+  var isLoadingContacts = false.obs;
 
   @override
   void onInit() {
     super.onInit();
     fetchVehicles();
+    fetchEmergencyContacts();
   }
 
   Future<void> fetchVehicles() async {
@@ -71,6 +76,67 @@ class HomeController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  Future<void> fetchEmergencyContacts() async {
+    try {
+      isLoadingContacts.value = true;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+
+      if (token == null || token.isEmpty) {
+        isLoadingContacts.value = false;
+        return;
+      }
+
+      final response = await http.get(
+        Uri.parse(ApiServices.get_number),
+        headers: {"Authorization": "Bearer $token"},
+      );
+
+      debugPrint("fetchEmergencyContacts status: ${response.statusCode}");
+      debugPrint("fetchEmergencyContacts body: ${response.body}");
+
+      if (response.statusCode == 200) {
+        var responseData = jsonDecode(response.body);
+        if (responseData['success'] == true && responseData['data'] != null) {
+          emergencyContacts.value = List<dynamic>.from(responseData['data']);
+        }
+      }
+    } catch (e) {
+      debugPrint("Error fetching emergency contacts: $e");
+    } finally {
+      isLoadingContacts.value = false;
+    }
+  }
+
+  Future<bool> addEmergencyContact({required String contactName, required String contactNumber}) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+
+      if (token == null || token.isEmpty) return false;
+
+      final response = await http.post(
+        Uri.parse(ApiServices.add_number),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode({
+          "contactName": contactName,
+          "contactNumber": contactNumber,
+        }),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        await fetchEmergencyContacts();
+        return true;
+      }
+    } catch (e) {
+      debugPrint("Error adding emergency contact: $e");
+    }
+    return false;
   }
 
   DateTime? parseDate(String? dateStr) {

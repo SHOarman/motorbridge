@@ -18,24 +18,20 @@ class AppRoutes {
   static const resetpassword = '/resetpassword';
   static const verificationcode = '/verificationcode';
 
-
-
   ///==============================================addvehicles=================================================
   static const addvehicles = '/addvehicles';
   static const vehicletype = '/vehicletype';
   static const importantdates = '/importantdates';
   static const moredetails = '/moredetails';
   static const galleryimages = '/galleryimages';
-  static const addDocuments="/addDocuments";
-
-
+  static const addDocuments = "/addDocuments";
 
   ///=========================================profile===================================
   static const String profile = '/profile';
-  static const String editprofile='/editprofile';
-  static const String editpassword='/editpassword';
-
-
+  static const String editprofile = '/editprofile';
+  static const String editpassword = '/editpassword';
+  static const String allReports = '/allReports';
+  static const String accidentReportDetail = '/accidentReportDetail';
 
   //==============================home==================================
   static const String home = '/home';
