@@ -98,10 +98,13 @@ class AddDocumentController extends GetxController {
       request.fields['title'] = title;
       request.fields['vehicle'] = vehicleId;
       request.fields['vehicleId'] = vehicleId;
+      request.fields['vehicle_id'] = vehicleId;
+      request.fields['userId'] = (prefs.getString('userId') ?? "");
 
       String fileName = selectedFile.value!.name;
       String ext = fileName.split('.').last.toLowerCase();
 
+      // Send the file under the single key 'files' expected by backend's Multer middleware
       var multipartFile = http.MultipartFile.fromBytes(
         'files',
         fileBytes.value!,
@@ -117,6 +120,29 @@ class AddDocumentController extends GetxController {
       debugPrint("uploadDocument body: ${response.body}");
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        try {
+          var decoded = jsonDecode(response.body);
+          if (decoded is Map && decoded['data'] != null) {
+            final docData = decoded['data'];
+            final String docId = (docData['_id'] ?? docData['id'] ?? '').toString();
+            final String titleStr = (docData['title'] ?? '').toString();
+            
+            final SharedPreferences prefs = await SharedPreferences.getInstance();
+            if (docId.isNotEmpty && vehicleId.isNotEmpty) {
+              await prefs.setString("doc_vehicle_$docId", vehicleId);
+            }
+
+            debugPrint("==================================================");
+            debugPrint("🚀 DOCUMENT CREATION SUCCESS 🚀");
+            debugPrint("📝 Created Document Name: $titleStr");
+            debugPrint("🔑 Created Document _id: $docId");
+            debugPrint("🚗 Associated Vehicle ID: $vehicleId");
+            debugPrint("==================================================");
+          }
+        } catch (e) {
+          debugPrint("Error parsing uploaded document response: $e");
+        }
+
         if (Get.context != null) {
           ScaffoldMessenger.of(Get.context!).showSnackBar(
             const SnackBar(

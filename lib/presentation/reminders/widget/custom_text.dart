@@ -5,8 +5,9 @@ import 'package:motorbridge/utils/app_text_styles.dart';
 class CustomReminderCard extends StatelessWidget {
   final String title;
   final String date;
-  final String? expiryStatus;
   final String vehicleName;
+  final String? vehicleTag;
+  final String? expiryStatus;
   final String buttonText;
   final String iconPath;
   final String? badgeIconPath;
@@ -29,6 +30,7 @@ class CustomReminderCard extends StatelessWidget {
     required this.date,
     this.expiryStatus,
     required this.vehicleName,
+    this.vehicleTag,
     required this.buttonText,
     required this.iconPath,
     this.badgeIconPath,

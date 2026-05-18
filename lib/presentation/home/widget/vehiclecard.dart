@@ -59,7 +59,7 @@ class VehicleCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header Section (Name, Year, Tag)
+
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,16 +239,41 @@ class VehicleCard extends StatelessWidget {
     }
     
     if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
-      return Image.network(imagePath, fit: BoxFit.contain, errorBuilder: (context, error, stackTrace) {
-        return Image.asset("assets/image/Rectangle_2-removebg-preview.png", fit: BoxFit.contain);
-      });
-    } else if (imagePath.startsWith("/uploads/")) {
-      final String fullUrl = "${ApiServices.baseurl}$imagePath";
-      return Image.network(fullUrl, fit: BoxFit.contain, errorBuilder: (context, error, stackTrace) {
-        return Image.asset("assets/image/Rectangle_2-removebg-preview.png", fit: BoxFit.contain);
-      });
+      return Image.network(
+        imagePath,
+        fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) {
+          return Image.asset("assets/image/Rectangle_2-removebg-preview.png", fit: BoxFit.contain);
+        },
+      );
+    } else if (imagePath.startsWith("/uploads/") || imagePath.startsWith("uploads/")) {
+      final String cleanPath = imagePath.startsWith("/") ? imagePath : "/$imagePath";
+      final String fullUrl = "${ApiServices.baseurl}$cleanPath";
+      return Image.network(
+        fullUrl,
+        fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) {
+          return Image.asset("assets/image/Rectangle_2-removebg-preview.png", fit: BoxFit.contain);
+        },
+      );
     } else {
-      return Image.asset(imagePath, fit: BoxFit.contain);
+      if (!imagePath.contains("assets/") && !imagePath.startsWith("/")) {
+        final String fullUrl = "${ApiServices.baseurl}/$imagePath";
+        return Image.network(
+          fullUrl,
+          fit: BoxFit.contain,
+          errorBuilder: (context, error, stackTrace) {
+            return Image.asset("assets/image/Rectangle_2-removebg-preview.png", fit: BoxFit.contain);
+          },
+        );
+      }
+      return Image.asset(
+        imagePath,
+        fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) {
+          return Image.asset("assets/image/Rectangle_2-removebg-preview.png", fit: BoxFit.contain);
+        },
+      );
     }
   }
 }

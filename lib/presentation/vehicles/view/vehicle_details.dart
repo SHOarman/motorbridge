@@ -31,6 +31,9 @@ class _VehicleDetailsState extends State<VehicleDetails> {
   List<dynamic> documents = [];
   bool isLoadingDocs = false;
 
+  List<dynamic> allExpenses = [];
+  bool isLoadingCosts = false;
+
   late TextEditingController makeController;
   late TextEditingController modelController;
   late TextEditingController yearController;
@@ -61,19 +64,23 @@ class _VehicleDetailsState extends State<VehicleDetails> {
     engineCodeController = TextEditingController(text: vehicle['engineCode']?.toString() ?? '');
 
     fetchDocuments();
+    fetchCostsSummary();
   }
 
   Future<void> fetchDocuments() async {
+    if (!mounted) return;
     setState(() {
       isLoadingDocs = true;
     });
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('token');
-      String vehicleId = vehicle['id'] ?? vehicle['_id'] ?? '';
+      String vehicleId = (vehicle['id'] ?? vehicle['_id'] ?? '').toString().trim();
       
+      if (vehicleId.isEmpty) return;
+
       final response = await http.get(
-        Uri.parse(ApiServices.get_document),
+        Uri.parse("${ApiServices.get_document}?vehicleId=$vehicleId&vehicle=$vehicleId"),
         headers: {
           "Authorization": "Bearer $token",
         },
@@ -82,47 +89,169 @@ class _VehicleDetailsState extends State<VehicleDetails> {
       debugPrint("Fetch documents status: ${response.statusCode}");
       debugPrint("Fetch documents body: ${response.body}");
 
-      debugPrint("fetchDocuments vehicleId: '$vehicleId', vehicle Keys: ${vehicle.keys.toList()}");
-
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        if (data['success'] == true && data['data'] != null) {
-          final List<dynamic> allDocs = data['data'];
-          
-          setState(() {
-            documents = allDocs.where((doc) {
-              final v = doc['vehicle'] ?? doc['vehicleId'];
-              if (v == null) {
-                // Strictly do not show if not associated with a specific vehicle
-                return false;
-              }
-              
-              String docVehicleId = '';
-              if (v is Map) {
-                docVehicleId = (v['id'] ?? v['_id'] ?? '').toString();
-              } else {
-                docVehicleId = v.toString();
-              }
-              
-              final targetVehicleId = vehicleId.trim();
-              final sourceVehicleId = docVehicleId.trim();
-              
-              debugPrint("Comparing doc title '${doc['title']}' vehicle: '$sourceVehicleId' with target: '$targetVehicleId'");
-              
-              return sourceVehicleId.isNotEmpty && 
-                     targetVehicleId.isNotEmpty && 
-                     sourceVehicleId.toLowerCase() == targetVehicleId.toLowerCase();
-            }).toList();
-          });
+        List<dynamic> allDocs = [];
+        if (data is List) {
+          allDocs = data;
+        } else if (data is Map) {
+          allDocs = data['data'] ?? data['documents'] ?? [];
         }
+        
+        setState(() {
+          documents = allDocs.where((doc) {
+            if (doc is! Map) return false;
+            var v = doc['vehicle'] ?? doc['vehicleId'] ?? doc['vehicle_id'];
+            if (v == null) {
+              final String docId = (doc['_id'] ?? doc['id'] ?? '').toString();
+              if (docId.isNotEmpty) {
+                v = prefs.getString("doc_vehicle_$docId");
+              }
+            }
+            v ??= vehicleId;
+            
+            String docVehicleId = '';
+            if (v is Map) {
+              docVehicleId = (v['id'] ?? v['_id'] ?? '').toString().trim();
+            } else {
+              docVehicleId = v.toString().trim();
+            }
+            
+            return vehicleId.isNotEmpty && 
+                   docVehicleId.toLowerCase() == vehicleId.toLowerCase();
+          }).toList();
+        });
       }
     } catch (e) {
       debugPrint("Error fetching documents: $e");
     } finally {
-      setState(() {
-        isLoadingDocs = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoadingDocs = false;
+        });
+      }
     }
+  }
+
+  Future<void> fetchCostsSummary() async {
+    if (!mounted) return;
+    setState(() {
+      isLoadingCosts = true;
+    });
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+      String targetVehicleId = (vehicle['id'] ?? vehicle['_id'] ?? '').toString().trim();
+
+      if (targetVehicleId.isEmpty) return;
+
+      final response = await http.get(
+        Uri.parse("${ApiServices.get_const}?vehicleId=$targetVehicleId&vehicle=$targetVehicleId"),
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      );
+
+      debugPrint("Fetch costs summary status: ${response.statusCode}");
+      debugPrint("Fetch costs summary body: ${response.body}");
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        List<dynamic> fetchedList = [];
+        if (decoded is List) {
+          fetchedList = decoded;
+        } else if (decoded is Map) {
+          fetchedList = decoded['data'] ?? [];
+        }
+
+        // Strict filtering: only include costs that belong to this specific vehicle
+        final filteredList = fetchedList.where((item) {
+          if (item is! Map) return false;
+          var v = item['vehicle'] ?? item['vehicleId'] ?? item['vehicle_id'];
+          if (v == null) {
+            final String costId = (item['_id'] ?? item['id'] ?? '').toString();
+            if (costId.isNotEmpty) {
+              v = prefs.getString("cost_vehicle_$costId");
+            }
+          }
+          v ??= targetVehicleId;
+          
+          String itemVehicleId = '';
+          if (v is Map) {
+            itemVehicleId = (v['id'] ?? v['_id'] ?? '').toString().trim();
+          } else {
+            itemVehicleId = v.toString().trim();
+          }
+          return targetVehicleId.isNotEmpty && 
+                 itemVehicleId.toLowerCase() == targetVehicleId.toLowerCase();
+        }).toList();
+
+        setState(() {
+          allExpenses = filteredList;
+        });
+      }
+    } catch (e) {
+      debugPrint("Error fetching costs summary: $e");
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoadingCosts = false;
+        });
+      }
+    }
+  }
+
+  String get totalSpent {
+    double total = 0.0;
+    for (var cost in allExpenses) {
+      total += (cost['amount'] ?? 0.0).toDouble();
+    }
+    return "£${total.toStringAsFixed(2)}";
+  }
+
+  String get entriesCount {
+    return "${allExpenses.length} entries";
+  }
+
+  Map<String, String> getTopCategory() {
+    if (allExpenses.isEmpty) {
+      return {
+        "category": "No Category",
+        "amount": "£0.00",
+        "percent": "0% of total spent",
+      };
+    }
+
+    double total = 0.0;
+    Map<String, double> categoriesMap = {};
+    for (var cost in allExpenses) {
+      String cat = (cost['purpose'] ?? 'General').toString().trim();
+      if (cat.contains('\u200b')) {
+        cat = cat.split('\u200b').first.trim();
+      }
+      if (cat.isEmpty) cat = 'General';
+      cat = cat[0].toUpperCase() + cat.substring(1).toLowerCase();
+      double amt = (cost['amount'] ?? 0.0).toDouble();
+      total += amt;
+      categoriesMap[cat] = (categoriesMap[cat] ?? 0.0) + amt;
+    }
+
+    String topCategory = "General";
+    double topCategoryAmount = 0.0;
+    categoriesMap.forEach((key, val) {
+      if (val > topCategoryAmount) {
+        topCategoryAmount = val;
+        topCategory = key;
+      }
+    });
+
+    double percent = total == 0.0 ? 0.0 : (topCategoryAmount / total) * 100.0;
+
+    return {
+      "category": topCategory,
+      "amount": "£${topCategoryAmount.toStringAsFixed(2)}",
+      "percent": "${percent.toStringAsFixed(0)}% of total spent",
+    };
   }
 
   Future<void> viewDocument(Map<String, dynamic> doc) async {
@@ -619,7 +748,15 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                 trendIconPath: "assets/icon/Icon (19).png",
                 repairIconPath: "assets/icon/Icon (20).png",
                 arrowIconPath: "assets/icon/Icon (21).png",
-                onPressed: () => Get.to(() => const ViewAllExpensesAddNew()),
+                totalSpent: totalSpent,
+                entriesCount: entriesCount,
+                topExpenseName: getTopCategory()['category']!,
+                topExpenseAmount: getTopCategory()['amount']!,
+                topExpensePercent: getTopCategory()['percent']!,
+                onPressed: () async {
+                  await Get.to(() => const ViewAllExpensesAddNew(), arguments: vehicle);
+                  fetchCostsSummary();
+                },
               ),
               const SizedBox(height: 20),
               VehicleDocumentsCard(

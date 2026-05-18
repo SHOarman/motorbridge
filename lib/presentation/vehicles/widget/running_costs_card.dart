@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../../utils/app_text_styles.dart';
 
 class RunningCostsCard extends StatelessWidget {
@@ -7,6 +6,11 @@ class RunningCostsCard extends StatelessWidget {
   final String trendIconPath;
   final String repairIconPath;
   final String arrowIconPath;
+  final String totalSpent;
+  final String entriesCount;
+  final String topExpenseName;
+  final String topExpenseAmount;
+  final String topExpensePercent;
   final VoidCallback onPressed;
 
   const RunningCostsCard({
@@ -15,6 +19,11 @@ class RunningCostsCard extends StatelessWidget {
     required this.trendIconPath,
     required this.repairIconPath,
     required this.arrowIconPath,
+    required this.totalSpent,
+    required this.entriesCount,
+    required this.topExpenseName,
+    required this.topExpenseAmount,
+    required this.topExpensePercent,
     required this.onPressed,
   });
 
@@ -55,12 +64,15 @@ class RunningCostsCard extends StatelessWidget {
                 child: Image.asset(iconPath, height: 24, width: 24),
               ),
               const SizedBox(width: 15),
-              Text(
-                "Running Costs",
-                style: AppTextStyles.bigText.copyWith(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xff101828),
+              Expanded(
+                child: Text(
+                  "Running Costs",
+                  style: AppTextStyles.bigText.copyWith(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xff101828),
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -93,34 +105,36 @@ class RunningCostsCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 15),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                     Text(
-                      "Total Spent",
-                      style: AppTextStyles.smallText.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: const Color(0xff006045),
-
-                      )
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      "£2050.00",
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xff1A1A1A),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Total Spent",
+                        style: AppTextStyles.smallText.copyWith(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: const Color(0xff006045),
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 5),
+                      Text(
+                        totalSpent,
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xff1A1A1A),
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
                 ),
-                const Spacer(),
-                const Text(
-                  "1 entries",
-                  style: TextStyle(
-                    fontSize: 14,
+                const SizedBox(width: 8),
+                Text(
+                  entriesCount,
+                  style: const TextStyle(
+                    fontSize: 13,
                     color: Color(0xff27AE60),
                     fontWeight: FontWeight.w500,
                   ),
@@ -151,19 +165,22 @@ class RunningCostsCard extends StatelessWidget {
                   children: [
                     Image.asset(repairIconPath, height: 20, width: 20),
                     const SizedBox(width: 10),
-                    const Text(
-                      "Repairs",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Color(0xff1A1A1A),
-                        fontWeight: FontWeight.w600,
+                    Expanded(
+                      child: Text(
+                        topExpenseName,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          color: Color(0xff1A1A1A),
+                          fontWeight: FontWeight.w600,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    const Spacer(),
-                    const Text(
-                      "£2050.00",
-                      style: TextStyle(
-                        fontSize: 18,
+                    const SizedBox(width: 8),
+                    Text(
+                      topExpenseAmount,
+                      style: const TextStyle(
+                        fontSize: 17,
                         fontWeight: FontWeight.bold,
                         color: Color(0xffE74C3C),
                       ),
@@ -171,9 +188,9 @@ class RunningCostsCard extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 5),
-                const Text(
-                  "100%",
-                  style: TextStyle(fontSize: 14, color: Color(0xff888888)),
+                Text(
+                  topExpensePercent,
+                  style: const TextStyle(fontSize: 13, color: Color(0xff888888)),
                 ),
               ],
             ),
@@ -194,15 +211,19 @@ class RunningCostsCard extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    "View All Expenses & Add New",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
+                  Expanded(
+                    child: Text(
+                      "View All Expenses & Add New",
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 8),
                   Image.asset(
                     arrowIconPath,
                     height: 16,

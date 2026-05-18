@@ -7,22 +7,33 @@ class ApiServices {
 
   ApiServices._();
 
-  static const String baseurl = "https://jvmlmf1r-5000.inc1.devtunnels.ms";
+  static const String baseurl = "https://9cx6xd5z-5000.inc1.devtunnels.ms";
 
   static String getFirstImageUrl(dynamic input) {
     if (input == null) return '';
     String path = '';
     if (input is List) {
       if (input.isNotEmpty) {
-        path = input[0].toString();
+        var first = input[0];
+        if (first is Map) {
+          path = (first['url'] ?? first['path'] ?? first['secure_url'] ?? '').toString();
+        } else {
+          path = first.toString();
+        }
       }
     } else if (input is String) {
       String trimmed = input.trim();
+      if (trimmed.isEmpty) return '';
       if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
         try {
           final List<dynamic> decoded = jsonDecode(trimmed);
           if (decoded.isNotEmpty) {
-            path = decoded[0].toString();
+            var first = decoded[0];
+            if (first is Map) {
+              path = (first['url'] ?? first['path'] ?? first['secure_url'] ?? '').toString();
+            } else {
+              path = first.toString();
+            }
           }
         } catch (e) {
           // Fallback
@@ -38,7 +49,20 @@ class ApiServices {
     } else {
       path = input.toString();
     }
-    return path.trim();
+    
+    // Normalize path (handle backslashes from Windows servers)
+    path = path.trim().replaceAll('\\', '/');
+    
+    if (path.isEmpty) return '';
+    
+    if (path.startsWith("http://") || path.startsWith("https://")) {
+      return path;
+    } else if (path.startsWith("assets/")) {
+      return path;
+    } else {
+      final String cleanPath = path.startsWith("/") ? path : "/$path";
+      return "$baseurl$cleanPath";
+    }
   }
 
   //=====================================Auth_APi============================
@@ -51,8 +75,8 @@ static const String verify_code = "$baseurl/api/auth/code-verify";
 
 //========================User_profile======================
 static const String user_profile = "$baseurl/api/user/me";
-static const String update_profile = "$baseurl/api/user/";
-static const String delete_account = "$baseurl/api/user/";
+static const String update_profile = "$baseurl/api/user";
+static const String delete_account = "$baseurl/api/user";
 
 
 //===========================crete_Repot========================================
@@ -65,15 +89,24 @@ static final String find_vehicle = kIsWeb
     ? "https://corsproxy.io/?https://driver-vehicle-licensing.api.gov.uk/vehicle-enquiry/v1/vehicles"
     : "https://driver-vehicle-licensing.api.gov.uk/vehicle-enquiry/v1/vehicles";
 static const crete_vehicle="$baseurl/api/vehicle/create";
+static const String get_all_vehicles = "$baseurl/api/vehicle";
+static const String get_vehicle_by_id = "$baseurl/api/vehicle";
+static const String update_vehicle = "$baseurl/api/vehicle";
+static const String delete_vehicle = "$baseurl/api/vehicle";
 
 //=========================document===========================================
 static const String create_documet= "$baseurl/api/documents/create";
 static const String get_document="$baseurl/api/documents";
+static const String delete_document = "$baseurl/api/documents";
 
 
 //=======================addcost================================================
 
 static const String crete_cost="$baseurl/api/cost/create";
+static const String get_const ="$baseurl/api/cost";
+static const String delete_cost = "$baseurl/api/cost";
+static const String available_costs = "$baseurl/api/cost/summary/?period=yearly";
+static const String get_vehicle_costs = "$baseurl/api/cost/vehicle/";
 
 
 

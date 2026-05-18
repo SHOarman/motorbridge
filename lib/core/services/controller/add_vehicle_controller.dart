@@ -10,7 +10,7 @@ import 'package:motorbridge/core/route/app_routes.dart';
 import '../api_sevices/api_services.dart';
 
 class AddVehicleController extends GetxController {
-  final String baseUrl = "https://jvmlmf1r-5000.inc1.devtunnels.ms";
+  final String baseUrl = "https://9cx6xd5z-5000.inc1.devtunnels.ms";
 
   var currentStep = 0.obs;
 
@@ -134,12 +134,13 @@ class AddVehicleController extends GetxController {
 
     try {
       isDvlaLoading.value = true;
+
       String dvlaUrl = ApiServices.find_vehicle;
 
       var response = await http.post(
         Uri.parse(dvlaUrl),
         headers: {
-          "x-api-key": const String.fromEnvironment('DVLA_API_KEY'),
+          "x-api-key": "",
           "Content-Type": "application/json",
         },
         body: jsonEncode({"registrationNumber": regNumber}),
