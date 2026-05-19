@@ -30,9 +30,12 @@ class Splashscreen2 extends StatelessWidget {
             bottom: 0,
             left: 0,
             right: 0,
-            height: size.height * 0.50,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              padding: EdgeInsets.only(
+                top: size.height * 0.15,
+                left: 24.0,
+                right: 24.0,
+              ),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,

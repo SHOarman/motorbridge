@@ -98,28 +98,31 @@ class CustomReminderCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: badgeBackgroundColor,
-                            borderRadius: BorderRadius.circular(6),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.15),
-                                offset: const Offset(0, 4),
-                                blurRadius: 4,
+                        Flexible(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: badgeBackgroundColor,
+                              borderRadius: BorderRadius.circular(6),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.15),
+                                  offset: const Offset(0, 4),
+                                  blurRadius: 4,
+                                ),
+                              ],
+                            ),
+                            child: Text(
+                              vehicleName,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyles.smallText.copyWith(
+                                color: badgeTextColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 11,
                               ),
-                            ],
-                          ),
-                          child: Text(
-                            vehicleName,
-                            style: AppTextStyles.smallText.copyWith(
-                              color: badgeTextColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 11,
                             ),
                           ),
                         ),
@@ -167,12 +170,15 @@ class CustomReminderCard extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    buttonText,
-                    style: AppTextStyles.smallText.copyWith(
-                      color: customButtonTextColor ?? Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18, // Slightly larger text to match big icon
+                  Flexible(
+                    child: Text(
+                      buttonText,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.smallText.copyWith(
+                        color: customButtonTextColor ?? Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18, // Slightly larger text to match big icon
+                      ),
                     ),
                   ),
                   const SizedBox(width: 12),

@@ -110,51 +110,45 @@ class AccidentReportTabController extends GetxController {
 
       request.headers.addAll({"Authorization": "Bearer $token"});
 
-      if (accidentDate.value.isNotEmpty)
-        request.fields['accidentDetails.date'] = accidentDate.value;
-      if (accidentTime.value.isNotEmpty)
-        request.fields['accidentDetails.time'] = accidentTime.value;
-      if (location.value.isNotEmpty)
-        request.fields['accidentDetails.location'] = location.value;
-      if (whatHappened.value.isNotEmpty)
-        request.fields['accidentDetails.description'] = whatHappened.value;
-      if (weatherCondition.value.isNotEmpty)
-        request.fields['accidentDetails.weatherConditions'] =
-            weatherCondition.value;
-      if (roadCondition.value.isNotEmpty)
-        request.fields['accidentDetails.roadConditions'] = roadCondition.value;
-      if (damageDescription.value.isNotEmpty)
-        request.fields['accidentDetails.damageDescription'] =
-            damageDescription.value;
-      request.fields['accidentDetails.injuries'] = hasInjuries.value.toString();
-      request.fields['accidentDetails.policeAttended'] = policeAttended.value
-          .toString();
+      // Format DateTime correctly if both are provided, otherwise just send what we have
+      if (accidentDate.value.isNotEmpty) {
+        String timeStr = accidentTime.value.isNotEmpty ? accidentTime.value : "00:00";
+        try {
+          // Attempt to format as ISO string or similar if date is in a specific format
+          // Assuming date is something like "2026-05-18", time "14:30"
+          request.fields['accidentDateTime'] = "${accidentDate.value}T$timeStr:00.000Z";
+        } catch (_) {
+          request.fields['accidentDateTime'] = accidentDate.value;
+        }
+      }
 
-      if (partyFullName.value.isNotEmpty)
-        request.fields['thirdParties.fullName'] = partyFullName.value;
-      if (partyPhone.value.isNotEmpty)
-        request.fields['thirdParties.phoneNumber'] = partyPhone.value;
-      if (partyEmail.value.isNotEmpty)
-        request.fields['thirdParties.emailAddress'] = partyEmail.value;
-      if (partyRegistration.value.isNotEmpty)
-        request.fields['thirdParties.registration'] = partyRegistration.value;
-      if (partyMake.value.isNotEmpty)
-        request.fields['thirdParties.make'] = partyMake.value;
-      if (partyModel.value.isNotEmpty)
-        request.fields['thirdParties.model'] = partyModel.value;
-      if (partyInsurance.value.isNotEmpty)
-        request.fields['thirdParties.insuranceCompany'] = partyInsurance.value;
-      if (partyPolicyNumber.value.isNotEmpty)
-        request.fields['thirdParties.policyNumber'] = partyPolicyNumber.value;
+      if (location.value.isNotEmpty) request.fields['location'] = location.value;
+      if (whatHappened.value.isNotEmpty) request.fields['incidentDetails'] = whatHappened.value;
+      if (weatherCondition.value.isNotEmpty) request.fields['weatherConditions'] = weatherCondition.value;
+      if (roadCondition.value.isNotEmpty) request.fields['roadConditions'] = roadCondition.value;
+      if (damageDescription.value.isNotEmpty) request.fields['damageDescription'] = damageDescription.value;
+      request.fields['injuries'] = hasInjuries.value.toString();
+      request.fields['policeAttended'] = policeAttended.value.toString();
 
-      if (witnessFullName.value.isNotEmpty)
-        request.fields['witnesses.fullName'] = witnessFullName.value;
-      if (witnessPhone.value.isNotEmpty)
-        request.fields['witnesses.phoneNumber'] = witnessPhone.value;
-      if (witnessEmail.value.isNotEmpty)
-        request.fields['witnesses.emailAddress'] = witnessEmail.value;
-      if (witnessStatement.value.isNotEmpty)
-        request.fields['witnesses.statement'] = witnessStatement.value;
+      // Third Parties
+      if (partyFullName.value.isNotEmpty) {
+        request.fields['thirdParties[0][fullName]'] = partyFullName.value;
+        if (partyPhone.value.isNotEmpty) request.fields['thirdParties[0][phoneNumber]'] = partyPhone.value;
+        if (partyEmail.value.isNotEmpty) request.fields['thirdParties[0][emailAddress]'] = partyEmail.value;
+        if (partyRegistration.value.isNotEmpty) request.fields['thirdParties[0][registration]'] = partyRegistration.value;
+        if (partyMake.value.isNotEmpty) request.fields['thirdParties[0][make]'] = partyMake.value;
+        if (partyModel.value.isNotEmpty) request.fields['thirdParties[0][model]'] = partyModel.value;
+        if (partyInsurance.value.isNotEmpty) request.fields['thirdParties[0][insuranceCompany]'] = partyInsurance.value;
+        if (partyPolicyNumber.value.isNotEmpty) request.fields['thirdParties[0][policyNumber]'] = partyPolicyNumber.value;
+      }
+
+      // Witnesses
+      if (witnessFullName.value.isNotEmpty) {
+        request.fields['witnesses[0][fullName]'] = witnessFullName.value;
+        if (witnessPhone.value.isNotEmpty) request.fields['witnesses[0][phoneNumber]'] = witnessPhone.value;
+        if (witnessEmail.value.isNotEmpty) request.fields['witnesses[0][emailAddress]'] = witnessEmail.value;
+        if (witnessStatement.value.isNotEmpty) request.fields['witnesses[0][statement]'] = witnessStatement.value;
+      }
 
       // Photos
       for (var photo in accidentPhotos) {
@@ -179,6 +173,12 @@ class AccidentReportTabController extends GetxController {
 
       var streamedResponse = await request.send();
       var response = await http.Response.fromStream(streamedResponse);
+
+      debugPrint("======== REPORT DATA SENT TO SERVER ========");
+      debugPrint("Fields: ${request.fields}");
+      debugPrint("Files: ${request.files.map((f) => '${f.field}: ${f.filename}').toList()}");
+      debugPrint("============================================");
+
 
       debugPrint("submitReport status: ${response.statusCode}");
       debugPrint("submitReport body: ${response.body}");

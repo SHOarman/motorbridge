@@ -392,12 +392,15 @@ class MotoringEmergencies extends StatelessWidget {
             children: [
               Image.asset(iconAsset, width: 28, height: 28),
               const SizedBox(width: 12),
-              Text(
-                title,
-                style: AppTextStyles.bigText.copyWith(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: const Color(0xFF2D3436),
+              Expanded(
+                child: Text(
+                  title,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.bigText.copyWith(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: const Color(0xFF2D3436),
+                  ),
                 ),
               ),
             ],

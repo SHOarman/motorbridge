@@ -114,9 +114,9 @@ class ReportDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic> item = Get.arguments ?? {};
-    final Map<String, dynamic> report = item['report'] ?? {};
+    final Map<String, dynamic> report = (item['report'] != null && item['report'] is Map && item['report'].isNotEmpty) ? item['report'] : item;
     final Map<String, dynamic> summary = item['summary'] ?? {};
-    final Map<String, dynamic> accidentDetails = summary['accidentDetails'] ?? {};
+    final Map<String, dynamic> accidentDetails = summary['accidentDetails'] ?? report['accidentDetails'] ?? item['accidentDetails'] ?? {};
 
     // Retrieve fields dynamically from backend structure with multiple robust fallbacks
     final String dateStr = accidentDetails['dateTime'] ?? report['accidentDateTime'] ?? report['date'] ?? report['createdAt'] ?? '';
@@ -125,7 +125,7 @@ class ReportDetailView extends StatelessWidget {
     final String weather = accidentDetails['weatherConditions'] ?? report['weatherConditions'] ?? report['weather'] ?? 'Not specified';
     final String road = accidentDetails['roadConditions'] ?? report['roadConditions'] ?? report['road'] ?? 'Not specified';
     final String damage = accidentDetails['damageDescription'] ?? report['damageDescription'] ?? report['damage'] ?? 'Not specified';
-    
+
     final String injuries = formatBool(accidentDetails['injuries'] ?? report['injuries']);
     final String police = formatBool(accidentDetails['policeAttended'] ?? report['policeAttended']);
 
@@ -159,7 +159,6 @@ class ReportDetailView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Photos Section at the very top (as in screenshot 3)
               if (scenePhotos.isNotEmpty) ...[
                 const Padding(
                   padding: EdgeInsets.only(left: 4.0, bottom: 12.0),
@@ -179,9 +178,15 @@ class ReportDetailView extends StatelessWidget {
                     itemCount: scenePhotos.length,
                     itemBuilder: (context, idx) {
                       String path = scenePhotos[idx].toString();
-                      String fullUrl = path.startsWith('/uploads/') 
-                          ? "${ApiServices.baseurl}$path" 
-                          : path;
+                      String fullUrl;
+                      if (path.startsWith('http://') || path.startsWith('https://')) {
+                        fullUrl = path;
+                      } else {
+                        if (!path.startsWith('/')) {
+                          path = '/$path';
+                        }
+                        fullUrl = "${ApiServices.baseurl}$path";
+                      }
                       return GestureDetector(
                         onTap: () => _viewFullScreenImage(context, fullUrl),
                         child: Container(

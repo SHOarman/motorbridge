@@ -1,1 +1,1 @@
--keep class public class com.mr.flutter.plugin.filepicker.** { *; }
+-keep class com.mr.flutter.plugin.filepicker.** { *; }

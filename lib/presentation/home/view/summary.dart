@@ -403,6 +403,7 @@ class SummaryView extends StatelessWidget {
   Widget _buildDetailRow(String label, String value) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
@@ -411,12 +412,16 @@ class SummaryView extends StatelessWidget {
             color: const Color(0xFF64748B),
           ),
         ),
-        Text(
-          value,
-          style: AppTextStyles.internt.copyWith(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: const Color(0xFF1E293B),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            value,
+            textAlign: TextAlign.right,
+            style: AppTextStyles.internt.copyWith(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xFF1E293B),
+            ),
           ),
         ),
       ],

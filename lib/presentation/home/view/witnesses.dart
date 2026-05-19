@@ -247,7 +247,7 @@ class WitnessesView extends StatelessWidget {
       children: [
         Icon(icon, size: 16, color: const Color(0xFF64748B)),
         const SizedBox(width: 6),
-        _buildLabel(label),
+        Expanded(child: _buildLabel(label)),
       ],
     );
   }

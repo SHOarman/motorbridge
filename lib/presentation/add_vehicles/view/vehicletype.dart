@@ -239,7 +239,7 @@ class VehicleTypeStep extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         width: cardWidth,
-        height: cardHeight,
+        constraints: BoxConstraints(minHeight: cardHeight),
         decoration: BoxDecoration(
           color: isSelected ? activeColor : Colors.white,
           borderRadius: BorderRadius.circular(10),

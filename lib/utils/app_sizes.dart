@@ -28,19 +28,19 @@ class AppSizes {
 
   // ─── Component heights ──────────────────────────────────────
   /// AddVehicleCard total height
-  double get addVehicleCardHeight => screenHeight * 0.26;
+  double get addVehicleCardHeight => (screenHeight * 0.26).clamp(180.0, 240.0);
 
   /// AddVehicleCard car image height
-  double get addVehicleCardImageHeight => screenHeight * 0.25;
+  double get addVehicleCardImageHeight => (screenHeight * 0.20).clamp(120.0, 180.0);
 
   /// Vehicle image in VehicleCard list
-  double get vehicleCardImageHeight => screenHeight * 0.18;
+  double get vehicleCardImageHeight => (screenHeight * 0.18).clamp(120.0, 200.0);
 
   /// Vehicle image in VehicleDetails screen
-  double get vehicleDetailImageHeight => screenHeight * 0.24;
+  double get vehicleDetailImageHeight => (screenHeight * 0.24).clamp(160.0, 260.0);
 
   /// Home screen appBar height
-  double get homeAppBarHeight => screenHeight * 0.30;
+  double get homeAppBarHeight => (screenHeight * 0.30).clamp(245.0, 320.0);
 
   // ─── Padding / margin ──────────────────────────────────────
   double get pagePadding => screenWidth * 0.05;

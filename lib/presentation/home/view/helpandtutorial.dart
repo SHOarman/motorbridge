@@ -128,48 +128,52 @@ class _HelpAndTutorialViewState extends State<HelpAndTutorialView>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        final Uri emailLaunchUri = Uri(
-                          scheme: 'mailto',
-                          path: 'support@motor-bridge.co.uk',
-                        );
-                        launchUrl(emailLaunchUri);
-                      },
-                      child: Text(
-                        "support@motor-bridge.co.uk",
-                        style: AppTextStyles.smallText.copyWith(
-                          color: const Color(0xFF10B981),
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          final Uri emailLaunchUri = Uri(
+                            scheme: 'mailto',
+                            path: 'support@motor-bridge.co.uk',
+                          );
+                          launchUrl(emailLaunchUri);
+                        },
+                        child: Text(
+                          "support@motor-bridge.co.uk",
+                          style: AppTextStyles.smallText.copyWith(
+                            color: const Color(0xFF10B981),
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Text(
-                          "Quick Start Tutorial",
-                          style: AppTextStyles.smallText.copyWith(
-                            color: const Color(0xFF64748B),
-                            fontSize: 13,
+                      const SizedBox(height: 4),
+                      Wrap(
+                        spacing: 12,
+                        children: [
+                          Text(
+                            "Quick Start Tutorial",
+                            style: AppTextStyles.smallText.copyWith(
+                              color: const Color(0xFF64748B),
+                              fontSize: 13,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 12),
-                        Text(
-                          "FAQs",
-                          style: AppTextStyles.smallText.copyWith(
-                            color: const Color(0xFF64748B),
-                            fontSize: 13,
+                          Text(
+                            "FAQs",
+                            style: AppTextStyles.smallText.copyWith(
+                              color: const Color(0xFF64748B),
+                              fontSize: 13,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: () => Get.back(),

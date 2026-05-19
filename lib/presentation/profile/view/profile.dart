@@ -228,7 +228,7 @@ class Profile extends StatelessWidget {
                 const SizedBox(height: 20),
                 Container(
                   width: double.infinity,
-                  height: 120,
+                  padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: const Color(0xffF6F6F6),
                     borderRadius: BorderRadius.circular(9),
@@ -245,67 +245,69 @@ class Profile extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: Stack(
+                  child: Row(
                     children: [
-                      Positioned(
-                        left: 20,
-                        top: 20,
-                        child: CircleAvatar(
-                          radius: 40,
-                          backgroundColor: Colors.grey[200],
-                          backgroundImage:
-                              controller.profileImageData.value != null
-                              ? MemoryImage(controller.profileImageData.value!)
-                              : (controller.profileImageUrl.value.isNotEmpty
-                                        ? NetworkImage(
-                                            controller.profileImageUrl.value,
-                                          )
-                                        : const AssetImage(
-                                            "assets/image/Ellipse 7.png",
-                                          ))
-                                    as ImageProvider,
-                        ),
+                      CircleAvatar(
+                        radius: 40,
+                        backgroundColor: Colors.grey[200],
+                        backgroundImage:
+                            controller.profileImageData.value != null
+                            ? MemoryImage(controller.profileImageData.value!)
+                            : (controller.profileImageUrl.value.isNotEmpty
+                                      ? NetworkImage(
+                                          controller.profileImageUrl.value,
+                                        )
+                                      : const AssetImage(
+                                          "assets/image/Ellipse 7.png",
+                                        ))
+                                  as ImageProvider,
                       ),
-                      Positioned(
-                        top: 20,
-                        left: 120,
-                        child: Text(
-                          controller.userName.value.isEmpty
-                              ? "User Name"
-                              : controller.userName.value,
-                          style: AppTextStyles.bigText.copyWith(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xff2A2A2A),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 50,
-                        left: 120,
-                        child: Text(
-                          controller.email.value.isEmpty
-                              ? "Email Address"
-                              : controller.email.value,
-                          style: AppTextStyles.smallText.copyWith(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: const Color(0xff2A2A2A),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 70,
-                        left: 120,
-                        child: Text(
-                          controller.phone.value.isEmpty
-                              ? "Phone Number"
-                              : controller.phone.value,
-                          style: AppTextStyles.smallText.copyWith(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: const Color(0xff2A2A2A),
-                          ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              controller.userName.value.isEmpty
+                                  ? "User Name"
+                                  : controller.userName.value,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyles.bigText.copyWith(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xff2A2A2A),
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              controller.email.value.isEmpty
+                                  ? "Email Address"
+                                  : controller.email.value,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyles.smallText.copyWith(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                                color: const Color(0xff2A2A2A),
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              controller.phone.value.isEmpty
+                                  ? "Phone Number"
+                                  : controller.phone.value,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyles.smallText.copyWith(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                                color: const Color(0xff2A2A2A),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -347,12 +349,18 @@ class Profile extends StatelessWidget {
                   }
                   return Column(
                     children: homeController.vehiclesList.map((vehicle) {
+                      final String yr = (vehicle['year'] ?? '').toString().trim();
+                      final String displayYear = yr.isNotEmpty ? " ($yr)" : "";
+                      final String reg = vehicle['registration'] ?? vehicle['registrationNumber'] ?? '';
+
                       return CustomMenuTile(
                         title:
-                            "${vehicle['make'] ?? ''} ${vehicle['model'] ?? ''}",
-                        subtitle: vehicle['registrationNumber'] ?? '',
+                            "${vehicle['make'] ?? ''} ${vehicle['model'] ?? ''}$displayYear",
+                        subtitle: reg,
                         leading: Image.asset('assets/icon/image 4.png'),
-                        onTap: () {},
+                        onTap: () {
+                          Get.toNamed(AppRoutes.vehicledetails, arguments: vehicle);
+                        },
                       );
                     }).toList(),
                   );

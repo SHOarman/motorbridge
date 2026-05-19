@@ -100,23 +100,30 @@ class Createaccount extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  Text(
-                    "Agree with ",
-                    style: AppTextStyles.smallText.copyWith(
-                      fontSize: 14,
-                      color: Colors.grey[700],
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {},
-                    child: Text(
-                      "Terms & Conditions",
-                      style: AppTextStyles.smallText.copyWith(
-                        fontSize: 14,
-                        color: const Color(0xFF154da1),
-                        fontWeight: FontWeight.w600,
-                        decoration: TextDecoration.underline,
-                      ),
+                  Expanded(
+                    child: Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        Text(
+                          "Agree with ",
+                          style: AppTextStyles.smallText.copyWith(
+                            fontSize: 14,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {},
+                          child: Text(
+                            "Terms & Conditions",
+                            style: AppTextStyles.smallText.copyWith(
+                              fontSize: 14,
+                              color: const Color(0xFF154da1),
+                              fontWeight: FontWeight.w600,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],

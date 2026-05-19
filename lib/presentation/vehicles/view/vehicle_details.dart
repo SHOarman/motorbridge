@@ -25,7 +25,7 @@ class VehicleDetails extends StatefulWidget {
 
 class _VehicleDetailsState extends State<VehicleDetails> {
   late Map<String, dynamic> vehicle;
-  bool isEditing = true;
+  bool isEditing = false;
   bool isSaving = false;
 
   List<dynamic> documents = [];
@@ -350,6 +350,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
         if (responseData['data'] != null) {
           setState(() {
             vehicle = responseData['data'];
+            isEditing = false;
           });
         } else {
           setState(() {
@@ -359,6 +360,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
             vehicle['bodyType'] = bodyTypeController.text.trim();
             vehicle['engineSize'] = engineSizeController.text.trim();
             vehicle['engineCode'] = engineCodeController.text.trim();
+            isEditing = false;
           });
         }
 
@@ -565,7 +567,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                 vehicleName: motStyles['text'],
                 buttonText: "Book Now",
                 iconPath: 'assets/icon/Group (4).png',
-                buttonIconPath: 'assets/icon/fluent_share-20-filled.png',
+                buttonIconPath: 'assets/icon/fluent_share-20-filled.svg',
                 backgroundColor: Colors.white,
                 titleColor: const Color(0xff2A2A2A),
                 dateColor: const Color(0xff888888),
@@ -585,7 +587,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                 vehicleName: taxStyles['text'],
                 buttonText: "Pay Tax Online",
                 iconPath: 'assets/icon/image 2.png',
-                buttonIconPath: 'assets/icon/fluent_share-20-filled.png',
+                buttonIconPath: 'assets/icon/fluent_share-20-filled.svg',
                 backgroundColor: Colors.white,
                 titleColor: const Color(0xff2A2A2A),
                 dateColor: const Color(0xff888888),
@@ -605,7 +607,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                 vehicleName: insStyles['text'],
                 buttonText: "Find Insurance",
                 iconPath: 'assets/icon/image 3.png',
-                buttonIconPath: 'assets/icon/fluent_share-20-filled.png',
+                buttonIconPath: 'assets/icon/fluent_share-20-filled.svg',
                 backgroundColor: Colors.white,
                 titleColor: const Color(0xff2A2A2A),
                 dateColor: const Color(0xff2A2A2A),
@@ -625,7 +627,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                 vehicleName: srvStyles['text'],
                 buttonText: "Book Now",
                 iconPath: 'assets/icon/mdi_tools.png',
-                buttonIconPath: 'assets/icon/fluent_share-20-filled.png',
+                buttonIconPath: 'assets/icon/fluent_share-20-filled.svg',
                 backgroundColor: Colors.white,
                 titleColor: const Color(0xff2A2A2A),
                 dateColor: const Color(0xff888888),
@@ -645,7 +647,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                 vehicleName: brkStyles['text'],
                 buttonText: "Find Cover",
                 iconPath: 'assets/icon/image 4.png',
-                buttonIconPath: 'assets/icon/fluent_share-20-filled.png',
+                buttonIconPath: 'assets/icon/fluent_share-20-filled.svg',
                 backgroundColor: Colors.white,
                 titleColor: const Color(0xff2A2A2A),
                 dateColor: const Color(0xff888888),
@@ -696,51 +698,75 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                 readOnly: !isEditing,
               ),
               
-              const SizedBox(height: 10),
-              SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: ElevatedButton(
-                  onPressed: isSaving ? null : () => saveVehicle(),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+              if (!isEditing)
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        isEditing = true;
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text(
+                      "Edit",
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                   ),
-                  child: Text(
-                    isSaving ? "Saving..." : "Save Changes",
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: OutlinedButton(
-                  onPressed: isSaving ? null : () {
-                    setState(() {
-                      engineSizeController.text = vehicle['engineSize']?.toString() ?? '';
-                      vinController.text = vehicle['vin']?.toString() ?? '';
-                      v5cController.text = vehicle['v5cDocumentNumber']?.toString() ?? '';
-                      fuelTypeController.text = vehicle['fuelType']?.toString() ?? '';
-                      bodyTypeController.text = vehicle['bodyType']?.toString() ?? '';
-                      engineCodeController.text = vehicle['engineCode']?.toString() ?? '';
-                    });
-                  },
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Colors.red),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                )
+              else ...[
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: ElevatedButton(
+                    onPressed: isSaving ? null : () => saveVehicle(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      isSaving ? "Saving..." : "Save Changes",
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                   ),
-                  child: const Text(
-                    "Cancel",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red),
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: OutlinedButton(
+                    onPressed: isSaving ? null : () {
+                      setState(() {
+                        isEditing = false;
+                        engineSizeController.text = vehicle['engineSize']?.toString() ?? '';
+                        vinController.text = vehicle['vin']?.toString() ?? '';
+                        v5cController.text = vehicle['v5cDocumentNumber']?.toString() ?? '';
+                        fuelTypeController.text = vehicle['fuelType']?.toString() ?? '';
+                        bodyTypeController.text = vehicle['bodyType']?.toString() ?? '';
+                        engineCodeController.text = vehicle['engineCode']?.toString() ?? '';
+                      });
+                    },
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: Colors.red),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text(
+                      "Cancel",
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red),
+                    ),
                   ),
                 ),
-              ),
+              ],
               
               const SizedBox(height: 20),
               RunningCostsCard(

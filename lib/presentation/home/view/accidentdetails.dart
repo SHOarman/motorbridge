@@ -285,7 +285,7 @@ class AccidentDetailsView extends StatelessWidget {
             child: value.value ? const Icon(Icons.check, size: 18, color: Colors.white) : null,
           )),
           const SizedBox(width: 12),
-          Text(label, style: _labelStyle()),
+          Expanded(child: Text(label, style: _labelStyle())),
         ],
       ),
     );

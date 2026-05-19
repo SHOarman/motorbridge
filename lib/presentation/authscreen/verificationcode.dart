@@ -17,10 +17,12 @@ class Verificationcode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final pinWidth = ((size.width - 40 - 30) / 6).clamp(35.0, 56.0);
     final defaultPinTheme = PinTheme(
-      width: 56,
+      width: pinWidth,
       height: 60,
-      textStyle: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+      textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),

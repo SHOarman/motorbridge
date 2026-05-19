@@ -94,7 +94,7 @@ class HomeScreen extends GetView<HomeController> {
               children: [
                 // ── Slider area ────────────────────────────────────────
                 SizedBox(
-                  height: sh * 0.50,
+                  height: sh * 0.55,
                   child: PageView.builder(
                     itemCount: whyChooseData.length,
                     onPageChanged: (i) => setState(() => currentIndex = i),
@@ -153,53 +153,53 @@ class HomeScreen extends GetView<HomeController> {
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 clipBehavior: Clip.antiAlias,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // Image
-                                    Container(
-                                      margin: const EdgeInsets.all(12),
-                                      height: imageHeight,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(14),
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      // Image
+                                      Container(
+                                        margin: const EdgeInsets.all(12),
+                                        height: imageHeight,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(14),
+                                        ),
+                                        clipBehavior: Clip.antiAlias,
+                                        child: Image.asset(
+                                          item['image']!,
+                                          width: double.infinity,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
-                                      clipBehavior: Clip.antiAlias,
-                                      child: Image.asset(
-                                        item['image']!,
-                                        width: double.infinity,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    // Title + description
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            item['title']!,
-                                            style: AppTextStyles.bigText.copyWith(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700,
-                                              color: Colors.white,
+                                      // Title + description
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              item['title']!,
+                                              style: AppTextStyles.bigText.copyWith(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.white,
+                                              ),
                                             ),
-                                          ),
-                                          const SizedBox(height: 6),
-                                          Text(
-                                            item['desc']!,
-                                            maxLines: 5,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: AppTextStyles.smallText.copyWith(
-                                              fontSize: 11.5,
-                                              color: const Color(0xFFCDD8EC),
-                                              height: 1.5,
+                                            const SizedBox(height: 6),
+                                            Text(
+                                              item['desc']!,
+                                              style: AppTextStyles.smallText.copyWith(
+                                                fontSize: 11.5,
+                                                color: const Color(0xFFCDD8EC),
+                                                height: 1.5,
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),

@@ -166,16 +166,17 @@ class _AllReportsViewState extends State<AllReportsView> {
                 itemCount: reports.length,
                 itemBuilder: (context, index) {
                   final item = reports[index];
-                  final report = item['report'] ?? {};
+                  final report = (item['report'] != null && item['report'] is Map && item['report'].isNotEmpty) ? item['report'] : item;
                   final summary = item['summary'] ?? {};
+                  final accidentDetails = summary['accidentDetails'] ?? report['accidentDetails'] ?? item['accidentDetails'] ?? {};
 
                   // Get details
                   final dateStr =
-                      summary['accidentDetails']?['dateTime'] ??
+                      accidentDetails['dateTime'] ??
                       report['accidentDateTime'] ??
                       '';
                   final location =
-                      summary['accidentDetails']?['location'] ??
+                      accidentDetails['location'] ??
                       report['location'] ??
                       'Not specified';
                   final photosCount =
@@ -261,68 +262,60 @@ class _AllReportsViewState extends State<AllReportsView> {
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 12),
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.location_on_outlined,
-                                    size: 16,
-                                    color: Colors.grey,
-                                  ),
-                                  const SizedBox(width: 6),
-                                  Expanded(
-                                    child: Text(
-                                      location,
-                                      style: AppTextStyles.smallText.copyWith(
-                                        fontSize: 14,
-                                        color: const Color(0xff666666),
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 6),
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.photo_library_outlined,
-                                    size: 16,
-                                    color: Colors.grey,
-                                  ),
-                                  const SizedBox(width: 6),
-                                  Text(
-                                    "$photosCount scene photo(s)",
-                                    style: AppTextStyles.smallText.copyWith(
-                                      fontSize: 14,
-                                      color: const Color(0xff666666),
-                                    ),
-                                  ),
-                                ],
-                              ),
                               const Divider(
                                 height: 24,
                                 color: Color(0xffEEEEEE),
                               ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    "Added:",
-                                    style: AppTextStyles.smallText.copyWith(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.grey,
-                                    ),
+                                  Row(
+                                    children: [
+                                      const Icon(Icons.location_on_outlined, size: 14, color: Color(0xff666666)),
+                                      const SizedBox(width: 4),
+                                      Expanded(
+                                        child: Text(
+                                          location,
+                                          style: AppTextStyles.smallText.copyWith(
+                                            fontSize: 13,
+                                            color: const Color(0xff666666),
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  Text(
-                                    formatDateString(dateStr),
-                                    style: AppTextStyles.smallText.copyWith(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: const Color(0xff2A2A2A),
-                                    ),
+                                  const SizedBox(height: 8),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      if (photosCount > 0)
+                                        Row(
+                                          children: [
+                                            const Icon(Icons.photo_library_outlined, size: 14, color: Color(0xff2664A3)),
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              "$photosCount Photo${photosCount > 1 ? 's' : ''}",
+                                              style: AppTextStyles.smallText.copyWith(
+                                                fontSize: 12,
+                                                color: const Color(0xff2664A3),
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      else
+                                        const SizedBox.shrink(),
+                                      Text(
+                                        formatDateString(dateStr),
+                                        style: AppTextStyles.smallText.copyWith(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                          color: const Color(0xff2A2A2A),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
