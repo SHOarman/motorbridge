@@ -8,6 +8,7 @@ class CustomDateCard extends StatelessWidget {
   final String placeholder;
   final String imagePath;
   final RxString dateValue;
+  final bool disableIfGovLoaded;
 
   final AddVehicleController controller = Get.find<AddVehicleController>();
 
@@ -17,6 +18,7 @@ class CustomDateCard extends StatelessWidget {
     required this.placeholder,
     required this.imagePath,
     required this.dateValue,
+    this.disableIfGovLoaded = false,
   });
 
   @override
@@ -34,8 +36,10 @@ class CustomDateCard extends StatelessWidget {
         ),
         const SizedBox(height: 8),
 
-        GestureDetector(
-          onTap: () => controller.chooseDate(context, dateValue),
+        Obx(() => GestureDetector(
+          onTap: (controller.isGovDataLoaded.value && disableIfGovLoaded)
+              ? null 
+              : () => controller.chooseDate(context, dateValue),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
             decoration: BoxDecoration(
@@ -65,7 +69,7 @@ class CustomDateCard extends StatelessWidget {
               ],
             ),
           ),
-        ),
+        )),
       ],
     );
   }

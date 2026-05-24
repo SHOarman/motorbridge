@@ -5,12 +5,13 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:motorbridge/core/route/app_routes.dart';
 import '../api_sevices/api_services.dart';
 
 class AddVehicleController extends GetxController {
-  final String baseUrl = "https://9cx6xd5z-5000.inc1.devtunnels.ms";
+  final String baseUrl = "env file ";
 
   var currentStep = 0.obs;
 
@@ -20,8 +21,8 @@ class AddVehicleController extends GetxController {
   final modelController = TextEditingController();
   var selectedYear = RxnString();
   var isDvlaLoading = false.obs;
+  var isGovDataLoaded = false.obs;
 
-  // Important Dates (using RxString for 100% compatibility with CustomDateCard)
   var motExpiryDate = "".obs;
   var roadTaxExpiryDate = "".obs;
   var insuranceExpiryDate = "".obs;
@@ -117,7 +118,6 @@ class AddVehicleController extends GetxController {
   String _formatDvlaDate(String? dateStr) {
     if (dateStr == null || dateStr.isEmpty) return '';
     try {
-      // DVLA returns yyyy-MM-dd, parse and convert to MM/dd/yyyy
       DateTime parsed = DateTime.parse(dateStr);
       return DateFormat('MM/dd/yyyy').format(parsed);
     } catch (e) {
@@ -140,7 +140,7 @@ class AddVehicleController extends GetxController {
       var response = await http.post(
         Uri.parse(dvlaUrl),
         headers: {
-          "x-api-key": "",
+          "x-api-key": dotenv.env['DVLA_API_KEY'] ?? "",
           "Content-Type": "application/json",
         },
         body: jsonEncode({"registrationNumber": regNumber}),
@@ -151,21 +151,45 @@ class AddVehicleController extends GetxController {
 
         makeController.text = data['make'] ?? '';
         selectedYear.value = data['yearOfManufacture']?.toString();
-        selectedFuelType.value = data['fuelType']?.toString().toLowerCase().capitalizeFirst;
-        engineSizeController.text = data['engineCapacity'] != null ? "${data['engineCapacity']}cc" : '';
+        selectedFuelType.value = data['fuelType']
+            ?.toString()
+            .toLowerCase()
+            .capitalizeFirst;
+        engineSizeController.text = data['engineCapacity'] != null
+            ? "${data['engineCapacity']}cc"
+            : '';
 
         motExpiryDate.value = _formatDvlaDate(data['motExpiryDate']);
         roadTaxExpiryDate.value = _formatDvlaDate(data['taxDueDate']);
+        
+        isGovDataLoaded.value = true;
 
-        Get.snackbar("Success", "Vehicle details loaded from DVLA!",
-            snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.green, colorText: Colors.white);
+        Get.snackbar(
+          "Success",
+          "Vehicle details loaded from DVLA!",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
       } else {
-        Get.snackbar("Error", "Vehicle not found on server",
-            snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.orange, colorText: Colors.white);
+        Get.snackbar(
+          "Error",
+          "Vehicle not found on server",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+        );
+        isGovDataLoaded.value = false;
       }
     } catch (e) {
-      Get.snackbar("Error", "API request failed: $e",
-          snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.orange, colorText: Colors.white);
+      Get.snackbar(
+        "Error",
+        "API request failed: $e",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+      );
+      isGovDataLoaded.value = false;
     } finally {
       isDvlaLoading.value = false;
     }
@@ -173,8 +197,11 @@ class AddVehicleController extends GetxController {
 
   Future<void> pickImages() async {
     if (galleryImages.length >= 6) {
-      Get.snackbar("Limit Exceeded", "You can add up to 6 images only.",
-          snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar(
+        "Limit Exceeded",
+        "You can add up to 6 images only.",
+        snackPosition: SnackPosition.BOTTOM,
+      );
       return;
     }
 
@@ -183,8 +210,11 @@ class AddVehicleController extends GetxController {
       if (galleryImages.length + images.length > 6) {
         int availableSlots = 6 - galleryImages.length;
         galleryImages.addAll(images.sublist(0, availableSlots));
-        Get.snackbar("Notice", "Only $availableSlots images added. Max limit is 6.",
-            snackPosition: SnackPosition.BOTTOM);
+        Get.snackbar(
+          "Notice",
+          "Only $availableSlots images added. Max limit is 6.",
+          snackPosition: SnackPosition.BOTTOM,
+        );
       } else {
         galleryImages.addAll(images);
       }
@@ -239,18 +269,26 @@ class AddVehicleController extends GetxController {
       request.fields['registration'] = registrationController.text.trim();
       request.fields['make'] = makeController.text.trim();
       request.fields['model'] = modelController.text.trim();
-      request.fields['year'] = (int.tryParse(selectedYear.value ?? '') ?? 0).toString();
+      request.fields['year'] = (int.tryParse(selectedYear.value ?? '') ?? 0)
+          .toString();
 
-      if (motExpiryDate.value.isNotEmpty) request.fields['motExpiry'] = motExpiryDate.value;
-      if (roadTaxExpiryDate.value.isNotEmpty) request.fields['roadTaxExpiry'] = roadTaxExpiryDate.value;
-      if (insuranceExpiryDate.value.isNotEmpty) request.fields['insuranceExpiry'] = insuranceExpiryDate.value;
-      if (serviceDueDate.value.isNotEmpty) request.fields['serviceDue'] = serviceDueDate.value;
-      if (breakdownExpiryDate.value.isNotEmpty) request.fields['breakdownCoverExpiry'] = breakdownExpiryDate.value;
+      if (motExpiryDate.value.isNotEmpty)
+        request.fields['motExpiry'] = motExpiryDate.value;
+      if (roadTaxExpiryDate.value.isNotEmpty)
+        request.fields['roadTaxExpiry'] = roadTaxExpiryDate.value;
+      if (insuranceExpiryDate.value.isNotEmpty)
+        request.fields['insuranceExpiry'] = insuranceExpiryDate.value;
+      if (serviceDueDate.value.isNotEmpty)
+        request.fields['serviceDue'] = serviceDueDate.value;
+      if (breakdownExpiryDate.value.isNotEmpty)
+        request.fields['breakdownCoverExpiry'] = breakdownExpiryDate.value;
 
       request.fields['vin'] = vinController.text.trim();
       request.fields['v5cDocumentNumber'] = v5cController.text.trim();
-      if (selectedFuelType.value != null) request.fields['fuelType'] = selectedFuelType.value!;
-      if (selectedBodyType.value != null) request.fields['bodyType'] = selectedBodyType.value!;
+      if (selectedFuelType.value != null)
+        request.fields['fuelType'] = selectedFuelType.value!;
+      if (selectedBodyType.value != null)
+        request.fields['bodyType'] = selectedBodyType.value!;
       request.fields['engineSize'] = engineSizeController.text.trim();
       request.fields['engineCode'] = engineCodeController.text.trim();
 
@@ -269,22 +307,36 @@ class AddVehicleController extends GetxController {
       var response = await http.Response.fromStream(streamedResponse);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        Get.snackbar("Success", "Vehicle created successfully!",
-            snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.green, colorText: Colors.white);
+        Get.snackbar(
+          "Success",
+          "Vehicle created successfully!",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
 
         Future.delayed(const Duration(seconds: 1), () {
           Get.offAllNamed(AppRoutes.home);
         });
       } else {
-        Get.snackbar("Submission Failed", "Server returned status: ${response.statusCode}",
-            snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red, colorText: Colors.white);
+        Get.snackbar(
+          "Submission Failed",
+          "Server returned status: ${response.statusCode}",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
       }
     } catch (e) {
-      Get.snackbar("Submission Failed", "Something went wrong: $e",
-          snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red, colorText: Colors.white);
+      Get.snackbar(
+        "Submission Failed",
+        "Something went wrong: $e",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     } finally {
       isSubmitLoading.value = false;
     }
   }
-
 }

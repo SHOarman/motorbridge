@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api_sevices/api_services.dart';
+import '../../route/app_routes.dart';
 
 class AuthController extends GetxController {
   var isAgreed = false.obs;
@@ -21,56 +22,60 @@ class AuthController extends GetxController {
     isAgreed.value = !isAgreed.value;
   }
 
-  Future<bool> registerUser({required String name, required String email, required String password}) async {
+  Future<bool> registerUser({
+    required String name,
+    required String email,
+    required String password,
+  }) async {
     isLoading.value = true;
     try {
       final response = await http.post(
         Uri.parse(ApiServices.register),
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "name": name,
-          "email": email,
-          "password": password
-        }),
+        body: jsonEncode({"name": name, "email": email, "password": password}),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         Get.snackbar("Success", "Registration successful!");
         return true;
       } else {
+        debugPrint("Registration error response: ${response.body}");
         var error = jsonDecode(response.body);
         Get.snackbar("Error", error['message'] ?? "Registration failed");
         return false;
       }
     } catch (e) {
-      Get.snackbar("Error", "Something went wrong");
+      debugPrint("Registration exception: $e");
+      Get.snackbar("Error", "Something went wrong: $e");
       return false;
     } finally {
       isLoading.value = false;
     }
   }
 
-  Future<bool> verifyEmail({required String email, required String code}) async {
+  Future<bool> verifyEmail({
+    required String email,
+    required String code,
+  }) async {
     isLoading.value = true;
     try {
       final response = await http.post(
         Uri.parse(ApiServices.verif_email),
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "email": email,
-          "verificationCode": code
-        }),
+        body: jsonEncode({"email": email, "verificationCode": code}),
       );
 
       if (response.statusCode == 200) {
         Get.snackbar("Success", "Email verified successfully!");
         return true;
       } else {
+        debugPrint("Verify email error response: ${response.body}");
         var error = jsonDecode(response.body);
         Get.snackbar("Error", error['message'] ?? "Verification failed");
         return false;
       }
     } catch (e) {
+      debugPrint("Verify email exception: $e");
       Get.snackbar("Error", "Something went wrong");
       return false;
     } finally {
@@ -78,16 +83,16 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<bool> loginUser({required String email, required String password}) async {
+  Future<bool> loginUser({
+    required String email,
+    required String password,
+  }) async {
     isLoading.value = true;
     try {
       final response = await http.post(
         Uri.parse(ApiServices.login),
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "email": email,
-          "password": password
-        }),
+        body: jsonEncode({"email": email, "password": password}),
       );
 
       debugPrint("Response Body: ${response.body}");
@@ -96,12 +101,15 @@ class AuthController extends GetxController {
         var responseData = jsonDecode(response.body);
 
         String token = '';
-        if (responseData['data'] != null && responseData['data']['accessToken'] != null) {
+        if (responseData['data'] != null &&
+            responseData['data']['accessToken'] != null) {
           token = responseData['data']['accessToken'];
         }
 
         debugPrint("================ User Token ================");
-        debugPrint(token.isEmpty ? "Token missing in response structure" : token);
+        debugPrint(
+          token.isEmpty ? "Token missing in response structure" : token,
+        );
         debugPrint("============================================");
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -113,11 +121,13 @@ class AuthController extends GetxController {
         Get.snackbar("Success", "Login successful!");
         return true;
       } else {
+        debugPrint("Login error response: ${response.body}");
         var error = jsonDecode(response.body);
         Get.snackbar("Error", error['message'] ?? "Login failed");
         return false;
       }
     } catch (e) {
+      debugPrint("Login exception: $e");
       Get.snackbar("Error", "Something went wrong");
       return false;
     } finally {
@@ -131,20 +141,20 @@ class AuthController extends GetxController {
       final response = await http.post(
         Uri.parse(ApiServices.forgotPassword),
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "email": email
-        }),
+        body: jsonEncode({"email": email}),
       );
 
       if (response.statusCode == 200) {
         Get.snackbar("Success", "Reset code sent to your email.");
         return true;
       } else {
+        debugPrint("Forgot password error response: ${response.body}");
         var error = jsonDecode(response.body);
         Get.snackbar("Error", error['message'] ?? "Failed to send code");
         return false;
       }
     } catch (e) {
+      debugPrint("Forgot password exception: $e");
       Get.snackbar("Error", "Something went wrong");
       return false;
     } finally {
@@ -152,27 +162,29 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<bool> verifyResetCode({required String email, required String code}) async {
+  Future<bool> verifyResetCode({
+    required String email,
+    required String code,
+  }) async {
     isLoading.value = true;
     try {
       final response = await http.post(
         Uri.parse(ApiServices.verify_code),
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "email": email,
-          "code": code
-        }),
+        body: jsonEncode({"email": email, "code": code}),
       );
 
       if (response.statusCode == 200) {
         Get.snackbar("Success", "Code verified!");
         return true;
       } else {
+        debugPrint("Verify reset code error response: ${response.body}");
         var error = jsonDecode(response.body);
         Get.snackbar("Error", error['message'] ?? "Invalid code");
         return false;
       }
     } catch (e) {
+      debugPrint("Verify reset code exception: $e");
       Get.snackbar("Error", "Something went wrong");
       return false;
     } finally {
@@ -180,7 +192,11 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<bool> resetPassword({required String email, required String code, required String newPassword}) async {
+  Future<bool> resetPassword({
+    required String email,
+    required String code,
+    required String newPassword,
+  }) async {
     isLoading.value = true;
     try {
       final response = await http.post(
@@ -189,7 +205,7 @@ class AuthController extends GetxController {
         body: jsonEncode({
           "email": email,
           "code": code,
-          "newPassword": newPassword
+          "newPassword": newPassword,
         }),
       );
 
@@ -197,11 +213,13 @@ class AuthController extends GetxController {
         Get.snackbar("Success", "Password reset successfully!");
         return true;
       } else {
+        debugPrint("Reset password error response: ${response.body}");
         var error = jsonDecode(response.body);
         Get.snackbar("Error", error['message'] ?? "Failed to reset password");
         return false;
       }
     } catch (e) {
+      debugPrint("Reset password exception: $e");
       Get.snackbar("Error", "Something went wrong");
       return false;
     } finally {
@@ -219,5 +237,6 @@ class AuthController extends GetxController {
     await prefs.clear();
     isLoggedIn.value = false;
     Get.snackbar("Logout", "Logged out successfully");
+    Get.offAllNamed(AppRoutes.singin);
   }
 }

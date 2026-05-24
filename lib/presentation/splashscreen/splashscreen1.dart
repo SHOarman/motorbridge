@@ -5,8 +5,34 @@ import '../../core/route/app_routes.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_text_styles.dart';
 
-class Splashscreen1 extends StatelessWidget {
+import 'package:shared_preferences/shared_preferences.dart';
+
+class Splashscreen1 extends StatefulWidget {
   const Splashscreen1({super.key});
+
+  @override
+  State<Splashscreen1> createState() => _Splashscreen1State();
+}
+
+class _Splashscreen1State extends State<Splashscreen1> {
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
+
+  Future<void> _checkLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    final bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    final String token = prefs.getString('token') ?? '';
+
+    if (isLoggedIn && token.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Get.offAllNamed(AppRoutes.home);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

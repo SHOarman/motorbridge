@@ -4,11 +4,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:motorbridge/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'core/dependency_injection/injecation.dart';
 import 'core/route/app_pages.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   DependencyInjection.bindings();
   runApp(
     DevicePreview(

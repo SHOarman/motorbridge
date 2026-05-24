@@ -164,7 +164,6 @@ class _VehicleDetailsState extends State<VehicleDetails> {
           fetchedList = decoded['data'] ?? [];
         }
 
-        // Strict filtering: only include costs that belong to this specific vehicle
         final filteredList = fetchedList.where((item) {
           if (item is! Map) return false;
           var v = item['vehicle'] ?? item['vehicleId'] ?? item['vehicle_id'];
@@ -296,6 +295,20 @@ class _VehicleDetailsState extends State<VehicleDetails> {
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red,
           colorText: Colors.white);
+    }
+  }
+
+  Future<void> _launchExternalUrl(String urlString) async {
+    final Uri url = Uri.parse(urlString);
+    try {
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url, mode: LaunchMode.externalApplication);
+      } else {
+        Get.snackbar("Error", "Could not launch URL",
+            snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red, colorText: Colors.white);
+      }
+    } catch (e) {
+      debugPrint("Error launching url: $e");
     }
   }
 
@@ -577,7 +590,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                 badgeBackgroundColor: motStyles['bgColor'],
                 badgeTextColor: motStyles['textColor'],
                 borderColor: const Color(0xffCECECE),
-                onButtonPressed: () {},
+                onButtonPressed: () => _launchExternalUrl('https://motor-bridge.co.uk/uk-motoring-solutions/garage-services-and-mot/'),
               ),
               const SizedBox(height: 10),
               CustomReminderCard(
@@ -597,7 +610,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                 badgeBackgroundColor: taxStyles['bgColor'],
                 badgeTextColor: taxStyles['textColor'],
                 borderColor: const Color(0xffCECECE),
-                onButtonPressed: () {},
+                onButtonPressed: () => _launchExternalUrl('https://www.gov.uk/vehicle-tax'),
               ),
               const SizedBox(height: 10),
               CustomReminderCard(
@@ -617,7 +630,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                 badgeBackgroundColor: insStyles['bgColor'],
                 badgeTextColor: insStyles['textColor'],
                 borderColor: const Color(0xffCECECE),
-                onButtonPressed: () {},
+                onButtonPressed: () => _launchExternalUrl('https://motor-bridge.co.uk/uk-motoring-solutions/vehicle-insurance/#vehicleinsurancesolutions'),
               ),
               const SizedBox(height: 10),
               CustomReminderCard(
@@ -637,7 +650,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                 badgeBackgroundColor: srvStyles['bgColor'],
                 badgeTextColor: srvStyles['textColor'],
                 borderColor: const Color(0xffCECECE),
-                onButtonPressed: () {},
+                onButtonPressed: () => _launchExternalUrl('https://motor-bridge.co.uk/uk-motoring-solutions/garage-services-and-mot/'),
               ),
               const SizedBox(height: 10),
               CustomReminderCard(
@@ -657,7 +670,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                 badgeBackgroundColor: brkStyles['bgColor'],
                 badgeTextColor: brkStyles['textColor'],
                 borderColor: const Color(0xffCECECE),
-                onButtonPressed: () {},
+                onButtonPressed: () => _launchExternalUrl('https://motor-bridge.co.uk/uk-motoring-solutions/breakdown-and-recovery/'),
               ),
               const SizedBox(height: 20),
               

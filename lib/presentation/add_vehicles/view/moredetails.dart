@@ -46,16 +46,18 @@ class MoreDetailsStep extends StatelessWidget {
             const SizedBox(height: 20),
             
             _buildLabel("Fuel Type"),
-            _buildSelectorCard(
+            Obx(() => _buildSelectorCard(
               value: controller.selectedFuelType,
               hint: "Select fuel type",
-              onTap: () => _showSelectionPopup(
-                context, 
-                "Select Fuel Type", 
-                ["Petrol", "Diesel", "Electric", "Hybrid", "LPG"],
-                (val) => controller.setFuelType(val),
-              ),
-            ),
+              onTap: controller.isGovDataLoaded.value 
+                  ? null 
+                  : () => _showSelectionPopup(
+                      context, 
+                      "Select Fuel Type", 
+                      ["Petrol", "Diesel", "Electric", "Hybrid", "LPG"],
+                      (val) => controller.setFuelType(val),
+                    ),
+            )),
             
             const SizedBox(height: 20),
             
@@ -74,10 +76,11 @@ class MoreDetailsStep extends StatelessWidget {
             const SizedBox(height: 20),
             
             _buildLabel("Engine Size"),
-            _buildTextField(
+            Obx(() => _buildTextField(
               controller: controller.engineSizeController,
               hint: "e.g., 2734",
-            ),
+              readOnly: controller.isGovDataLoaded.value,
+            )),
             
             const SizedBox(height: 20),
             
@@ -207,9 +210,11 @@ class MoreDetailsStep extends StatelessWidget {
   Widget _buildTextField({
     required TextEditingController controller,
     required String hint,
+    bool readOnly = false,
   }) {
     return TextFormField(
       controller: controller,
+      readOnly: readOnly,
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
@@ -235,7 +240,7 @@ class MoreDetailsStep extends StatelessWidget {
   Widget _buildSelectorCard({
     required RxnString value,
     required String hint,
-    required VoidCallback onTap,
+    VoidCallback? onTap,
   }) {
     return GestureDetector(
       onTap: onTap,

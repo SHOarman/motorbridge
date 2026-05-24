@@ -147,14 +147,15 @@ class VehicleTypeStep extends StatelessWidget {
 
           // ── Make ──
           _buildLabel(context, "Make*", labelFont),
-          _buildTextField(
+          Obx(() => _buildTextField(
             controller: controller.makeController,
             hint: "e.g., TOYOTA",
             hintFont: hintFont,
             fieldFont: fieldFont,
             vPad: sh * 0.018,
             hPad: sw * 0.040,
-          ),
+            readOnly: controller.isGovDataLoaded.value,
+          )),
 
           SizedBox(height: vGap),
 
@@ -173,8 +174,8 @@ class VehicleTypeStep extends StatelessWidget {
 
           // ── Year picker ──
           _buildLabel(context, "Year", labelFont),
-          GestureDetector(
-            onTap: () => _showYearPicker(context, controller),
+          Obx(() => GestureDetector(
+            onTap: controller.isGovDataLoaded.value ? null : () => _showYearPicker(context, controller),
             child: Container(
               padding: EdgeInsets.symmetric(
                 horizontal: sw * 0.040,
@@ -203,7 +204,7 @@ class VehicleTypeStep extends StatelessWidget {
               ),
             ),
           ),
-
+          ),
           SizedBox(height: sh * 0.045),
 
           // ── Save & Continue ──
@@ -308,9 +309,11 @@ class VehicleTypeStep extends StatelessWidget {
     required double fieldFont,
     required double vPad,
     required double hPad,
+    bool readOnly = false,
   }) {
     return TextFormField(
       controller: controller,
+      readOnly: readOnly,
       style: TextStyle(fontSize: fieldFont),
       decoration: InputDecoration(
         hintText: hint,

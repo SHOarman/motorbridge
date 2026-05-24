@@ -83,7 +83,8 @@ class AccidentDetailsView extends StatelessWidget {
                           );
                           if (picked != null) {
                             if (!context.mounted) return;
-                            controller.setTime(picked.format(context));
+                            final String hhmm = '${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}';
+                            controller.setTime(hhmm);
                           }
                         },
                         child: _buildInputBox(

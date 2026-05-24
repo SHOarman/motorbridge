@@ -34,6 +34,7 @@ class ImportantDatesStep extends StatelessWidget {
               placeholder: "mm/dd/yyyy",
               imagePath: "assets/icon/uis_calender.png",
               dateValue: controller.motExpiryDate,
+              disableIfGovLoaded: true,
             ),
             
             const SizedBox(height: 20),
@@ -43,6 +44,7 @@ class ImportantDatesStep extends StatelessWidget {
               placeholder: "mm/dd/yyyy",
               imagePath: "assets/icon/uis_calender.png",
               dateValue: controller.roadTaxExpiryDate,
+              disableIfGovLoaded: true,
             ),
             
             const SizedBox(height: 20),
