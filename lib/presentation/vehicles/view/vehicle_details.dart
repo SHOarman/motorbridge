@@ -1,5 +1,10 @@
+import 'dart:io';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:intl/intl.dart';
 import 'package:motorbridge/core/route/app_routes.dart';
 import 'package:motorbridge/general_widget/customappbar.dart';
 import 'package:get/get.dart';
@@ -65,6 +70,94 @@ class _VehicleDetailsState extends State<VehicleDetails> {
 
     fetchDocuments();
     fetchCostsSummary();
+  }
+
+  Future<void> _updateVehicleDate(String field, String title) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (pickedDate != null) {
+      String formattedDate = DateFormat('MM/dd/yyyy').format(pickedDate);
+      
+      try {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String? token = prefs.getString('token');
+        String vehicleId = (vehicle['id'] ?? vehicle['_id'] ?? '').toString().trim();
+
+        if (vehicleId.isEmpty) return;
+
+        var request = http.MultipartRequest(
+          'PATCH', 
+          Uri.parse("${ApiServices.update_vehicle}/$vehicleId")
+        );
+        
+        request.headers['Authorization'] = 'Bearer $token';
+        request.fields[field] = formattedDate;
+
+        debugPrint("Sending PATCH to: ${ApiServices.update_vehicle}/$vehicleId");
+        debugPrint("Updating field: $field with value: $formattedDate");
+
+        var streamedResponse = await request.send();
+        var response = await http.Response.fromStream(streamedResponse);
+
+        debugPrint("Update Vehicle Response Code: ${response.statusCode}");
+        debugPrint("Update Vehicle Response Body: ${response.body}");
+
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          bool updatedState = false;
+          try {
+            var parsed = jsonDecode(response.body);
+            if (parsed['data'] != null && parsed['data'] is Map) {
+              setState(() {
+                vehicle = Map<String, dynamic>.from(parsed['data']);
+              });
+              updatedState = true;
+            }
+          } catch (e) {
+            // parse error
+          }
+          
+          if (!updatedState) {
+            try {
+              var getRes = await http.get(
+                Uri.parse("${ApiServices.get_vehicle_by_id}/$vehicleId"),
+                headers: {'Authorization': 'Bearer $token'},
+              );
+              if (getRes.statusCode == 200) {
+                var getParsed = jsonDecode(getRes.body);
+                if (getParsed['data'] != null) {
+                  setState(() {
+                    vehicle = Map<String, dynamic>.from(getParsed['data']);
+                  });
+                  updatedState = true;
+                }
+              }
+            } catch (e) {}
+          }
+          
+          if (!updatedState) {
+            setState(() {
+              vehicle[field] = formattedDate;
+            });
+          }
+
+          Get.snackbar("Success", "$title updated successfully!", backgroundColor: Colors.green, colorText: Colors.white);
+          
+          if (Get.isRegistered<HomeController>()) {
+            Get.find<HomeController>().fetchVehicles();
+          }
+        } else {
+          Get.snackbar("Error", "Failed to update $title");
+        }
+      } catch (e) {
+        debugPrint("Error updating vehicle: $e");
+        Get.snackbar("Error", "Something went wrong: $e");
+      }
+    }
   }
 
   Future<void> fetchDocuments() async {
@@ -325,6 +418,174 @@ class _VehicleDetailsState extends State<VehicleDetails> {
     bodyTypeController.dispose();
     engineCodeController.dispose();
     super.dispose();
+  }
+
+  Future<void> deleteDocument(String docId) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+      final response = await http.delete(
+        Uri.parse("${ApiServices.delete_document}/$docId"),
+        headers: {"Authorization": "Bearer $token"},
+      );
+      if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 204) {
+        Get.snackbar("Success", "Document deleted successfully", backgroundColor: Colors.green, colorText: Colors.white, snackPosition: SnackPosition.BOTTOM);
+        fetchDocuments();
+      } else {
+        Get.snackbar("Error", "Failed to delete document", backgroundColor: Colors.red, colorText: Colors.white, snackPosition: SnackPosition.BOTTOM);
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong", backgroundColor: Colors.red, colorText: Colors.white, snackPosition: SnackPosition.BOTTOM);
+    }
+  }
+
+  void _showDeleteDocConfirmation(String docId) {
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.warning_amber_rounded, color: Colors.red, size: 48),
+              const SizedBox(height: 16),
+              const Text("Delete Document", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              const Text("Are you sure you want to delete this document?", textAlign: TextAlign.center),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(child: OutlinedButton(onPressed: () => Get.back(), child: const Text("Cancel"))),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                      onPressed: () {
+                        Get.back();
+                        deleteDocument(docId);
+                      },
+                      child: const Text("Delete", style: TextStyle(color: Colors.white)),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showEditDocDialog(Map<String, dynamic> doc) {
+    final String docId = (doc['_id'] ?? doc['id'] ?? '').toString();
+    final TextEditingController titleCtrl = TextEditingController(text: doc['title']?.toString() ?? '');
+    PlatformFile? selectedFile;
+    Uint8List? fileBytes;
+    bool isUpdating = false;
+
+    Get.bottomSheet(
+      StatefulBuilder(
+        builder: (context, setModalState) {
+          return Container(
+            padding: const EdgeInsets.all(24),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text("Edit Document", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: titleCtrl,
+                    decoration: const InputDecoration(labelText: "Document Title", border: OutlineInputBorder()),
+                  ),
+                  const SizedBox(height: 20),
+                  Text("Selected File: ${selectedFile?.name ?? 'No new file selected (keeps existing)'}"),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () async {
+                      FilePickerResult? result = await FilePicker.pickFiles(
+                        type: FileType.custom, allowedExtensions: ['pdf', 'png', 'jpg', 'jpeg'], withData: kIsWeb,
+                      );
+                      if (result != null && result.files.isNotEmpty) {
+                        final file = result.files.first;
+                        setModalState(() { selectedFile = file; });
+                        if (kIsWeb) {
+                          fileBytes = file.bytes;
+                        } else {
+                          fileBytes = file.path != null ? await File(file.path!).readAsBytes() : file.bytes;
+                        }
+                      }
+                    },
+                    child: const Text("Pick New File (Optional)"),
+                  ),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(backgroundColor: const Color(0xff1B4E9F)),
+                      onPressed: isUpdating ? null : () async {
+                        if (titleCtrl.text.trim().isEmpty) {
+                          Get.snackbar("Error", "Title cannot be empty");
+                          return;
+                        }
+                        setModalState(() { isUpdating = true; });
+                        try {
+                          SharedPreferences prefs = await SharedPreferences.getInstance();
+                          String? token = prefs.getString('token');
+                          var request = http.MultipartRequest('PATCH', Uri.parse("${ApiServices.update_document}/$docId"));
+                          request.headers.addAll({"Authorization": "Bearer $token"});
+                          request.fields['title'] = titleCtrl.text.trim();
+                          
+                          debugPrint("Sending PATCH to: ${ApiServices.update_document}/$docId");
+                          debugPrint("Title: ${titleCtrl.text.trim()}");
+
+                          if (selectedFile != null && fileBytes != null) {
+                            String ext = selectedFile!.name.split('.').last.toLowerCase();
+                            request.files.add(http.MultipartFile.fromBytes('files', fileBytes!, filename: selectedFile!.name, contentType: MediaType(ext == 'pdf' ? 'application' : 'image', ext)));
+                            debugPrint("Sending file: ${selectedFile!.name} of type $ext");
+                          } else {
+                            debugPrint("No new file selected");
+                          }
+
+                          var streamedResponse = await request.send();
+                          var response = await http.Response.fromStream(streamedResponse);
+                          
+                          debugPrint("Update Document Response Code: ${response.statusCode}");
+                          debugPrint("Update Document Response Body: ${response.body}");
+
+                          if (response.statusCode == 200 || response.statusCode == 201) {
+                            Get.back();
+                            Get.snackbar("Success", "Document updated successfully", backgroundColor: Colors.green, colorText: Colors.white);
+                            fetchDocuments();
+                          } else {
+                            Get.snackbar("Error", "Failed to update document: ${response.statusCode}");
+                          }
+                        } catch (e) {
+                          debugPrint("Error updating document: $e");
+                          Get.snackbar("Error", "Something went wrong: $e");
+                        } finally {
+                          setModalState(() { isUpdating = false; });
+                        }
+                      },
+                      child: isUpdating ? const CircularProgressIndicator(color: Colors.white) : const Text("Update Document", style: TextStyle(color: Colors.white)),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+      isScrollControlled: true,
+    );
   }
 
   Future<void> saveVehicle() async {
@@ -613,64 +874,73 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                 onButtonPressed: () => _launchExternalUrl('https://www.gov.uk/vehicle-tax'),
               ),
               const SizedBox(height: 10),
-              CustomReminderCard(
-                title: "Insurance",
-                date: vehicle['insuranceExpiry'] ?? '',
-                expiryStatus: vehicle['expiryStatus']?['insuranceExpiry']?['label'] ?? '',
-                vehicleName: insStyles['text'],
-                buttonText: "Find Insurance",
-                iconPath: 'assets/icon/image 3.png',
-                buttonIconPath: 'assets/icon/fluent_share-20-filled.svg',
-                backgroundColor: Colors.white,
-                titleColor: const Color(0xff2A2A2A),
-                dateColor: const Color(0xff2A2A2A),
-                expiryTextColor: insStyles['expiryColor'],
-                buttonColor: primaryColor,
-                customButtonTextColor: Colors.white,
-                badgeBackgroundColor: insStyles['bgColor'],
-                badgeTextColor: insStyles['textColor'],
-                borderColor: const Color(0xffCECECE),
-                onButtonPressed: () => _launchExternalUrl('https://motor-bridge.co.uk/uk-motoring-solutions/vehicle-insurance/#vehicleinsurancesolutions'),
+              GestureDetector(
+                onTap: () => _updateVehicleDate('insuranceExpiry', 'Insurance'),
+                child: CustomReminderCard(
+                  title: "Insurance",
+                  date: vehicle['insuranceExpiry'] ?? '',
+                  expiryStatus: vehicle['expiryStatus']?['insuranceExpiry']?['label'] ?? '',
+                  vehicleName: insStyles['text'],
+                  buttonText: "Find Insurance",
+                  iconPath: 'assets/icon/image 3.png',
+                  buttonIconPath: 'assets/icon/fluent_share-20-filled.svg',
+                  backgroundColor: Colors.white,
+                  titleColor: const Color(0xff2A2A2A),
+                  dateColor: const Color(0xff2A2A2A),
+                  expiryTextColor: insStyles['expiryColor'],
+                  buttonColor: primaryColor,
+                  customButtonTextColor: Colors.white,
+                  badgeBackgroundColor: insStyles['bgColor'],
+                  badgeTextColor: insStyles['textColor'],
+                  borderColor: const Color(0xffCECECE),
+                  onButtonPressed: () => _launchExternalUrl('https://motor-bridge.co.uk/uk-motoring-solutions/vehicle-insurance/#vehicleinsurancesolutions'),
+                ),
               ),
               const SizedBox(height: 10),
-              CustomReminderCard(
-                title: "Service Due",
-                date: vehicle['serviceDue'] ?? '',
-                expiryStatus: vehicle['expiryStatus']?['serviceDue']?['label'] ?? '',
-                vehicleName: srvStyles['text'],
-                buttonText: "Book Now",
-                iconPath: 'assets/icon/mdi_tools.png',
-                buttonIconPath: 'assets/icon/fluent_share-20-filled.svg',
-                backgroundColor: Colors.white,
-                titleColor: const Color(0xff2A2A2A),
-                dateColor: const Color(0xff888888),
-                expiryTextColor: srvStyles['expiryColor'],
-                buttonColor: primaryColor,
-                customButtonTextColor: Colors.white,
-                badgeBackgroundColor: srvStyles['bgColor'],
-                badgeTextColor: srvStyles['textColor'],
-                borderColor: const Color(0xffCECECE),
-                onButtonPressed: () => _launchExternalUrl('https://motor-bridge.co.uk/uk-motoring-solutions/garage-services-and-mot/'),
+              GestureDetector(
+                onTap: () => _updateVehicleDate('serviceDue', 'Service Due'),
+                child: CustomReminderCard(
+                  title: "Service Due",
+                  date: vehicle['serviceDue'] ?? '',
+                  expiryStatus: vehicle['expiryStatus']?['serviceDue']?['label'] ?? '',
+                  vehicleName: srvStyles['text'],
+                  buttonText: "Book Now",
+                  iconPath: 'assets/icon/mdi_tools.png',
+                  buttonIconPath: 'assets/icon/fluent_share-20-filled.svg',
+                  backgroundColor: Colors.white,
+                  titleColor: const Color(0xff2A2A2A),
+                  dateColor: const Color(0xff888888),
+                  expiryTextColor: srvStyles['expiryColor'],
+                  buttonColor: primaryColor,
+                  customButtonTextColor: Colors.white,
+                  badgeBackgroundColor: srvStyles['bgColor'],
+                  badgeTextColor: srvStyles['textColor'],
+                  borderColor: const Color(0xffCECECE),
+                  onButtonPressed: () => _launchExternalUrl('https://motor-bridge.co.uk/uk-motoring-solutions/garage-services-and-mot/'),
+                ),
               ),
               const SizedBox(height: 10),
-              CustomReminderCard(
-                title: "Breakdown Cover",
-                date: vehicle['breakdownCoverExpiry'] ?? '',
-                expiryStatus: vehicle['expiryStatus']?['breakdownCoverExpiry']?['label'] ?? '',
-                vehicleName: brkStyles['text'],
-                buttonText: "Find Cover",
-                iconPath: 'assets/icon/image 4.png',
-                buttonIconPath: 'assets/icon/fluent_share-20-filled.svg',
-                backgroundColor: Colors.white,
-                titleColor: const Color(0xff2A2A2A),
-                dateColor: const Color(0xff888888),
-                expiryTextColor: brkStyles['expiryColor'],
-                buttonColor: primaryColor,
-                customButtonTextColor: Colors.white,
-                badgeBackgroundColor: brkStyles['bgColor'],
-                badgeTextColor: brkStyles['textColor'],
-                borderColor: const Color(0xffCECECE),
-                onButtonPressed: () => _launchExternalUrl('https://motor-bridge.co.uk/uk-motoring-solutions/breakdown-and-recovery/'),
+              GestureDetector(
+                onTap: () => _updateVehicleDate('breakdownCoverExpiry', 'Breakdown Cover'),
+                child: CustomReminderCard(
+                  title: "Breakdown Cover",
+                  date: vehicle['breakdownCoverExpiry'] ?? '',
+                  expiryStatus: vehicle['expiryStatus']?['breakdownCoverExpiry']?['label'] ?? '',
+                  vehicleName: brkStyles['text'],
+                  buttonText: "Find Cover",
+                  iconPath: 'assets/icon/image 4.png',
+                  buttonIconPath: 'assets/icon/fluent_share-20-filled.svg',
+                  backgroundColor: Colors.white,
+                  titleColor: const Color(0xff2A2A2A),
+                  dateColor: const Color(0xff888888),
+                  expiryTextColor: brkStyles['expiryColor'],
+                  buttonColor: primaryColor,
+                  customButtonTextColor: Colors.white,
+                  badgeBackgroundColor: brkStyles['bgColor'],
+                  badgeTextColor: brkStyles['textColor'],
+                  borderColor: const Color(0xffCECECE),
+                  onButtonPressed: () => _launchExternalUrl('https://motor-bridge.co.uk/uk-motoring-solutions/breakdown-and-recovery/'),
+                ),
               ),
               const SizedBox(height: 20),
               
@@ -808,6 +1078,13 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                 },
                 onViewTap: (doc) {
                   viewDocument(doc);
+                },
+                onEditTap: (doc) {
+                  _showEditDocDialog(doc);
+                },
+                onDeleteTap: (doc) {
+                  final String docId = (doc['_id'] ?? doc['id'] ?? '').toString();
+                  if (docId.isNotEmpty) _showDeleteDocConfirmation(docId);
                 },
               ),
               const SizedBox(height: 30),

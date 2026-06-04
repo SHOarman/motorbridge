@@ -7,6 +7,9 @@ import 'package:motorbridge/core/route/app_routes.dart';
 import 'package:motorbridge/general_widget/customappbar.dart';
 import 'package:motorbridge/core/services/api_sevices/api_services.dart';
 import 'package:motorbridge/utils/app_text_styles.dart';
+import 'package:motorbridge/utils/pdf_generator.dart';
+
+import '../../home/view/accident_report_tab.dart';
 
 class AllReportsView extends StatefulWidget {
   const AllReportsView({super.key});
@@ -24,6 +27,44 @@ class _AllReportsViewState extends State<AllReportsView> {
   void initState() {
     super.initState();
     fetchReports();
+  }
+
+  Future<void> deleteReport(String id) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+      final response = await http.delete(
+        Uri.parse("${ApiServices.baseurl}/api/report/$id"),
+        headers: {"Authorization": "Bearer $token"},
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Get.snackbar("Success", "Report deleted successfully", backgroundColor: Colors.green, colorText: Colors.white);
+        fetchReports();
+      } else {
+        Get.snackbar("Error", "Failed to delete report");
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong");
+    }
+  }
+
+  void _showDeleteConfirmation(String id) {
+    Get.dialog(
+      AlertDialog(
+        title: const Text("Delete Report"),
+        content: const Text("Are you sure you want to delete this report?"),
+        actions: [
+          TextButton(onPressed: () => Get.back(), child: const Text("Cancel")),
+          TextButton(
+            onPressed: () {
+              Get.back();
+              deleteReport(id);
+            },
+            child: const Text("Delete", style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> fetchReports() async {
@@ -220,45 +261,114 @@ class _AllReportsViewState extends State<AllReportsView> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(8),
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xffFFF4D0),
-                                          borderRadius: BorderRadius.circular(
-                                            8,
+                                  Expanded(
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xffFFF4D0),
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                          ),
+                                          child: const Icon(
+                                            Icons.warning_amber_rounded,
+                                            color: Color(0xffFDC209),
+                                            size: 24,
                                           ),
                                         ),
-                                        child: const Icon(
-                                          Icons.warning_amber_rounded,
-                                          color: Color(0xffFDC209),
-                                          size: 24,
+                                        const SizedBox(width: 12),
+                                        Expanded(
+                                          child: Text(
+                                            "Report #${reports.length - index}",
+                                            style: AppTextStyles.bigText.copyWith(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: const Color(0xff2A2A2A),
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         ),
+                                      ],
+                                    ),
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          IconButton(
+                                            padding: EdgeInsets.zero,
+                                            constraints: const BoxConstraints(),
+                                            icon: const Icon(
+                                              Icons.visibility,
+                                              color: Color(0xff2664A3),
+                                              size: 22,
+                                            ),
+                                            onPressed: () {
+                                              Get.toNamed(
+                                                AppRoutes.accidentReportDetail,
+                                                arguments: item,
+                                              );
+                                            },
+                                          ),
+                                          const SizedBox(width: 12),
+                                          IconButton(
+                                            padding: EdgeInsets.zero,
+                                            constraints: const BoxConstraints(),
+                                            icon: const Icon(
+                                              Icons.edit,
+                                              color: Colors.orange,
+                                              size: 22,
+                                            ),
+                                            onPressed: () {
+                                              Get.delete<AccidentReportTabController>();
+                                              Get.toNamed(
+                                                AppRoutes.accidentReport,
+                                                arguments: item,
+                                              );
+                                            },
+                                          ),
+                                        ],
                                       ),
-                                      const SizedBox(width: 12),
-                                      Text(
-                                        "Report #${reports.length - index}",
-                                        style: AppTextStyles.bigText.copyWith(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: const Color(0xff2A2A2A),
-                                        ),
+                                      const SizedBox(height: 12),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          IconButton(
+                                            padding: EdgeInsets.zero,
+                                            constraints: const BoxConstraints(),
+                                            icon: const Icon(
+                                              Icons.picture_as_pdf_outlined,
+                                              color: Colors.redAccent,
+                                              size: 22,
+                                            ),
+                                            onPressed: () {
+                                              PdfGenerator.generateAndShareAccidentReport(item);
+                                            },
+                                          ),
+                                          const SizedBox(width: 12),
+                                          IconButton(
+                                            padding: EdgeInsets.zero,
+                                            constraints: const BoxConstraints(),
+                                            icon: const Icon(
+                                              Icons.delete_outline,
+                                              color: Colors.red,
+                                              size: 22,
+                                            ),
+                                            onPressed: () {
+                                              final String reportId = (item['report'] != null ? item['report']['_id'] ?? item['report']['id'] : item['_id'] ?? item['id'])?.toString() ?? '';
+                                              if (reportId.isNotEmpty) {
+                                                _showDeleteConfirmation(reportId);
+                                              }
+                                            },
+                                          ),
+                                        ],
                                       ),
                                     ],
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.visibility,
-                                      color: Color(0xff2664A3),
-                                      size: 24,
-                                    ),
-                                    onPressed: () {
-                                      Get.toNamed(
-                                        AppRoutes.accidentReportDetail,
-                                        arguments: item,
-                                      );
-                                    },
                                   ),
                                 ],
                               ),

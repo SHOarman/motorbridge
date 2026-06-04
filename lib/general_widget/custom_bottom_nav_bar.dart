@@ -25,19 +25,22 @@ class BottomNavPainter extends CustomPainter {
 
 
 
-    // Line to the start of the notch
-    path.lineTo(notchStart, 0);
+    double cx = size.width / 2;
+    double nw = 55.0; // Half of the notch width
 
-    // Smooth Notch (Design Match)
+    // Line to the start of the notch
+    path.lineTo(cx - nw, 0);
+
+    // Smooth Notch (Design Match) - Fixed width for tablets
     path.cubicTo(
-      size.width * 0.44, 0,
-      size.width * 0.38, size.height * 0.50,
-      size.width * 0.49, size.height * 0.60,
+      cx - nw + 20, 0,
+      cx - nw + 10, size.height * 0.60,
+      cx, size.height * 0.60,
     );
     path.cubicTo(
-      size.width * 0.64, size.height * 0.60,
-      size.width * 0.55, 0,
-      size.width * 0.64, 0,
+      cx + nw - 10, size.height * 0.60,
+      cx + nw - 20, 0,
+      cx + nw, 0,
     );
 
     // Line to the top-right corner
@@ -111,13 +114,12 @@ class CustomBottomNavBar extends StatelessWidget {
             height: barHeight,
             padding: const EdgeInsets.symmetric(horizontal: 25),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildNavItem(0, iconSize),
-                _buildNavItem(1, iconSize),
-                SizedBox(width: fabSize + 10), // Notch Space
-                _buildNavItem(2, iconSize),
-                _buildNavItem(3, iconSize),
+                Expanded(child: _buildNavItem(0, iconSize)),
+                Expanded(child: _buildNavItem(1, iconSize)),
+                const SizedBox(width: 110), // Exact width of the centered notch (nw * 2)
+                Expanded(child: _buildNavItem(2, iconSize)),
+                Expanded(child: _buildNavItem(3, iconSize)),
               ],
             ),
           ),
@@ -173,12 +175,16 @@ class CustomBottomNavBar extends StatelessWidget {
             color: isSelected ? const Color(0xFF1B4E9F) : Colors.black54,
           ),
           const SizedBox(height: 5),
-          Text(
-            item.label,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w700,
-              color: isSelected ? const Color(0xFF1B4E9F) : Color(0xff313131),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              item.label,
+              maxLines: 1,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w700,
+                color: isSelected ? const Color(0xFF1B4E9F) : const Color(0xff313131),
+              ),
             ),
           ),
         ],

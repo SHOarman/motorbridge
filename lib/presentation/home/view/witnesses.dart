@@ -118,11 +118,11 @@ class WitnessesView extends StatelessWidget {
                         children: [
                           Expanded(
                               child: _buildTextField("Jane Doe",
-                                      (v) => controller.witnessFullName.value = v)),
+                                      (v) => controller.witnessFullName.value = v, controller.witnessFullName.value)),
                           const SizedBox(width: 16),
                           Expanded(
                               child: _buildTextField("07123 456789",
-                                      (v) => controller.witnessPhone.value = v)),
+                                      (v) => controller.witnessPhone.value = v, controller.witnessPhone.value)),
                         ],
                       ),
 
@@ -130,12 +130,13 @@ class WitnessesView extends StatelessWidget {
                       _buildLabel("Email Address"),
                       const SizedBox(height: 8),
                       _buildTextField("jane@example.com",
-                              (v) => controller.witnessEmail.value = v),
+                              (v) => controller.witnessEmail.value = v, controller.witnessEmail.value),
 
                       const SizedBox(height: 16),
                       _buildLabel("Statement"),
                       const SizedBox(height: 8),
-                      TextField(
+                      TextFormField(
+                        initialValue: controller.witnessStatement.value,
                         onChanged: (v) => controller.witnessStatement.value = v,
                         maxLines: 4,
                         decoration: InputDecoration(
@@ -192,35 +193,30 @@ class WitnessesView extends StatelessWidget {
               Expanded(
                 child: SizedBox(
                   height: 56,
-                  child: Obx(() {
-                    bool isValid =
-                        controller.witnessFullName.value.isNotEmpty &&
-                            controller.witnessPhone.value.isNotEmpty;
-                    return ElevatedButton(
-                      onPressed: isValid ? () => controller.nextTab() : null,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF2563EB),
-                        foregroundColor: Colors.white,
-                        disabledBackgroundColor:
-                        const Color(0xFF2563EB).withValues(alpha: 0.5),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16)),
-                        elevation: 0,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("Next",
-                              style: AppTextStyles.internt.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 15,
-                                  color: Colors.white)),
-                          const SizedBox(width: 10),
-                          const Icon(Icons.arrow_forward, size: 20),
-                        ],
-                      ),
-                    );
-                  }),
+                  child: ElevatedButton(
+                    onPressed: () => controller.nextTab(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF2563EB),
+                      foregroundColor: Colors.white,
+                      disabledBackgroundColor:
+                      const Color(0xFF2563EB).withValues(alpha: 0.5),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16)),
+                      elevation: 0,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Next",
+                            style: AppTextStyles.internt.copyWith(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 15,
+                                color: Colors.white)),
+                        const SizedBox(width: 10),
+                        const Icon(Icons.arrow_forward, size: 20),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -252,8 +248,9 @@ class WitnessesView extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField(String hint, Function(String) onChanged) {
-    return TextField(
+  Widget _buildTextField(String hint, Function(String) onChanged, [String initialValue = ""]) {
+    return TextFormField(
+      initialValue: initialValue,
       onChanged: onChanged,
       decoration: InputDecoration(
         hintText: hint,

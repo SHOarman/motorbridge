@@ -417,7 +417,7 @@ class HomeScreen extends GetView<HomeController> {
                   onAddPressed: () => Get.toNamed(AppRoutes.addvehicles),
                   subtitle: 'Add your vehicle, get timely reminders,\nand never miss an important date.',
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: s.spaceM),
                 CustomActionCard(
                   title: "Why Choose Motorbridge",
                   bgColor: const Color(0x33000BE0),
@@ -425,7 +425,8 @@ class HomeScreen extends GetView<HomeController> {
                   onTap: () => showWhyChoosePopup(context),
                   iconPath: 'assets/icon/Vector (2).png',
                 ),
-                const SizedBox(height: 10),
+
+                SizedBox(height: s.spaceM),
                 CustomActionCard(
                   title: "Help & Tutorial",
                   bgColor: const Color.fromRGBO(0, 177, 0, 0.2),
@@ -433,7 +434,7 @@ class HomeScreen extends GetView<HomeController> {
                   onTap: () => Get.to(() => const HelpAndTutorialView()),
                   iconPath: 'assets/icon/Frame (5).png',
                 ),
-                const SizedBox(height: 30),
+                SizedBox(height: s.spaceM),
                 CustomActionButton(
                   title: "Motoring Emergencies",
                   subtitle: "Quick access to emergency contact\n & insurance details",
@@ -442,7 +443,7 @@ class HomeScreen extends GetView<HomeController> {
                   contentColor: const Color(0xffFCFDFF),
                   onTap: () => Get.toNamed(AppRoutes.motoringemergencies),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: s.spaceM),
                 CustomActionButton(
                   title: "Visit Motor Bridge UK",
                   subtitle: "All of your motoring solutions",
@@ -452,7 +453,7 @@ class HomeScreen extends GetView<HomeController> {
                   iconAfterText: true,
                   onTap: () => _launchUrl("https://motor-bridge.co.uk/"),
                 ),
-                 const SizedBox(height: 20),
+                SizedBox(height: s.spaceM),
                 Obx(() {
                   if (controller.vehiclesList.isEmpty) {
                     return const SizedBox.shrink();
@@ -485,7 +486,7 @@ class HomeScreen extends GetView<HomeController> {
                     ],
                   );
                 }),
-                const SizedBox(height: 30),
+                SizedBox(height: s.spaceM),
                 Text(
                   "Important: Motor Bridge UK is a reminder tool only. We accept no liability for missed renewals, fines, or any decisions made using this app. You are solely responsible for maintaining valid MOT, tax, and insurance. Always verify dates with official sources.",
                   style: AppTextStyles.smallText.copyWith(
@@ -494,7 +495,7 @@ class HomeScreen extends GetView<HomeController> {
                     color: AppColors.subtleText,
                   ),
                 ),
-                const SizedBox(height: 15),
+                SizedBox(height: s.spaceM),
                 Text("© 2026 Motor Bridge UK. All rights reserved.", style: AppTextStyles.smallText.copyWith(fontSize: 14, color: AppColors.subtleText)),
                 const SizedBox(height: 5),
                 GestureDetector(

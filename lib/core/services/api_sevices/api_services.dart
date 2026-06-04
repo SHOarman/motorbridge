@@ -81,6 +81,7 @@ static String get delete_account => "$baseurl/api/user";
 
 //===========================crete_Repot========================================
 static String get create_Repot => "$baseurl/api/report/create";
+static String get update_report => "$baseurl/api/report";
 static String get get_reports => "$baseurl/api/report";
 static String get get_single_report => "$baseurl/api/report"; // usage: /api/report/:id/summary
 
@@ -100,7 +101,7 @@ static String get delete_vehicle => "$baseurl/api/vehicle";
 static String get create_documet => "$baseurl/api/documents/create";
 static String get get_document => "$baseurl/api/documents";
 static String get delete_document => "$baseurl/api/documents";
-
+static String get update_document => "$baseurl/api/documents";
 
 //=======================addcost================================================
 
@@ -114,6 +115,8 @@ static String get get_vehicle_costs => "$baseurl/api/cost/vehicle/";
 //===============================emergncyconted====================
  static String get add_number => "$baseurl/api/contact/create";
  static String get get_number => "$baseurl/api/contact";
+ static String get update_number => "$baseurl/api/contact";
+ static String get delet_number => "$baseurl/api/contact";
 
 
 

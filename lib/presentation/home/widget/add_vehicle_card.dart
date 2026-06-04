@@ -74,44 +74,52 @@ class AddVehicleCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: s.screenWidth * 0.55,
-                          child: Text(
-                            title,
-                            style: AppTextStyles.bigText.copyWith(
-                              color: Colors.white,
-                              fontSize: s.fontL,
-                              fontWeight: FontWeight.w800,
-                              height: 1.2,
+                    Flexible(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SizedBox(
+                              width: s.screenWidth * 0.55,
+                              child: Text(
+                                title,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTextStyles.bigText.copyWith(
+                                  color: Colors.white,
+                                  fontSize: s.fontL,
+                                  fontWeight: FontWeight.w800,
+                                  height: 1.2,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        SizedBox(height: s.spaceM),
-                        SizedBox(
-                          width: s.screenWidth * 0.65,
-                          child: Text(
-                            subtitle,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTextStyles.smallText.copyWith(
-                              color: const Color(0xffEFEFEF),
-                              fontSize: s.fontS,
-                              fontWeight: FontWeight.w500,
+                            SizedBox(height: s.spaceS),
+                            SizedBox(
+                              width: s.screenWidth * 0.65,
+                              child: Text(
+                                subtitle,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTextStyles.smallText.copyWith(
+                                  color: const Color(0xffEFEFEF),
+                                  fontSize: s.fontS,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
+                    const SizedBox(height: 10), // সেফটি মার্জিন
                     InkWell(
                       onTap: onAddPressed,
                       borderRadius: BorderRadius.circular(s.radiusM),
                       child: Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: s.screenWidth * 0.05,
-                          vertical: s.spaceS,
+                          vertical: s.spaceS * 0.8, // প্যাডিং কিছুটা কমানো হলো
                         ),
                         decoration: BoxDecoration(
                           color: const Color(0xFF2D61A6),

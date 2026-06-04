@@ -204,6 +204,99 @@ class Profile extends StatelessWidget {
     );
   }
 
+  void _showDeleteVehicleDialog(BuildContext context, String vehicleId) {
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        backgroundColor: Colors.white,
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0x33FF4343),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(
+                Icons.delete_outline,
+                color: Color(0xFFFF4343),
+                size: 22,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Flexible(
+              child: Text(
+                "Delete Vehicle",
+                style: AppTextStyles.bigText.copyWith(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ],
+        ),
+        content: Text(
+          "Are you sure you want to delete this vehicle? This action cannot be undone.",
+          style: AppTextStyles.smallText.copyWith(
+            fontSize: 14,
+            color: const Color(0xFF666666),
+          ),
+        ),
+        actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        actions: [
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => Get.back(),
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: Color(0xFFDDDDDD)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
+                  child: Text(
+                    "Cancel",
+                    style: AppTextStyles.smallText.copyWith(
+                      fontSize: 14,
+                      color: const Color(0xFF555555),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Get.back();
+                    homeController.deleteVehicle(vehicleId);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFF4343),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    elevation: 0,
+                  ),
+                  child: Text(
+                    "Delete",
+                    style: AppTextStyles.smallText.copyWith(
+                      fontSize: 14,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     controller.getProfile(showLoader: false);
@@ -358,6 +451,29 @@ class Profile extends StatelessWidget {
                             "${vehicle['make'] ?? ''} ${vehicle['model'] ?? ''}$displayYear",
                         subtitle: reg,
                         leading: Image.asset('assets/icon/image 4.png'),
+                        trailing: PopupMenuButton<String>(
+                          onSelected: (value) {
+                            if (value == 'view') {
+                              Get.toNamed(AppRoutes.vehicledetails, arguments: vehicle);
+                            } else if (value == 'delete') {
+                              final String vId = (vehicle['_id'] ?? vehicle['id'] ?? '').toString();
+                              if (vId.isNotEmpty) {
+                                _showDeleteVehicleDialog(context, vId);
+                              }
+                            }
+                          },
+                          icon: const Icon(Icons.more_vert, color: Color(0xFF94A3B8)),
+                          itemBuilder: (context) => [
+                            const PopupMenuItem(
+                              value: 'view',
+                              child: Text('View Details'),
+                            ),
+                            const PopupMenuItem(
+                              value: 'delete',
+                              child: Text('Delete Vehicle', style: TextStyle(color: Colors.red)),
+                            ),
+                          ],
+                        ),
                         onTap: () {
                           Get.toNamed(AppRoutes.vehicledetails, arguments: vehicle);
                         },

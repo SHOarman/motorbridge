@@ -131,11 +131,11 @@ class OtherPartiesView extends StatelessWidget {
                         children: [
                           Expanded(
                               child: _buildTextField("John Smith",
-                                  (v) => controller.partyFullName.value = v)),
+                                  (v) => controller.partyFullName.value = v, controller.partyFullName.value)),
                           const SizedBox(width: 16),
                           Expanded(
                               child: _buildTextField("07123 456789",
-                                  (v) => controller.partyPhone.value = v)),
+                                  (v) => controller.partyPhone.value = v, controller.partyPhone.value)),
                         ],
                       ),
 
@@ -143,13 +143,13 @@ class OtherPartiesView extends StatelessWidget {
                       _buildLabel("Email Address"),
                       const SizedBox(height: 8),
                       _buildTextField("john@example.com",
-                          (v) => controller.partyEmail.value = v),
+                          (v) => controller.partyEmail.value = v, controller.partyEmail.value),
 
                       const SizedBox(height: 16),
                       _buildLabel("Address"),
                       const SizedBox(height: 8),
                       _buildTextField("Enter Address...",
-                          (v) => controller.partyAddress.value = v),
+                          (v) => controller.partyAddress.value = v, controller.partyAddress.value),
 
                       const SizedBox(height: 16),
                       Row(
@@ -168,11 +168,11 @@ class OtherPartiesView extends StatelessWidget {
                               child: _buildTextField(
                                   "AB12 CDE",
                                   (v) =>
-                                      controller.partyRegistration.value = v)),
+                                      controller.partyRegistration.value = v, controller.partyRegistration.value)),
                           const SizedBox(width: 16),
                           Expanded(
                               child: _buildTextField("Ford",
-                                  (v) => controller.partyMake.value = v)),
+                                  (v) => controller.partyMake.value = v, controller.partyMake.value)),
                         ],
                       ),
 
@@ -189,11 +189,11 @@ class OtherPartiesView extends StatelessWidget {
                         children: [
                           Expanded(
                               child: _buildTextField("Focus",
-                                  (v) => controller.partyModel.value = v)),
+                                  (v) => controller.partyModel.value = v, controller.partyModel.value)),
                           const SizedBox(width: 16),
                           Expanded(
                               child: _buildTextField("Churchill",
-                                  (v) => controller.partyInsurance.value = v)),
+                                  (v) => controller.partyInsurance.value = v, controller.partyInsurance.value)),
                         ],
                       ),
 
@@ -201,7 +201,7 @@ class OtherPartiesView extends StatelessWidget {
                       _buildLabel("Policy Number"),
                       const SizedBox(height: 8),
                       _buildTextField("POL123456",
-                          (v) => controller.partyPolicyNumber.value = v),
+                          (v) => controller.partyPolicyNumber.value = v, controller.partyPolicyNumber.value),
                     ],
                   ),
                 ),
@@ -239,34 +239,29 @@ class OtherPartiesView extends StatelessWidget {
               Expanded(
                 child: SizedBox(
                   height: 56,
-                  child: Obx(() {
-                    bool isValid = controller.partyFullName.value.isNotEmpty &&
-                        controller.partyPhone.value.isNotEmpty &&
-                        controller.partyRegistration.value.isNotEmpty;
-                    return ElevatedButton(
-                      onPressed: isValid ? () => controller.nextTab() : null,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF2563EB),
-                        foregroundColor: Colors.white,
-                        disabledBackgroundColor:
-                            const Color(0xFF2563EB).withValues(alpha: 0.5),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16)),
-                        elevation: 0,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("Next",
-                              style: AppTextStyles.smallText.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(0xffFFFFFF))),
-                          const SizedBox(width: 10),
-                          const Icon(Icons.arrow_forward, size: 20),
-                        ],
-                      ),
-                    );
-                  }),
+                  child: ElevatedButton(
+                    onPressed: () => controller.nextTab(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF2563EB),
+                      foregroundColor: Colors.white,
+                      disabledBackgroundColor:
+                          const Color(0xFF2563EB).withValues(alpha: 0.5),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16)),
+                      elevation: 0,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Next",
+                            style: AppTextStyles.smallText.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xffFFFFFF))),
+                        const SizedBox(width: 10),
+                        const Icon(Icons.arrow_forward, size: 20),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -298,8 +293,9 @@ class OtherPartiesView extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField(String hint, Function(String) onChanged) {
-    return TextField(
+  Widget _buildTextField(String hint, Function(String) onChanged, [String initialValue = ""]) {
+    return TextFormField(
+      initialValue: initialValue,
       onChanged: onChanged,
       decoration: InputDecoration(
         hintText: hint,

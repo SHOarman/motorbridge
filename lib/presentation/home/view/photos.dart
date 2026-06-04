@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:motorbridge/core/services/api_sevices/api_services.dart';
 import 'accident_report_tab.dart';
 import '../../../utils/app_text_styles.dart';
 
@@ -121,7 +122,7 @@ class PhotosVideosView extends StatelessWidget {
 
                 // Preview Box
                 Obx(() {
-                  if (controller.accidentPhotos.isEmpty) return const SizedBox();
+                  if (controller.accidentPhotos.isEmpty && controller.existingPhotos.isEmpty) return const SizedBox();
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -132,7 +133,7 @@ class PhotosVideosView extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Selected Photos (${controller.accidentPhotos.length})",
+                            "Selected Photos (${controller.accidentPhotos.length + controller.existingPhotos.length})",
                             style: AppTextStyles.internt.copyWith(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -159,47 +160,96 @@ class PhotosVideosView extends StatelessWidget {
                       const SizedBox(height: 12),
                       SizedBox(
                         height: 90,
-                        child: ListView.builder(
+                        child: ListView(
                           scrollDirection: Axis.horizontal,
-                          itemCount: controller.accidentPhotos.length,
-                          itemBuilder: (context, index) {
-                            final photo = controller.accidentPhotos[index];
-                            return Padding(
-                              padding: const EdgeInsets.only(right: 12),
-                              child: Stack(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: Image.file(
-                                      File(photo.path),
-                                      width: 90,
-                                      height: 90,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  Positioned(
-                                    top: 4,
-                                    right: 4,
-                                    child: GestureDetector(
-                                      onTap: () => controller.accidentPhotos.removeAt(index),
-                                      child: Container(
-                                        padding: const EdgeInsets.all(4),
-                                        decoration: const BoxDecoration(
-                                          color: Colors.black54,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: const Icon(
-                                          Icons.close,
-                                          color: Colors.white,
-                                          size: 14,
+                          children: [
+                            // Existing Photos
+                            ...controller.existingPhotos.asMap().entries.map((entry) {
+                              int index = entry.key;
+                              var photoUrl = entry.value;
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 12),
+                                child: Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: Image.network(
+                                        ApiServices.getFirstImageUrl(photoUrl),
+                                        width: 90,
+                                        height: 90,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (context, error, stackTrace) => Container(
+                                          width: 90,
+                                          height: 90,
+                                          color: Colors.grey[300],
+                                          child: const Icon(Icons.image_not_supported, color: Colors.grey),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
+                                    Positioned(
+                                      top: 4,
+                                      right: 4,
+                                      child: GestureDetector(
+                                        onTap: () => controller.existingPhotos.removeAt(index),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(4),
+                                          decoration: const BoxDecoration(
+                                            color: Colors.black54,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: const Icon(
+                                            Icons.close,
+                                            color: Colors.white,
+                                            size: 14,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }),
+                            // New Photos
+                            ...controller.accidentPhotos.asMap().entries.map((entry) {
+                              int index = entry.key;
+                              var photo = entry.value;
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 12),
+                                child: Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: Image.file(
+                                        File(photo.path),
+                                        width: 90,
+                                        height: 90,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: 4,
+                                      right: 4,
+                                      child: GestureDetector(
+                                        onTap: () => controller.accidentPhotos.removeAt(index),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(4),
+                                          decoration: const BoxDecoration(
+                                            color: Colors.black54,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: const Icon(
+                                            Icons.close,
+                                            color: Colors.white,
+                                            size: 14,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }),
+                          ],
                         ),
                       ),
                     ],
@@ -239,32 +289,29 @@ class PhotosVideosView extends StatelessWidget {
               Expanded(
                 child: SizedBox(
                   height: 56,
-                  child: Obx(() {
-                    bool isValid = controller.accidentPhotos.isNotEmpty;
-                    return ElevatedButton(
-                      onPressed: isValid ? () => controller.nextTab() : null,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF2563EB),
-                        foregroundColor: Colors.white,
-                        disabledBackgroundColor:
-                            const Color(0xFF2563EB).withValues(alpha: 0.5),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16)),
-                        elevation: 0,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("Next",
-                              style: AppTextStyles.smallText.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white)),
-                          const SizedBox(width: 10),
-                          const Icon(Icons.arrow_forward, size: 20),
-                        ],
-                      ),
-                    );
-                  }),
+                  child: ElevatedButton(
+                    onPressed: () => controller.nextTab(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF2563EB),
+                      foregroundColor: Colors.white,
+                      disabledBackgroundColor:
+                          const Color(0xFF2563EB).withValues(alpha: 0.5),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16)),
+                      elevation: 0,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Next",
+                            style: AppTextStyles.smallText.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white)),
+                        const SizedBox(width: 10),
+                        const Icon(Icons.arrow_forward, size: 20),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ],

@@ -304,7 +304,7 @@ class SummaryView extends StatelessWidget {
                       if (success) {
                         Get.snackbar(
                           "Success",
-                          "Accident report saved successfully!",
+                          controller.reportId.value.isNotEmpty ? "Accident report updated successfully!" : "Accident report saved successfully!",
                           snackPosition: SnackPosition.TOP,
                           backgroundColor: const Color(0xFF00C950),
                           colorText: Colors.white,
@@ -364,7 +364,9 @@ class SummaryView extends StatelessWidget {
                             : const Icon(Icons.check_circle_outline, size: 20),
                         const SizedBox(width: 8),
                         Text(
-                          controller.isLoading.value ? "Saving..." : "Save Report",
+                          controller.isLoading.value
+                              ? "Saving..."
+                              : (controller.reportId.value.isNotEmpty ? "Update Report" : "Save Report"),
                           style: AppTextStyles.internt.copyWith(
                             fontWeight: FontWeight.w700,
                             color: Colors.white,

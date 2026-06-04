@@ -11,7 +11,7 @@ import 'package:motorbridge/core/route/app_routes.dart';
 import '../api_sevices/api_services.dart';
 
 class AddVehicleController extends GetxController {
-  final String baseUrl = "env file ";
+  final String baseUrl = "http://13.217.91.47:5000";
 
   var currentStep = 0.obs;
 
@@ -67,26 +67,7 @@ class AddVehicleController extends GetxController {
         return false;
       }
     } else if (currentStep.value == 1) {
-      if (motExpiryDate.value.isEmpty) {
-        _showValidationError("MOT Expiry date is required");
-        return false;
-      }
-      if (roadTaxExpiryDate.value.isEmpty) {
-        _showValidationError("Road Tax Expiry date is required");
-        return false;
-      }
-      if (insuranceExpiryDate.value.isEmpty) {
-        _showValidationError("Insurance Expiry date is required");
-        return false;
-      }
-      if (serviceDueDate.value.isEmpty) {
-        _showValidationError("Service Due date is required");
-        return false;
-      }
-      if (breakdownExpiryDate.value.isEmpty) {
-        _showValidationError("Breakdown Cover Expiry date is required");
-        return false;
-      }
+      // All date fields (MOT, Road Tax, Insurance, Service, Breakdown) are now optional.
     }
     return true;
   }
@@ -205,18 +186,64 @@ class AddVehicleController extends GetxController {
       return;
     }
 
-    final List<XFile> images = await _picker.pickMultiImage();
-    if (images.isNotEmpty) {
-      if (galleryImages.length + images.length > 6) {
-        int availableSlots = 6 - galleryImages.length;
-        galleryImages.addAll(images.sublist(0, availableSlots));
-        Get.snackbar(
-          "Notice",
-          "Only $availableSlots images added. Max limit is 6.",
-          snackPosition: SnackPosition.BOTTOM,
-        );
-      } else {
-        galleryImages.addAll(images);
+    Get.bottomSheet(
+      Container(
+        color: Colors.white,
+        child: SafeArea(
+          child: Wrap(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Gallery'),
+                onTap: () {
+                  Get.back();
+                  _pickImagesFromSource(ImageSource.gallery);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('Camera'),
+                onTap: () {
+                  Get.back();
+                  _pickImagesFromSource(ImageSource.camera);
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _pickImagesFromSource(ImageSource source) async {
+    if (source == ImageSource.camera) {
+      final XFile? image = await _picker.pickImage(
+        source: source,
+        imageQuality: 60,
+        maxWidth: 1200,
+        maxHeight: 1200,
+      );
+      if (image != null) {
+        galleryImages.add(image);
+      }
+    } else {
+      final List<XFile> images = await _picker.pickMultiImage(
+        imageQuality: 60,
+        maxWidth: 1200,
+        maxHeight: 1200,
+      );
+      if (images.isNotEmpty) {
+        if (galleryImages.length + images.length > 6) {
+          int availableSlots = 6 - galleryImages.length;
+          galleryImages.addAll(images.sublist(0, availableSlots));
+          Get.snackbar(
+            "Notice",
+            "Only $availableSlots images added. Max limit is 6.",
+            snackPosition: SnackPosition.BOTTOM,
+          );
+        } else {
+          galleryImages.addAll(images);
+        }
       }
     }
   }

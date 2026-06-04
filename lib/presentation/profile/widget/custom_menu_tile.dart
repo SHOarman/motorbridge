@@ -5,6 +5,7 @@ class CustomMenuTile extends StatelessWidget {
   final String title;
   final String? subtitle;
   final Widget? leading;
+  final Widget? trailing;
   final VoidCallback onTap;
   final Color? backgroundColor;
   final Color? borderColor;
@@ -14,6 +15,7 @@ class CustomMenuTile extends StatelessWidget {
     required this.title,
     this.subtitle,
     this.leading,
+    this.trailing,
     required this.onTap,
     this.backgroundColor,
     this.borderColor,
@@ -76,7 +78,7 @@ class CustomMenuTile extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Icon(
+                trailing ?? const Icon(
                   Icons.arrow_forward_ios,
                   size: 20,
                   color: Color(0xFF94A3B8),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
 /// Centralized responsive size helper.
 /// Usage: final s = AppSizes(context);
@@ -6,10 +7,12 @@ import 'package:flutter/material.dart';
 class AppSizes {
   final double screenWidth;
   final double screenHeight;
+  final double effectiveWidth;
 
   AppSizes(BuildContext context)
       : screenWidth = MediaQuery.of(context).size.width,
-        screenHeight = MediaQuery.of(context).size.height;
+        screenHeight = MediaQuery.of(context).size.height,
+        effectiveWidth = math.min(MediaQuery.of(context).size.width, 500);
 
   // ─── Spacing ───────────────────────────────────────────────
   double get spaceXS => screenHeight * 0.008;
@@ -19,12 +22,12 @@ class AppSizes {
   double get spaceXL => screenHeight * 0.050;
 
   // ─── Font sizes ────────────────────────────────────────────
-  double get fontXS  => screenWidth * 0.028; // ~10–11px
-  double get fontS   => screenWidth * 0.032; // ~12px
-  double get fontM   => screenWidth * 0.038; // ~14px
-  double get fontL   => screenWidth * 0.044; // ~16px
-  double get fontXL  => screenWidth * 0.055; // ~20px
-  double get fontXXL => screenWidth * 0.065; // ~24px
+  double get fontXS  => effectiveWidth * 0.028; // ~10–11px
+  double get fontS   => effectiveWidth * 0.032; // ~12px
+  double get fontM   => effectiveWidth * 0.038; // ~14px
+  double get fontL   => effectiveWidth * 0.044; // ~16px
+  double get fontXL  => effectiveWidth * 0.055; // ~20px
+  double get fontXXL => effectiveWidth * 0.065; // ~24px
 
   // ─── Component heights ──────────────────────────────────────
   /// AddVehicleCard total height
@@ -43,7 +46,7 @@ class AppSizes {
   double get homeAppBarHeight => (screenHeight * 0.30).clamp(245.0, 320.0);
 
   // ─── Padding / margin ──────────────────────────────────────
-  double get pagePadding => screenWidth * 0.05;
+  double get pagePadding => effectiveWidth * 0.05;
 
   // ─── Border radius ─────────────────────────────────────────
   double get radiusM => 12.0;

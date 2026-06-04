@@ -6,6 +6,8 @@ class VehicleDocumentsCard extends StatelessWidget {
   final bool isLoading;
   final VoidCallback onAddTap;
   final Function(Map<String, dynamic>) onViewTap;
+  final Function(Map<String, dynamic>) onEditTap;
+  final Function(Map<String, dynamic>) onDeleteTap;
 
   const VehicleDocumentsCard({
     super.key,
@@ -13,6 +15,8 @@ class VehicleDocumentsCard extends StatelessWidget {
     required this.isLoading,
     required this.onAddTap,
     required this.onViewTap,
+    required this.onEditTap,
+    required this.onDeleteTap,
   });
 
   String? getFileUrl(Map<String, dynamic> doc) {
@@ -100,6 +104,8 @@ class VehicleDocumentsCard extends StatelessWidget {
                   title: title,
                   isPdf: isPdf,
                   onViewTap: () => onViewTap(doc),
+                  onEditTap: () => onEditTap(doc),
+                  onDeleteTap: () => onDeleteTap(doc),
                 );
               },
             ),
@@ -144,12 +150,16 @@ class DocumentItem extends StatelessWidget {
   final String title;
   final bool isPdf;
   final VoidCallback onViewTap;
+  final VoidCallback onEditTap;
+  final VoidCallback onDeleteTap;
 
   const DocumentItem({
     super.key,
     required this.title,
     required this.isPdf,
     required this.onViewTap,
+    required this.onEditTap,
+    required this.onDeleteTap,
   });
 
   @override
@@ -189,23 +199,32 @@ class DocumentItem extends StatelessWidget {
               ),
             ),
           ),
-          GestureDetector(
-            onTap: onViewTap,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-              decoration: BoxDecoration(
-                color: const Color(0xffF1F3F8),
-                borderRadius: BorderRadius.circular(8),
+          PopupMenuButton<String>(
+            padding: EdgeInsets.zero,
+            icon: const Icon(Icons.more_vert, color: Color(0xff607D8B)),
+            onSelected: (value) {
+              if (value == 'view') {
+                onViewTap();
+              } else if (value == 'edit') {
+                onEditTap();
+              } else if (value == 'delete') {
+                onDeleteTap();
+              }
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'view',
+                child: Text('View'),
               ),
-              child: Text(
-                "View",
-                style: AppTextStyles.smallText.copyWith(
-                  color: const Color(0xff607D8B),
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                ),
+              const PopupMenuItem(
+                value: 'edit',
+                child: Text('Edit'),
               ),
-            ),
+              const PopupMenuItem(
+                value: 'delete',
+                child: Text('Delete', style: TextStyle(color: Colors.red)),
+              ),
+            ],
           ),
         ],
       ),

@@ -7,6 +7,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:image_picker/image_picker.dart';
 import '../api_sevices/api_services.dart';
 
 class AddDocumentController extends GetxController {
@@ -30,6 +31,55 @@ class AddDocumentController extends GetxController {
   }
 
   Future<void> pickFile() async {
+    Get.bottomSheet(
+      Container(
+        color: Colors.white,
+        child: SafeArea(
+          child: Wrap(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('Camera'),
+                onTap: () {
+                  Get.back();
+                  _pickFromCamera();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.insert_drive_file),
+                title: const Text('Files / Gallery'),
+                onTap: () {
+                  Get.back();
+                  _pickFromFilePicker();
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _pickFromCamera() async {
+    try {
+      final picker = ImagePicker();
+      final XFile? image = await picker.pickImage(source: ImageSource.camera, imageQuality: 50);
+      if (image != null) {
+        final bytes = await image.readAsBytes();
+        selectedFile.value = PlatformFile(
+          name: image.name,
+          size: bytes.length,
+          bytes: bytes,
+          path: image.path,
+        );
+        fileBytes.value = bytes;
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Failed to capture image: $e", snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red, colorText: Colors.white);
+    }
+  }
+
+  Future<void> _pickFromFilePicker() async {
     try {
       FilePickerResult? result = await FilePicker.pickFiles(
         type: FileType.custom,

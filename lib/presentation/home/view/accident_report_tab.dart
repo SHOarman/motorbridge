@@ -17,10 +17,85 @@ import 'photos.dart';
 import 'summary.dart';
 
 class AccidentReportTabController extends GetxController {
+  var reportId = "".obs;
   var selectedIndex = 0.obs;
   var isAccepted = false.obs;
   var completedTabs = <int>{}.obs;
   var isLoading = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    final args = Get.arguments;
+    if (args != null && args is Map) {
+      final report = (args['report'] != null && args['report'] is Map && args['report'].isNotEmpty) ? args['report'] : args;
+      final summary = args['summary'] ?? {};
+      final accidentDetails = summary['accidentDetails'] ?? report['accidentDetails'] ?? args['accidentDetails'] ?? {};
+      
+      reportId.value = (report['_id'] ?? report['id'] ?? '').toString();
+      
+      // Load Date and Time
+      String fullDateTime = accidentDetails['dateTime'] ?? report['accidentDateTime'] ?? '';
+      if (fullDateTime.isNotEmpty) {
+        if (fullDateTime.contains('T')) {
+          final parts = fullDateTime.split('T');
+          accidentDate.value = parts[0];
+          if (parts.length > 1) accidentTime.value = parts[1].substring(0, 5);
+        } else if (fullDateTime.contains(',')) {
+           final parts = fullDateTime.split(', ');
+           if (parts.length == 2) {
+             final dParts = parts[0].split('/');
+             if (dParts.length == 3) accidentDate.value = "${dParts[2]}-${dParts[1]}-${dParts[0]}";
+             accidentTime.value = parts[1].substring(0, 5);
+           }
+        }
+      }
+      
+      location.value = (accidentDetails['location'] ?? report['location'] ?? '').toString();
+      whatHappened.value = (accidentDetails['incidentDetails'] ?? report['incidentDetails'] ?? '').toString();
+      weatherCondition.value = (accidentDetails['weatherConditions'] ?? report['weatherConditions'] ?? '').toString();
+      roadCondition.value = (accidentDetails['roadConditions'] ?? report['roadConditions'] ?? '').toString();
+      damageDescription.value = (accidentDetails['damageDescription'] ?? report['damageDescription'] ?? '').toString();
+      hasInjuries.value = report['injuries'] == true || report['injuries'] == 'true';
+      policeAttended.value = report['policeAttended'] == true || report['policeAttended'] == 'true';
+
+      final thirdParties = report['thirdParties'] as List? ?? [];
+      if (thirdParties.isNotEmpty) {
+        final tp = thirdParties[0];
+        partyFullName.value = (tp['fullName'] ?? '').toString();
+        partyPhone.value = (tp['phoneNumber'] ?? '').toString();
+        partyEmail.value = (tp['emailAddress'] ?? '').toString();
+        partyRegistration.value = (tp['registration'] ?? '').toString();
+        partyMake.value = (tp['make'] ?? '').toString();
+        partyModel.value = (tp['model'] ?? '').toString();
+        partyInsurance.value = (tp['insuranceCompany'] ?? '').toString();
+        partyPolicyNumber.value = (tp['policyNumber'] ?? '').toString();
+      }
+
+      final witnessesList = report['witnesses'] as List? ?? [];
+      if (witnessesList.isNotEmpty) {
+        final wt = witnessesList[0];
+        witnessFullName.value = (wt['fullName'] ?? '').toString();
+        witnessPhone.value = (wt['phoneNumber'] ?? '').toString();
+        witnessEmail.value = (wt['emailAddress'] ?? '').toString();
+        witnessStatement.value = (wt['statement'] ?? '').toString();
+      }
+      
+      final scenePhotosData = report['scenePhotos'];
+      existingPhotos.clear();
+      if (scenePhotosData is List) {
+        for (var photo in scenePhotosData) {
+          if (photo != null && photo.toString().isNotEmpty) {
+            existingPhotos.add(photo.toString());
+          }
+        }
+      } else if (scenePhotosData is String && scenePhotosData.isNotEmpty) {
+        existingPhotos.add(scenePhotosData);
+      }
+      
+      isAccepted.value = true;
+    }
+  }
 
   void changeTab(int index) {
     selectedIndex.value = index;
@@ -76,18 +151,59 @@ class AccidentReportTabController extends GetxController {
   var witnessStatement = "".obs;
 
   // Photos Form Data
+  var existingPhotos = <String>[].obs;
   var accidentPhotos = <XFile>[].obs;
 
   Future<void> pickImages() async {
+    Get.bottomSheet(
+      Container(
+        color: Colors.white,
+        child: SafeArea(
+          child: Wrap(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Gallery'),
+                onTap: () {
+                  Get.back();
+                  _pickImagesFromSource(ImageSource.gallery);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('Camera'),
+                onTap: () {
+                  Get.back();
+                  _pickImagesFromSource(ImageSource.camera);
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _pickImagesFromSource(ImageSource source) async {
     try {
       final ImagePicker picker = ImagePicker();
-      final List<XFile> images = await picker.pickMultiImage(
-        imageQuality: 50, // Compresses image to drastically reduce upload size
-        maxWidth:
-            1080, // Limits maximum width to standard high definition width
-      );
-      if (images.isNotEmpty) {
-        accidentPhotos.addAll(images);
+      if (source == ImageSource.camera) {
+        final XFile? image = await picker.pickImage(
+          source: source,
+          imageQuality: 50,
+          maxWidth: 1080,
+        );
+        if (image != null) {
+          accidentPhotos.add(image);
+        }
+      } else {
+        final List<XFile> images = await picker.pickMultiImage(
+          imageQuality: 50,
+          maxWidth: 1080,
+        );
+        if (images.isNotEmpty) {
+          accidentPhotos.addAll(images);
+        }
       }
     } catch (e) {
       debugPrint("Error picking images: $e");
@@ -103,9 +219,10 @@ class AccidentReportTabController extends GetxController {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('token');
 
+      final isUpdate = reportId.value.isNotEmpty;
       var request = http.MultipartRequest(
-        'POST',
-        Uri.parse(ApiServices.create_Repot),
+        isUpdate ? 'PATCH' : 'POST',
+        Uri.parse(isUpdate ? "${ApiServices.update_report}/${reportId.value}" : ApiServices.create_Repot),
       );
 
       request.headers.addAll({"Authorization": "Bearer $token"});
@@ -151,8 +268,8 @@ class AccidentReportTabController extends GetxController {
       }
 
       // Photos
-      for (var photo in accidentPhotos) {
-        String ext = photo.name.split('.').last.toLowerCase();
+      for (var file in accidentPhotos) {
+        String ext = file.name.split('.').last.toLowerCase();
         if (ext != 'jpg' &&
             ext != 'jpeg' &&
             ext != 'png' &&
@@ -160,15 +277,34 @@ class AccidentReportTabController extends GetxController {
             ext != 'webp') {
           ext = 'jpeg'; // Fallback
         }
-        var fileBytes = await photo.readAsBytes();
+        var fileBytes = await file.readAsBytes();
         request.files.add(
           http.MultipartFile.fromBytes(
             'scenePhotos',
             fileBytes,
-            filename: photo.name,
+            filename: file.name,
             contentType: MediaType('image', ext == 'jpg' ? 'jpeg' : ext),
           ),
         );
+      }
+
+      // Preserve existing photos by re-uploading them
+      for (String url in existingPhotos) {
+        try {
+          var response = await http.get(Uri.parse(ApiServices.getFirstImageUrl(url)));
+          if (response.statusCode == 200) {
+            request.files.add(
+              http.MultipartFile.fromBytes(
+                'scenePhotos',
+                response.bodyBytes,
+                filename: 'existing_photo_${DateTime.now().millisecondsSinceEpoch}.jpg',
+                contentType: MediaType('image', 'jpeg'),
+              ),
+            );
+          }
+        } catch (e) {
+          debugPrint("Failed to download existing photo: $e");
+        }
       }
 
       var streamedResponse = await request.send();
@@ -263,7 +399,10 @@ class AccidentReportTab extends StatelessWidget {
                 children: [
                   // Back Button Section
                   GestureDetector(
-                    onTap: () => Get.back(),
+                    onTap: () {
+                      Get.delete<AccidentReportTabController>();
+                      Get.back();
+                    },
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [

@@ -78,6 +78,27 @@ class HomeController extends GetxController {
     }
   }
 
+  Future<void> deleteVehicle(String id) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+
+      var response = await http.delete(
+        Uri.parse("${ApiServices.delete_vehicle}/$id"),
+        headers: {"Authorization": "Bearer $token"},
+      );
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        Get.snackbar("Success", "Vehicle deleted successfully",
+            backgroundColor: Colors.green, colorText: Colors.white);
+        fetchVehicles();
+      } else {
+        Get.snackbar("Error", "Failed to delete vehicle");
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong: $e");
+    }
+  }
+
   Future<void> fetchEmergencyContacts() async {
     try {
       isLoadingContacts.value = true;
@@ -129,12 +150,74 @@ class HomeController extends GetxController {
         }),
       );
 
+      debugPrint("Add Contact Response Code: ${response.statusCode}");
+      debugPrint("Add Contact Response Body: ${response.body}");
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         await fetchEmergencyContacts();
         return true;
       }
     } catch (e) {
       debugPrint("Error adding emergency contact: $e");
+    }
+    return false;
+  }
+
+  Future<bool> updateEmergencyContact(String id, String contactName, String contactNumber) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+
+      if (token == null || token.isEmpty) return false;
+
+      final response = await http.patch(
+        Uri.parse("${ApiServices.update_number}/$id"),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode({
+          "contactName": contactName,
+          "contactNumber": contactNumber,
+        }),
+      );
+
+      debugPrint("Update Contact Response Code: ${response.statusCode}");
+      debugPrint("Update Contact Response Body: ${response.body}");
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        await fetchEmergencyContacts();
+        return true;
+      }
+    } catch (e) {
+      debugPrint("Error updating emergency contact: $e");
+    }
+    return false;
+  }
+
+  Future<bool> deleteEmergencyContact(String id) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+
+      if (token == null || token.isEmpty) return false;
+
+      final response = await http.delete(
+        Uri.parse("${ApiServices.delet_number}/$id"),
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      );
+
+      debugPrint("Delete Contact Response Code: ${response.statusCode}");
+      debugPrint("Delete Contact Response Body: ${response.body}");
+
+      if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 204) {
+        await fetchEmergencyContacts();
+        return true;
+      }
+    } catch (e) {
+      debugPrint("Error deleting emergency contact: $e");
     }
     return false;
   }

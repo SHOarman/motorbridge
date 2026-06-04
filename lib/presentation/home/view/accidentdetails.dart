@@ -99,7 +99,8 @@ class AccidentDetailsView extends StatelessWidget {
                 const SizedBox(height: 20),
                 _buildLabelWithIcon("Location", Icons.location_on_outlined),
                 const SizedBox(height: 8),
-                TextField(
+                TextFormField(
+                  initialValue: controller.location.value,
                   onChanged: (val) => controller.location.value = val,
                   decoration: _inputDecoration("Enter your location"),
                   style: _inputTextStyle(),
@@ -108,7 +109,8 @@ class AccidentDetailsView extends StatelessWidget {
                 const SizedBox(height: 20),
                 Text("What Happened?", style: _labelStyle()),
                 const SizedBox(height: 8),
-                TextField(
+                TextFormField(
+                  initialValue: controller.whatHappened.value,
                   onChanged: (val) => controller.whatHappened.value = val,
                   maxLines: 4,
                   decoration: _inputDecoration("Describe the accident in detail..."),
@@ -156,7 +158,8 @@ class AccidentDetailsView extends StatelessWidget {
                 const SizedBox(height: 20),
                 Text("Damage Description", style: _labelStyle()),
                 const SizedBox(height: 8),
-                TextField(
+                TextFormField(
+                  initialValue: controller.damageDescription.value,
                   onChanged: (val) => controller.damageDescription.value = val,
                   maxLines: 3,
                   decoration: _inputDecoration("Describe the damage..."),
@@ -192,19 +195,30 @@ class AccidentDetailsView extends StatelessWidget {
               Expanded(
                 child: SizedBox(
                   height: 56,
-                  child: Obx(() {
-                    bool isValid = controller.accidentDate.value.isNotEmpty &&
-                        controller.accidentTime.value.isNotEmpty &&
-                        controller.location.value.isNotEmpty;
-                    return ElevatedButton(
-                      onPressed: isValid ? () => controller.nextTab() : null,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF2563EB),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                      ),
-                      child: const Text("Next", style: TextStyle(color: Colors.white)),
-                    );
-                  }),
+                  child: ElevatedButton(
+                    onPressed: () => controller.nextTab(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF2563EB),
+                      foregroundColor: Colors.white,
+                      disabledBackgroundColor:
+                          const Color(0xFF2563EB).withValues(alpha: 0.5),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16)),
+                      elevation: 0,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Next",
+                            style: AppTextStyles.internt.copyWith(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 15,
+                                color: Colors.white)),
+                        const SizedBox(width: 10),
+                        const Icon(Icons.arrow_forward, size: 20),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -256,20 +270,26 @@ class AccidentDetailsView extends StatelessWidget {
   }
 
   Widget _buildDropdown(RxString selectedValue, List<String> items) {
-    return Obx(() => Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(color: const Color(0xFFF1F5F9), borderRadius: BorderRadius.circular(10)),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<String>(
-          value: selectedValue.value.isEmpty ? null : selectedValue.value,
-          hint: Text("Select..", style: AppTextStyles.internt.copyWith(fontSize: 14)),
-          isExpanded: true,
-          icon: const Icon(Icons.keyboard_arrow_down),
-          items: items.map((val) => DropdownMenuItem(value: val, child: Text(val, style: _inputTextStyle()))).toList(),
-          onChanged: (val) => selectedValue.value = val ?? "",
+    return Obx(() {
+      String? currentValue = selectedValue.value.isEmpty ? null : selectedValue.value;
+      if (currentValue != null && !items.contains(currentValue)) {
+        currentValue = null;
+      }
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        decoration: BoxDecoration(color: const Color(0xFFF1F5F9), borderRadius: BorderRadius.circular(10)),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton<String>(
+            value: currentValue,
+            hint: Text("Select..", style: AppTextStyles.internt.copyWith(fontSize: 14)),
+            isExpanded: true,
+            icon: const Icon(Icons.keyboard_arrow_down),
+            items: items.map((val) => DropdownMenuItem(value: val, child: Text(val, style: _inputTextStyle()))).toList(),
+            onChanged: (val) => selectedValue.value = val ?? "",
+          ),
         ),
-      ),
-    ));
+      );
+    });
   }
 
   Widget _buildCheckboxRow(String label, RxBool value, Function(bool?) onChanged) {

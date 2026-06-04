@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -163,10 +164,7 @@ class MotoringEmergencies extends StatelessWidget {
                 phoneNumber: "0300 123 5000",
               ),
               const SizedBox(height: 16),
-              _buildInsuranceButton(
-                phoneNumber: "08000000000",
-                iconAsset: "assets/icon/Frame (10).png",
-              ),
+
 
               // Dynamic Contacts
               Obx(() {
@@ -187,6 +185,7 @@ class MotoringEmergencies extends StatelessWidget {
                         backgroundColor: const Color(0xffE8F5E9),
                         buttonColor: const Color(0xFF2E7D32),
                         phoneNumber: contact['contactNumber'] ?? '',
+                        contactId: (contact['_id'] ?? contact['id'])?.toString(),
                       ),
                     );
                   }).toList(),
@@ -207,50 +206,59 @@ class MotoringEmergencies extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              Container(
-                width: double.infinity,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-                decoration: BoxDecoration(
-                  color: const Color(0xffFFFFFF),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withAlpha(13),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                      spreadRadius: 2,
-                    ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      "assets/icon/Container (20).png",
-                      width: 80,
-                      height: 80,
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      "Broken down? Need Cover?",
-                      textAlign: TextAlign.center,
-                      style: AppTextStyles.smallText.copyWith(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w400,
+              InkWell(
+                onTap: () async {
+                  final Uri url = Uri.parse('https://motor-bridge.co.uk/uk-motoring-solutions/breakdown-and-recovery/');
+                  if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+                    Get.snackbar("Error", "Could not open the link");
+                  }
+                },
+                borderRadius: BorderRadius.circular(16),
+                child: Container(
+                  width: double.infinity,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+                  decoration: BoxDecoration(
+                    color: const Color(0xffFFFFFF),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withAlpha(13),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                        spreadRadius: 2,
                       ),
-                    ),
-                    const SizedBox(height: 15),
-                    Text(
-                      "Vehicle Breakdown",
-                      textAlign: TextAlign.center,
-                      style: AppTextStyles.bigText.copyWith(
-                        fontSize: 30,
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xffFF6B35),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        "assets/icon/Container (20).png",
+                        width: 80,
+                        height: 80,
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 20),
+                      Text(
+                        "Broken down? Need Cover?",
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.smallText.copyWith(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      Text(
+                        "Vehicle Breakdown",
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.bigText.copyWith(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w700,
+                          color: const Color(0xffFF6B35),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -318,6 +326,7 @@ class MotoringEmergencies extends StatelessWidget {
                       borderRadius: BorderRadius.circular(14),
                       child: InkWell(
                         onTap: () {
+                          Get.delete<AccidentReportTabController>();
                           Get.to(() => const AccidentReportTab());
                         },
                         borderRadius: BorderRadius.circular(14),
@@ -370,6 +379,7 @@ class MotoringEmergencies extends StatelessWidget {
     required Color backgroundColor,
     required Color buttonColor,
     required String phoneNumber,
+    String? contactId,
   }) {
     return Container(
       width: double.infinity,
@@ -403,6 +413,28 @@ class MotoringEmergencies extends StatelessWidget {
                   ),
                 ),
               ),
+              if (contactId != null)
+                PopupMenuButton<String>(
+                  padding: EdgeInsets.zero,
+                  icon: const Icon(Icons.more_vert, color: Color(0xFF2D3436)),
+                  onSelected: (value) {
+                    if (value == 'edit') {
+                      _showEditContactDialog(contactId, title, phoneNumber);
+                    } else if (value == 'delete') {
+                      _showDeleteConfirmation(contactId);
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: 'edit',
+                      child: Text('Edit'),
+                    ),
+                    const PopupMenuItem(
+                      value: 'delete',
+                      child: Text('Delete'),
+                    ),
+                  ],
+                ),
             ],
           ),
           const SizedBox(height: 4),
@@ -504,6 +536,219 @@ class MotoringEmergencies extends StatelessWidget {
                   color: Colors.white,
                   fontWeight: FontWeight.w500,
                 ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showEditContactDialog(String id, String currentName, String currentNumber) {
+    final TextEditingController nameController = TextEditingController(text: currentName);
+    final TextEditingController numberController = TextEditingController(text: currentNumber);
+    final HomeController homeController = Get.find<HomeController>();
+
+    Get.defaultDialog(
+      title: "",
+      titlePadding: EdgeInsets.zero,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      radius: 12,
+      content: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+          const Text(
+            "Update Contact Name",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xff2D3436)),
+          ),
+          const SizedBox(height: 10),
+          TextField(
+            controller: nameController,
+            decoration: InputDecoration(
+              hintText: "example - insurance provider",
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+          ),
+          const SizedBox(height: 20),
+          const Text(
+            "Update Contact Number",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xff2D3436)),
+          ),
+          const SizedBox(height: 10),
+          TextField(
+            controller: numberController,
+            keyboardType: TextInputType.phone,
+            decoration: InputDecoration(
+              hintText: "example - insurance contact number",
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+          ),
+          const SizedBox(height: 25),
+          SizedBox(
+            width: double.infinity,
+            height: 50,
+            child: ElevatedButton(
+              onPressed: () async {
+                if (nameController.text.trim().isEmpty || numberController.text.trim().isEmpty) {
+                  Get.snackbar("Error", "Please fill all fields", backgroundColor: Colors.red, colorText: Colors.white);
+                  return;
+                }
+                
+                bool success = await homeController.updateEmergencyContact(
+                  id,
+                  nameController.text.trim(),
+                  numberController.text.trim(),
+                );
+                
+                if (success) {
+                  Get.back();
+                  Get.snackbar("Success", "Contact updated successfully", backgroundColor: Colors.green, colorText: Colors.white);
+                } else {
+                  Get.snackbar("Error", "Failed to update contact", backgroundColor: Colors.red, colorText: Colors.white);
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xff2664A3),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              child: const Text(
+                "Update Contact",
+                style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+              ),
+            ),
+          ),
+        ],
+      ),
+      ),
+    );
+  }
+
+  void _showDeleteConfirmation(String id) {
+    final HomeController homeController = Get.find<HomeController>();
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 15.0,
+                offset: Offset(0.0, 10.0),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.red.shade50,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.delete_outline,
+                  color: Colors.red.shade400,
+                  size: 40,
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                "Delete Contact",
+                style: TextStyle(
+                  fontSize: 22.0,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF2D3436),
+                ),
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                "Are you sure you want to delete this contact? This action cannot be undone.",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14.0,
+                  color: Color(0xFF636E72),
+                  height: 1.4,
+                ),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Get.back(),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        side: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      child: const Text(
+                        "Cancel",
+                        style: TextStyle(
+                          color: Color(0xFF636E72),
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        bool success = await homeController.deleteEmergencyContact(id);
+                        if (success) {
+                          Get.back();
+                          Get.snackbar(
+                            "Success", 
+                            "Contact deleted successfully", 
+                            backgroundColor: Colors.green, 
+                            colorText: Colors.white,
+                            snackPosition: SnackPosition.BOTTOM,
+                            margin: const EdgeInsets.all(12),
+                          );
+                        } else {
+                          Get.snackbar(
+                            "Error", 
+                            "Failed to delete contact", 
+                            backgroundColor: Colors.red, 
+                            colorText: Colors.white,
+                            snackPosition: SnackPosition.BOTTOM,
+                            margin: const EdgeInsets.all(12),
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFE74C3C),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: const Text(
+                        "Delete",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

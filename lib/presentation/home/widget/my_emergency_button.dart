@@ -31,9 +31,10 @@ class _MyEmergencyButtonState extends State<MyEmergencyButton> {
       titlePadding: EdgeInsets.zero,
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       radius: 12,
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+      content: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           const Text(
             "Emergency Contact Name",
             style: TextStyle(
@@ -124,6 +125,7 @@ class _MyEmergencyButtonState extends State<MyEmergencyButton> {
             ),
           ),
         ],
+      ),
       ),
     );
   }
