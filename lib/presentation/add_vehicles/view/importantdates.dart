@@ -31,7 +31,7 @@ class ImportantDatesStep extends StatelessWidget {
             
             CustomDateCard(
               label: "MOT Expiry",
-              placeholder: "mm/dd/yyyy",
+              placeholder: "DD/MM/YYYY",
               imagePath: "assets/icon/uis_calender.png",
               dateValue: controller.motExpiryDate,
               disableIfGovLoaded: true,
@@ -41,7 +41,7 @@ class ImportantDatesStep extends StatelessWidget {
             
             CustomDateCard(
               label: "Road Tax Expiry",
-              placeholder: "mm/dd/yyyy",
+              placeholder: "DD/MM/YYYY",
               imagePath: "assets/icon/uis_calender.png",
               dateValue: controller.roadTaxExpiryDate,
               disableIfGovLoaded: true,
@@ -51,7 +51,7 @@ class ImportantDatesStep extends StatelessWidget {
             
             CustomDateCard(
               label: "Insurance Expiry",
-              placeholder: "mm/dd/yyyy",
+              placeholder: "DD/MM/YYYY",
               imagePath: "assets/icon/uis_calender.png",
               dateValue: controller.insuranceExpiryDate,
             ),
@@ -60,7 +60,7 @@ class ImportantDatesStep extends StatelessWidget {
             
             CustomDateCard(
               label: "Service Due",
-              placeholder: "mm/dd/yyyy",
+              placeholder: "DD/MM/YYYY",
               imagePath: "assets/icon/uis_calender.png",
               dateValue: controller.serviceDueDate,
             ),
@@ -69,7 +69,7 @@ class ImportantDatesStep extends StatelessWidget {
             
             CustomDateCard(
               label: "Breakdown Cover Expiry",
-              placeholder: "mm/dd/yyyy",
+              placeholder: "DD/MM/YYYY",
               imagePath: "assets/icon/uis_calender.png",
               dateValue: controller.breakdownExpiryDate,
             ),

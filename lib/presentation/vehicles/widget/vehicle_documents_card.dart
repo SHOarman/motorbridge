@@ -21,9 +21,9 @@ class VehicleDocumentsCard extends StatelessWidget {
 
   String? getFileUrl(Map<String, dynamic> doc) {
     if (doc['files'] is List && (doc['files'] as List).isNotEmpty) {
-      final first = doc['files'][0];
-      if (first is String) return first;
-      if (first is Map) return first['url']?.toString() ?? first['path']?.toString();
+      final last = (doc['files'] as List).last;
+      if (last is String) return last;
+      if (last is Map) return last['url']?.toString() ?? last['path']?.toString();
     }
     if (doc['files'] is String) return doc['files'];
     if (doc['file'] is String) return doc['file'];

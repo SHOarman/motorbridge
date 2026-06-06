@@ -81,7 +81,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
     );
 
     if (pickedDate != null) {
-      String formattedDate = DateFormat('MM/dd/yyyy').format(pickedDate);
+      String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
       
       try {
         SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -349,9 +349,9 @@ class _VehicleDetailsState extends State<VehicleDetails> {
   Future<void> viewDocument(Map<String, dynamic> doc) async {
     String? fileUrl;
     if (doc['files'] is List && (doc['files'] as List).isNotEmpty) {
-      final first = doc['files'][0];
-      if (first is String) fileUrl = first;
-      if (first is Map) fileUrl = first['url']?.toString() ?? first['path']?.toString();
+      final last = (doc['files'] as List).last;
+      if (last is String) fileUrl = last;
+      if (last is Map) fileUrl = last['url']?.toString() ?? last['path']?.toString();
     } else if (doc['files'] is String) {
       fileUrl = doc['files'];
     } else if (doc['file'] is String) {
@@ -439,6 +439,66 @@ class _VehicleDetailsState extends State<VehicleDetails> {
     }
   }
 
+  void _showDeleteVehicleConfirmation(HomeController homeController) {
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.warning_amber_rounded, color: Colors.red, size: 48),
+              const SizedBox(height: 16),
+              const Text("Remove Vehicle", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              const Text(
+                "Are you sure you want to remove this vehicle and all of its saved components?",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.black87),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Get.back(),
+                      child: const Text("Cancel"),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                      onPressed: () async {
+                        Get.back(); // close the dialog
+                        String vehicleId = (vehicle['id'] ?? vehicle['_id'] ?? '').toString().trim();
+                        if (vehicleId.isNotEmpty) {
+                          // Show loading indicator
+                          Get.dialog(
+                            const Center(child: CircularProgressIndicator()),
+                            barrierDismissible: false,
+                          );
+                          bool success = await homeController.deleteVehicle(vehicleId);
+                          Get.back(); // close the loading dialog
+                          if (success) {
+                            Get.back(); // navigate back to previous screen
+                          }
+                        }
+                      },
+                      child: const Text("Remove", style: TextStyle(color: Colors.white)),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   void _showDeleteDocConfirmation(String docId) {
     Get.dialog(
       Dialog(
@@ -508,52 +568,75 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                   const SizedBox(height: 20),
                   Text("Selected File: ${selectedFile?.name ?? 'No new file selected (keeps existing)'}"),
                   const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () async {
-                      FilePickerResult? result = await FilePicker.pickFiles(
-                        type: FileType.custom, allowedExtensions: ['pdf', 'png', 'jpg', 'jpeg'], withData: kIsWeb,
-                      );
-                      if (result != null && result.files.isNotEmpty) {
-                        final file = result.files.first;
-                        setModalState(() { selectedFile = file; });
-                        if (kIsWeb) {
-                          fileBytes = file.bytes;
-                        } else {
-                          fileBytes = file.path != null ? await File(file.path!).readAsBytes() : file.bytes;
-                        }
-                      }
-                    },
-                    child: const Text("Pick New File (Optional)"),
-                  ),
-                  const SizedBox(height: 24),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: const Color(0xff1B4E9F)),
-                      onPressed: isUpdating ? null : () async {
-                        if (titleCtrl.text.trim().isEmpty) {
-                          Get.snackbar("Error", "Title cannot be empty");
-                          return;
-                        }
-                        setModalState(() { isUpdating = true; });
-                        try {
-                          SharedPreferences prefs = await SharedPreferences.getInstance();
-                          String? token = prefs.getString('token');
-                          var request = http.MultipartRequest('PATCH', Uri.parse("${ApiServices.update_document}/$docId"));
-                          request.headers.addAll({"Authorization": "Bearer $token"});
-                          request.fields['title'] = titleCtrl.text.trim();
-                          
-                          debugPrint("Sending PATCH to: ${ApiServices.update_document}/$docId");
-                          debugPrint("Title: ${titleCtrl.text.trim()}");
-
-                          if (selectedFile != null && fileBytes != null) {
-                            String ext = selectedFile!.name.split('.').last.toLowerCase();
-                            request.files.add(http.MultipartFile.fromBytes('files', fileBytes!, filename: selectedFile!.name, contentType: MediaType(ext == 'pdf' ? 'application' : 'image', ext)));
-                            debugPrint("Sending file: ${selectedFile!.name} of type $ext");
-                          } else {
-                            debugPrint("No new file selected");
+                      ElevatedButton(
+                        onPressed: () async {
+                          FilePickerResult? result = await FilePicker.pickFiles(
+                            type: FileType.custom, allowedExtensions: ['pdf', 'png', 'jpg', 'jpeg'], withData: kIsWeb,
+                          );
+                          if (result != null && result.files.isNotEmpty) {
+                            final file = result.files.first;
+                            Uint8List? bytes;
+                            if (kIsWeb) {
+                              bytes = file.bytes;
+                            } else {
+                              if (file.path != null) {
+                                try {
+                                  bytes = await File(file.path!).readAsBytes();
+                                } catch (e) {
+                                  debugPrint("Error reading file: $e");
+                                }
+                              } else {
+                                bytes = file.bytes;
+                              }
+                            }
+                            setModalState(() {
+                              selectedFile = file;
+                              fileBytes = bytes;
+                            });
                           }
+                        },
+                        child: const Text("Pick New File (Optional)"),
+                      ),
+                      const SizedBox(height: 24),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(backgroundColor: const Color(0xff1B4E9F)),
+                          onPressed: isUpdating ? null : () async {
+                            if (titleCtrl.text.trim().isEmpty) {
+                              Get.snackbar("Error", "Title cannot be empty");
+                              return;
+                            }
+                            setModalState(() { isUpdating = true; });
+                            try {
+                              SharedPreferences prefs = await SharedPreferences.getInstance();
+                              String? token = prefs.getString('token');
+                              String targetVehicleId = (vehicle['id'] ?? vehicle['_id'] ?? '').toString().trim();
+                              var request = http.MultipartRequest('PATCH', Uri.parse("${ApiServices.update_document}/$docId"));
+                              request.headers.addAll({"Authorization": "Bearer $token"});
+                              request.fields['title'] = titleCtrl.text.trim();
+                              request.fields['vehicle'] = targetVehicleId;
+                              request.fields['vehicleId'] = targetVehicleId;
+                              request.fields['vehicle_id'] = targetVehicleId;
+                              request.fields['userId'] = (prefs.getString('userId') ?? "");
+                              
+                              debugPrint("Sending PATCH to: ${ApiServices.update_document}/$docId");
+                              debugPrint("Title: ${titleCtrl.text.trim()}");
+                              debugPrint("Vehicle ID: $targetVehicleId");
+
+                              if (selectedFile != null && fileBytes != null) {
+                                String ext = selectedFile!.name.split('.').last.toLowerCase();
+                                request.files.add(http.MultipartFile.fromBytes(
+                                  'files',
+                                  fileBytes!,
+                                  filename: selectedFile!.name,
+                                  contentType: MediaType(ext == 'pdf' ? 'application' : 'image', ext == 'jpg' ? 'jpeg' : ext),
+                                ));
+                                debugPrint("Sending file: ${selectedFile!.name} of type $ext, bytes length: ${fileBytes!.length}");
+                              } else {
+                                debugPrint("No new file selected");
+                              }
 
                           var streamedResponse = await request.send();
                           var response = await http.Response.fromStream(streamedResponse);
@@ -562,6 +645,18 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                           debugPrint("Update Document Response Body: ${response.body}");
 
                           if (response.statusCode == 200 || response.statusCode == 201) {
+                            try {
+                              var parsed = jsonDecode(response.body);
+                              if (parsed is Map && parsed['data'] != null) {
+                                final docData = parsed['data'];
+                                final String newDocId = (docData['_id'] ?? docData['id'] ?? '').toString();
+                                if (newDocId.isNotEmpty && targetVehicleId.isNotEmpty) {
+                                  await prefs.setString("doc_vehicle_$newDocId", targetVehicleId);
+                                }
+                              }
+                            } catch (e) {
+                              debugPrint("Error parsing update response: $e");
+                            }
                             Get.back();
                             Get.snackbar("Success", "Document updated successfully", backgroundColor: Colors.green, colorText: Colors.white);
                             fetchDocuments();
@@ -1026,6 +1121,31 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                   width: double.infinity,
                   height: 52,
                   child: OutlinedButton(
+                    onPressed: isSaving ? null : () => _showDeleteVehicleConfirmation(homeController),
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: Colors.red, width: 1.5),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.delete_forever, color: Colors.red),
+                        SizedBox(width: 8),
+                        Text(
+                          "Remove Vehicle",
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: OutlinedButton(
                     onPressed: isSaving ? null : () {
                       setState(() {
                         isEditing = false;
@@ -1038,14 +1158,14 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                       });
                     },
                     style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Colors.red),
+                      side: const BorderSide(color: Colors.grey),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
                     child: const Text(
                       "Cancel",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey),
                     ),
                   ),
                 ),

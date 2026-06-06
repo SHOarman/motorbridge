@@ -342,18 +342,20 @@ class Profile extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 40,
-                        backgroundColor: Colors.grey[200],
-                        backgroundImage:
-                            controller.profileImageData.value != null
+                        backgroundColor: const Color(0xFFF1F5F9),
+                        backgroundImage: controller.profileImageData.value != null
                             ? MemoryImage(controller.profileImageData.value!)
                             : (controller.profileImageUrl.value.isNotEmpty
-                                      ? NetworkImage(
-                                          controller.profileImageUrl.value,
-                                        )
-                                      : const AssetImage(
-                                          "assets/image/Ellipse 7.png",
-                                        ))
-                                  as ImageProvider,
+                                ? NetworkImage(controller.profileImageUrl.value)
+                                : null),
+                        child: (controller.profileImageData.value == null &&
+                                controller.profileImageUrl.value.isEmpty)
+                            ? const Icon(
+                                Icons.person,
+                                size: 40,
+                                color: Color(0xFF94A3B8),
+                              )
+                            : null,
                       ),
                       const SizedBox(width: 16),
                       Expanded(
@@ -387,19 +389,21 @@ class Profile extends StatelessWidget {
                                 color: const Color(0xff2A2A2A),
                               ),
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              controller.phone.value.isEmpty
-                                  ? "Phone Number"
-                                  : controller.phone.value,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: AppTextStyles.smallText.copyWith(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w400,
-                                color: const Color(0xff2A2A2A),
+                            if (controller.phone.value.trim().isNotEmpty &&
+                                controller.phone.value.trim().toLowerCase() != 'n/a' &&
+                                controller.phone.value.trim().toLowerCase() != 'null') ...[
+                              const SizedBox(height: 4),
+                              Text(
+                                controller.phone.value.trim(),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTextStyles.smallText.copyWith(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w400,
+                                  color: const Color(0xff2A2A2A),
+                                ),
                               ),
-                            ),
+                            ],
                           ],
                         ),
                       ),

@@ -78,7 +78,7 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<void> deleteVehicle(String id) async {
+  Future<bool> deleteVehicle(String id) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('token');
@@ -91,11 +91,14 @@ class HomeController extends GetxController {
         Get.snackbar("Success", "Vehicle deleted successfully",
             backgroundColor: Colors.green, colorText: Colors.white);
         fetchVehicles();
+        return true;
       } else {
         Get.snackbar("Error", "Failed to delete vehicle");
+        return false;
       }
     } catch (e) {
       Get.snackbar("Error", "Something went wrong: $e");
+      return false;
     }
   }
 
@@ -226,17 +229,43 @@ class HomeController extends GetxController {
     if (dateStr == null || dateStr.trim().isEmpty) return null;
     dateStr = dateStr.trim();
     try {
-      // Try MM/dd/yyyy
       if (dateStr.contains('/')) {
         final parts = dateStr.split('/');
         if (parts.length == 3) {
-          int month = int.parse(parts[0]);
-          int day = int.parse(parts[1]);
-          int year = int.parse(parts[2]);
-          return DateTime(year, month, day);
+          int p0 = int.parse(parts[0]);
+          int p1 = int.parse(parts[1]);
+          int p2 = int.parse(parts[2]);
+          if (p1 > 12) {
+            // Must be MM/dd/yyyy
+            return DateTime(p2, p0, p1);
+          } else if (p0 > 12) {
+            // Must be dd/MM/yyyy
+            return DateTime(p2, p1, p0);
+          } else {
+            // Default to UK format dd/MM/yyyy
+            return DateTime(p2, p1, p0);
+          }
         }
       }
-      // Try yyyy-MM-dd or full ISO
+      if (dateStr.contains('-')) {
+        final parts = dateStr.split('-');
+        if (parts.length == 3) {
+          if (parts[0].length == 4) {
+            return DateTime.parse(dateStr);
+          } else {
+            int p0 = int.parse(parts[0]);
+            int p1 = int.parse(parts[1]);
+            int p2 = int.parse(parts[2]);
+            if (p1 > 12) {
+              // MM-dd-yyyy
+              return DateTime(p2, p0, p1);
+            } else {
+              // dd-MM-yyyy
+              return DateTime(p2, p1, p0);
+            }
+          }
+        }
+      }
       return DateTime.parse(dateStr);
     } catch (e) {
       debugPrint("Error parsing date '$dateStr': $e");

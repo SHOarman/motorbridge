@@ -11,7 +11,7 @@ import 'package:motorbridge/core/route/app_routes.dart';
 import '../api_sevices/api_services.dart';
 
 class AddVehicleController extends GetxController {
-  final String baseUrl = "http://13.217.91.47:5000";
+  final String baseUrl = "";
 
   var currentStep = 0.obs;
 
@@ -100,7 +100,7 @@ class AddVehicleController extends GetxController {
     if (dateStr == null || dateStr.isEmpty) return '';
     try {
       DateTime parsed = DateTime.parse(dateStr);
-      return DateFormat('MM/dd/yyyy').format(parsed);
+      return DateFormat('dd/MM/yyyy').format(parsed);
     } catch (e) {
       return dateStr;
     }
@@ -269,7 +269,7 @@ class AddVehicleController extends GetxController {
     );
 
     if (pickedDate != null) {
-      dateVariable.value = DateFormat('MM/dd/yyyy').format(pickedDate);
+      dateVariable.value = DateFormat('dd/MM/yyyy').format(pickedDate);
     }
   }
 

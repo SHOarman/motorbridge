@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:motorbridge/utils/app_text_styles.dart';
+import 'package:intl/intl.dart';
 
 class CustomReminderCard extends StatelessWidget {
   final String title;
@@ -47,6 +48,65 @@ class CustomReminderCard extends StatelessWidget {
     this.customButtonTextColor,
     this.buttonBorder,
   });
+
+  String _formatDate(String rawDate) {
+    if (rawDate.isEmpty) return '';
+    try {
+      DateTime? parsed;
+      if (rawDate.contains('/')) {
+        final parts = rawDate.split('/');
+        if (parts.length == 3) {
+          int p0 = int.parse(parts[0]);
+          int p1 = int.parse(parts[1]);
+          int p2 = int.parse(parts[2]);
+          if (p1 > 12) {
+            parsed = DateTime(p2, p0, p1);
+          } else if (p0 > 12) {
+            parsed = DateTime(p2, p1, p0);
+          } else {
+            parsed = DateTime(p2, p1, p0);
+          }
+        }
+      } else if (rawDate.contains('-')) {
+        final parts = rawDate.split('-');
+        if (parts.length == 3) {
+          if (parts[0].length == 4) {
+            parsed = DateTime.parse(rawDate);
+          } else {
+            int p0 = int.parse(parts[0]);
+            int p1 = int.parse(parts[1]);
+            int p2 = int.parse(parts[2]);
+            if (p1 > 12) {
+              parsed = DateTime(p2, p0, p1);
+            } else {
+              parsed = DateTime(p2, p1, p0);
+            }
+          }
+        }
+      } else {
+        parsed = DateTime.tryParse(rawDate);
+      }
+
+      if (parsed != null) {
+        final day = parsed.day;
+        String suffix = 'th';
+        if (day >= 11 && day <= 13) {
+          suffix = 'th';
+        } else {
+          switch (day % 10) {
+            case 1: suffix = 'st'; break;
+            case 2: suffix = 'nd'; break;
+            case 3: suffix = 'rd'; break;
+          }
+        }
+        final monthStr = DateFormat('MMM').format(parsed);
+        return "$day$suffix $monthStr ${parsed.year}";
+      }
+    } catch (e) {
+      // ignore
+    }
+    return rawDate;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +190,7 @@ class CustomReminderCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      "Due: $date",
+                      "Due: ${_formatDate(date)}",
                       style: AppTextStyles.smallText.copyWith(
                         fontSize: 16,
                         color: dateColor,

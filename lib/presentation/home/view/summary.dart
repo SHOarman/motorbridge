@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:motorbridge/core/route/app_routes.dart';
 import 'accident_report_tab.dart';
 import '../../../utils/app_text_styles.dart';
@@ -479,12 +480,19 @@ class ReportPreviewPage extends StatelessWidget {
                       padding: const EdgeInsets.only(right: 12),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
-                        child: Image.file(
-                          File(controller.accidentPhotos[index].path),
-                          width: 120,
-                          height: 120,
-                          fit: BoxFit.cover,
-                        ),
+                        child: kIsWeb
+                            ? Image.network(
+                                controller.accidentPhotos[index].path,
+                                width: 120,
+                                height: 120,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.file(
+                                File(controller.accidentPhotos[index].path),
+                                width: 120,
+                                height: 120,
+                                fit: BoxFit.cover,
+                              ),
                       ),
                     );
                   },

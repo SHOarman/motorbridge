@@ -57,7 +57,7 @@ class ProfileController extends GetxController {
     );
 
     if (pickedDate != null) {
-      dob.value = DateFormat('MM/dd/yyyy').format(pickedDate);
+      dob.value = DateFormat('dd/MM/yyyy').format(pickedDate);
     }
   }
 
@@ -95,7 +95,12 @@ class ProfileController extends GetxController {
           fullNameController.text = userName.value;
           email.value = (data['email'] ?? "").toString();
           emailController.text = email.value;
-          phone.value = (data['phone'] ?? data['phoneNumber'] ?? data['mobile'] ?? "").toString();
+          String rawPhone = (data['phone'] ?? data['phoneNumber'] ?? data['mobile'] ?? "").toString().trim();
+          if (rawPhone.toLowerCase() == 'n/a' || rawPhone.toLowerCase() == 'null') {
+            phone.value = "";
+          } else {
+            phone.value = rawPhone;
+          }
           phoneController.text = phone.value;
           addressController.text = (data['address'] ?? "").toString();
           cityController.text = (data['city'] ?? "").toString();
@@ -208,7 +213,7 @@ class ProfileController extends GetxController {
 
       if (response.statusCode == 200) {
         await prefs.clear();
-        Get.toNamed(AppRoutes.home);
+        Get.offAllNamed(AppRoutes.singin);
       }
     } catch (e) {
       debugPrint(e.toString());

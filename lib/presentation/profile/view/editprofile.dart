@@ -33,28 +33,40 @@ class EditProfile extends StatelessWidget {
                   onTap: () => controller.pickProfileImage(),
                   child: Stack(
                     children: [
-                      Obx(() => Container(
-                        width: 120,
-                        height: 120,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white, width: 4),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.1),
-                              blurRadius: 10,
-                            ),
-                          ],
-                          image: DecorationImage(
-                            image: controller.profileImageData.value != null
-                                ? MemoryImage(controller.profileImageData.value!)
-                                : (controller.profileImageUrl.value.isNotEmpty
-                                    ? NetworkImage(controller.profileImageUrl.value)
-                                    : const AssetImage("assets/image/Ellipse 7.png")) as ImageProvider,
-                            fit: BoxFit.cover,
+                      Obx(() {
+                        final hasImage = controller.profileImageData.value != null ||
+                            controller.profileImageUrl.value.isNotEmpty;
+                        return Container(
+                          width: 120,
+                          height: 120,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: const Color(0xFFF1F5F9),
+                            border: Border.all(color: Colors.white, width: 4),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.1),
+                                blurRadius: 10,
+                              ),
+                            ],
+                            image: hasImage
+                                ? DecorationImage(
+                                    image: controller.profileImageData.value != null
+                                        ? MemoryImage(controller.profileImageData.value!)
+                                        : NetworkImage(controller.profileImageUrl.value) as ImageProvider,
+                                    fit: BoxFit.cover,
+                                  )
+                                : null,
                           ),
-                        ),
-                      )),
+                          child: !hasImage
+                              ? const Icon(
+                                  Icons.person,
+                                  size: 60,
+                                  color: Color(0xFF94A3B8),
+                                )
+                              : null,
+                        );
+                      }),
                       Positioned(
                         bottom: 0,
                         right: 0,

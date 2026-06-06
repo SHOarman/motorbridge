@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:motorbridge/core/services/api_sevices/api_services.dart';
 import 'accident_report_tab.dart';
 import '../../../utils/app_text_styles.dart';
@@ -219,12 +220,19 @@ class PhotosVideosView extends StatelessWidget {
                                   children: [
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(8),
-                                      child: Image.file(
-                                        File(photo.path),
-                                        width: 90,
-                                        height: 90,
-                                        fit: BoxFit.cover,
-                                      ),
+                                      child: kIsWeb
+                                          ? Image.network(
+                                              photo.path,
+                                              width: 90,
+                                              height: 90,
+                                              fit: BoxFit.cover,
+                                            )
+                                          : Image.file(
+                                              File(photo.path),
+                                              width: 90,
+                                              height: 90,
+                                              fit: BoxFit.cover,
+                                            ),
                                     ),
                                     Positioned(
                                       top: 4,
