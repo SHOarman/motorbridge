@@ -811,12 +811,18 @@ class _VehicleDetailsState extends State<VehicleDetails> {
     );
     final String vehicleTag = vehicleIndex != -1 ? "Vehicle ${vehicleIndex + 1}" : "Vehicle 1";
 
-    // Badges
-    final motStyles = getBadgeStyles(vehicle['expiryStatus']?['motExpiry']?['status']?.toString());
-    final taxStyles = getBadgeStyles(vehicle['expiryStatus']?['roadTaxExpiry']?['status']?.toString());
-    final insStyles = getBadgeStyles(vehicle['expiryStatus']?['insuranceExpiry']?['status']?.toString());
-    final srvStyles = getBadgeStyles(vehicle['expiryStatus']?['serviceDue']?['status']?.toString());
-    final brkStyles = getBadgeStyles(vehicle['expiryStatus']?['breakdownCoverExpiry']?['status']?.toString());
+    // Badges & Expiry Statuses calculated on client side for correct UK date parsing
+    final motInfo = homeController.getExpiryInfo(vehicle.cast<String, dynamic>(), 'motExpiry', vehicle['motExpiry']?.toString());
+    final taxInfo = homeController.getExpiryInfo(vehicle.cast<String, dynamic>(), 'roadTaxExpiry', vehicle['roadTaxExpiry']?.toString());
+    final insInfo = homeController.getExpiryInfo(vehicle.cast<String, dynamic>(), 'insuranceExpiry', vehicle['insuranceExpiry']?.toString());
+    final srvInfo = homeController.getExpiryInfo(vehicle.cast<String, dynamic>(), 'serviceDue', vehicle['serviceDue']?.toString());
+    final brkInfo = homeController.getExpiryInfo(vehicle.cast<String, dynamic>(), 'breakdownCoverExpiry', vehicle['breakdownCoverExpiry']?.toString());
+
+    final motStyles = getBadgeStyles(motInfo['status']?.toString());
+    final taxStyles = getBadgeStyles(taxInfo['status']?.toString());
+    final insStyles = getBadgeStyles(insInfo['status']?.toString());
+    final srvStyles = getBadgeStyles(srvInfo['status']?.toString());
+    final brkStyles = getBadgeStyles(brkInfo['status']?.toString());
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6F8),
@@ -932,7 +938,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
               CustomReminderCard(
                 title: "MOT",
                 date: vehicle['motExpiry'] ?? '',
-                expiryStatus: vehicle['expiryStatus']?['motExpiry']?['label'] ?? '',
+                expiryStatus: motInfo['label'] ?? '',
                 vehicleName: motStyles['text'],
                 buttonText: "Book Now",
                 iconPath: 'assets/icon/Group (4).png',
@@ -952,7 +958,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
               CustomReminderCard(
                 title: "Road Tax",
                 date: vehicle['roadTaxExpiry'] ?? '',
-                expiryStatus: vehicle['expiryStatus']?['roadTaxExpiry']?['label'] ?? '',
+                expiryStatus: taxInfo['label'] ?? '',
                 vehicleName: taxStyles['text'],
                 buttonText: "Pay Tax Online",
                 iconPath: 'assets/icon/image 2.png',
@@ -974,7 +980,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                 child: CustomReminderCard(
                   title: "Insurance",
                   date: vehicle['insuranceExpiry'] ?? '',
-                  expiryStatus: vehicle['expiryStatus']?['insuranceExpiry']?['label'] ?? '',
+                  expiryStatus: insInfo['label'] ?? '',
                   vehicleName: insStyles['text'],
                   buttonText: "Find Insurance",
                   iconPath: 'assets/icon/image 3.png',
@@ -997,7 +1003,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                 child: CustomReminderCard(
                   title: "Service Due",
                   date: vehicle['serviceDue'] ?? '',
-                  expiryStatus: vehicle['expiryStatus']?['serviceDue']?['label'] ?? '',
+                  expiryStatus: srvInfo['label'] ?? '',
                   vehicleName: srvStyles['text'],
                   buttonText: "Book Now",
                   iconPath: 'assets/icon/mdi_tools.png',
@@ -1020,7 +1026,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                 child: CustomReminderCard(
                   title: "Breakdown Cover",
                   date: vehicle['breakdownCoverExpiry'] ?? '',
-                  expiryStatus: vehicle['expiryStatus']?['breakdownCoverExpiry']?['label'] ?? '',
+                  expiryStatus: brkInfo['label'] ?? '',
                   vehicleName: brkStyles['text'],
                   buttonText: "Find Cover",
                   iconPath: 'assets/icon/image 4.png',

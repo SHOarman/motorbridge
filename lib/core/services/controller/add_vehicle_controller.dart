@@ -11,7 +11,6 @@ import 'package:motorbridge/core/route/app_routes.dart';
 import '../api_sevices/api_services.dart';
 
 class AddVehicleController extends GetxController {
-  final String baseUrl = "";
 
   var currentStep = 0.obs;
 
@@ -281,7 +280,7 @@ class AddVehicleController extends GetxController {
 
     try {
       isSubmitLoading.value = true;
-      String createUrl = "$baseUrl/api/vehicle/create";
+      String createUrl = ApiServices.crete_vehicle;
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('token');

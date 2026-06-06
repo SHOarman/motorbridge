@@ -310,20 +310,8 @@ class HomeController extends GetxController {
   }
 
   Map<String, dynamic> getExpiryInfo(Map<String, dynamic> vehicle, String field, String? dateStr) {
-    if (vehicle['expiryStatus'] is Map) {
-      final expiryData = vehicle['expiryStatus'] as Map;
-      if (expiryData[field] is Map) {
-        final info = expiryData[field];
-        final status = info['status']?.toString();
-        final label = info['label']?.toString();
-        if (status != null && label != null) {
-          return {
-            'status': status,
-            'label': label,
-          };
-        }
-      }
-    }
+    // Always compute on client side because the backend parses dates using US format (MM/dd/yyyy),
+    // which is incorrect for UK dates (e.g. 01/07/2026 becomes Jan 7th instead of July 1st).
     return computeExpiryInfo(dateStr);
   }
 
