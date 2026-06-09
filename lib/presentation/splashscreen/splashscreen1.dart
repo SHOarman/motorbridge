@@ -111,7 +111,7 @@ class _Splashscreen1State extends State<Splashscreen1> {
                       },
                     ),
                   ),
-                  SizedBox(height: size.height * 0.05),
+                  SizedBox(height: MediaQuery.of(context).padding.bottom + 20.0),
                 ],
               ),
             ),

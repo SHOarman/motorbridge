@@ -4,6 +4,9 @@ import 'package:get/get.dart';
 import 'package:motorbridge/core/route/app_routes.dart';
 
 class BottomNavPainter extends CustomPainter {
+  final double barHeight;
+  BottomNavPainter({required this.barHeight});
+
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
@@ -13,52 +16,41 @@ class BottomNavPainter extends CustomPainter {
     ui.Path path = ui.Path();
 
     double cornerRadius = 35.0;
-    double notchStart = size.width * 0.35;
 
-    // Start from bottom left
     path.moveTo(0, size.height);
 
-    // Left side line and top-left corner
     path.lineTo(0, cornerRadius);
     path.quadraticBezierTo(0, 18, cornerRadius, 16);
 
-
-
-
     double cx = size.width / 2;
-    double nw = 55.0; // Half of the notch width
+    double nw = 55.0;
 
-    // Line to the start of the notch
     path.lineTo(cx - nw, 0);
 
-    // Smooth Notch (Design Match) - Fixed width for tablets
     path.cubicTo(
       cx - nw + 20, 0,
-      cx - nw + 10, size.height * 0.60,
-      cx, size.height * 0.60,
+      cx - nw + 10, barHeight * 0.60,
+      cx, barHeight * 0.60,
     );
     path.cubicTo(
-      cx + nw - 10, size.height * 0.60,
+      cx + nw - 10, barHeight * 0.60,
       cx + nw - 20, 0,
       cx + nw, 0,
     );
 
-    // Line to the top-right corner
     path.lineTo(size.width - cornerRadius, 16);
     path.quadraticBezierTo(size.width, 18, size.width, cornerRadius);
 
-    // Right side and bottom lines
     path.lineTo(size.width, size.height);
     path.lineTo(0, size.height);
     path.close();
 
-    // Soft Shadow
     canvas.drawShadow(path, Colors.black.withValues(alpha: 0.12), 8.0, true);
     canvas.drawPath(path, paint);
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant BottomNavPainter oldDelegate) => oldDelegate.barHeight != barHeight;
 }
 
 class CustomBottomNavBar extends StatelessWidget {
@@ -91,68 +83,75 @@ class CustomBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sw = MediaQuery.of(context).size.width;
+    final double systemNavBarHeight = MediaQuery.of(context).viewPadding.bottom;
 
-    // Dimensions based on design image
-    final double barHeight = 90.0;
+    final double barHeight = 80.0;
     final double fabSize = 55.0;
     final double iconSize = 24.0;
 
-    return SizedBox(
-      height: barHeight + 10,
-      child: Stack(
-        alignment: Alignment.bottomCenter,
-        clipBehavior: Clip.none,
-        children: [
-          // Background Painter
-          CustomPaint(
-            size: Size(sw, barHeight),
-            painter: BottomNavPainter(),
-          ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          height: barHeight + 10,
+          child: Stack(
+            alignment: Alignment.bottomCenter,
+            clipBehavior: Clip.none,
+            children: [
+              CustomPaint(
+                size: Size(sw, barHeight),
+                painter: BottomNavPainter(barHeight: barHeight),
+              ),
 
-          // Items Row
-          Container(
-            height: barHeight,
-            padding: const EdgeInsets.symmetric(horizontal: 25),
-            child: Row(
-              children: [
-                Expanded(child: _buildNavItem(0, iconSize)),
-                Expanded(child: _buildNavItem(1, iconSize)),
-                const SizedBox(width: 110), // Exact width of the centered notch (nw * 2)
-                Expanded(child: _buildNavItem(2, iconSize)),
-                Expanded(child: _buildNavItem(3, iconSize)),
-              ],
-            ),
-          ),
-
-          // Center FAB Button
-          Positioned(
-            top: 0, // Adjusted for perfect notch fit
-            child: GestureDetector(
-              onTap: () => Get.toNamed(AppRoutes.addvehicles),
-              child: Container(
-                height: fabSize,
-                width: fabSize,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1B4E9F),
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.2),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    )
+              Container(
+                height: barHeight,
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: Row(
+                  children: [
+                    Expanded(child: _buildNavItem(0, iconSize)),
+                    Expanded(child: _buildNavItem(1, iconSize)),
+                    const SizedBox(width: 100),
+                    Expanded(child: _buildNavItem(2, iconSize)),
+                    Expanded(child: _buildNavItem(3, iconSize)),
                   ],
                 ),
-                child: const Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 38,
+              ),
+
+              Positioned(
+                top: 0,
+                child: GestureDetector(
+                  onTap: () => Get.toNamed(AppRoutes.addvehicles),
+                  child: Container(
+                    height: fabSize,
+                    width: fabSize,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1B4E9F),
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.2),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        )
+                      ],
+                    ),
+                    child: const Icon(
+                      Icons.add,
+                      color: Colors.white,
+                      size: 38,
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        ),
+        if (systemNavBarHeight > 0)
+          Container(
+            height: systemNavBarHeight,
+            color: const Color(0xFFC3E1FF),
+          ),
+      ],
     );
   }
 

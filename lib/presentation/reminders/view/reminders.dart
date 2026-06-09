@@ -13,6 +13,7 @@ class Reminders extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+        extendBody: true,
         appBar: const CustomAppBar(
           title: "Reminders",
           backgroundImage: "assets/image/Image__3_-removebg-preview.png",

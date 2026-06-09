@@ -84,7 +84,7 @@ class Splashscreen2 extends StatelessWidget {
                       },
                     ),
                   ),
-                  SizedBox(height: size.height * 0.05),
+                  SizedBox(height: MediaQuery.of(context).padding.bottom + 20.0),
                 ],
               ),
             ),

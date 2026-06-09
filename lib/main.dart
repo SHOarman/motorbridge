@@ -26,7 +26,7 @@ void main() async {
       builder: (context) =>  MyApp(),
     ),
   );
-  // runApp(const MyApp());
+
 }
 
 class MyApp extends StatelessWidget {
@@ -41,6 +41,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'MotorBridge',
       theme: ThemeData(
+        appBarTheme: const AppBarTheme(
+          systemOverlayStyle: SystemUiOverlayStyle(
+            systemNavigationBarColor: Colors.transparent,
+            systemNavigationBarIconBrightness: Brightness.dark,
+          ),
+        ),
         scaffoldBackgroundColor: const Color(0xFFF5F6F8),
         colorScheme: ColorScheme.fromSeed(
           seedColor: AppColors.primaryColor,

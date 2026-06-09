@@ -80,7 +80,7 @@ class ImportantDatesStep extends StatelessWidget {
             CustomButton(text: "Save & Continue", onTap: (){
               controller.setStep(2);
             },backgroundColor: Color(0xff3876B3),),
-            const SizedBox(height: 30),
+            const SizedBox(height: 120),
           ],
         ),
       ),

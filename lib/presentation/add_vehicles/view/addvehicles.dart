@@ -46,7 +46,8 @@ class _AddVehiclesScreenState extends State<AddVehiclesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: CustomBottomNavBar(selectedIndex: 4),
+      extendBody: true,
+      bottomNavigationBar: const CustomBottomNavBar(selectedIndex: 4),
 
 
       backgroundColor: Colors.white,

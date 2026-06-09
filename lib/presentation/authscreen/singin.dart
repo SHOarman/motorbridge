@@ -47,7 +47,7 @@ class Singin extends StatelessWidget {
               const SizedBox(height: 30),
               CustomTextField(
                 title: "Email",
-                hintText: "Enter your mail...",
+                hintText: "Enter your E-mail",
                 controller: emailController,
               ),
               const SizedBox(height: 10),

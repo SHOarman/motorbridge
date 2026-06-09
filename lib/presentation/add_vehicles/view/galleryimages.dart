@@ -163,7 +163,7 @@ class GalleryImagesStep extends GetView<AddVehicleController> {
                       : () => controller.submitVehicle(),
                   backgroundColor: const Color(0xff3876B3),
                 )),
-            const SizedBox(height: 30),
+            const SizedBox(height: 120),
           ],
         ),
       ),

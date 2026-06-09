@@ -21,43 +21,50 @@ import 'helpandtutorial.dart';
 final List<Map<String, String>> whyChooseData = [
   {
     "title": "Never Miss a Deadline",
-    "desc": "Smart notifications remind you when your MOT, tax, insurance, or service is due. Stay legal and safe on UK roads without the stress of remembering dates.",
+    "desc":
+        "Smart notifications remind you when your MOT, tax, insurance, or service is due. Stay legal and safe on UK roads without the stress of remembering dates.",
     "image": "assets/image/Rectangle 11.png",
     "icon": "assets/icon/activereminder.png",
   },
   {
     "title": "All Dates in One Place",
-    "desc": "Track MOT expiry, road tax, insurance renewal, and service schedules for all your vehicles from a single dashboard. No more searching through emails or paperwork.",
+    "desc":
+        "Track MOT expiry, road tax, insurance renewal, and service schedules for all your vehicles from a single dashboard. No more searching through emails or paperwork.",
     "image": "assets/image/Rectangle 11 (8).png",
     "icon": "assets/icon/uis_calender.png",
   },
   {
     "title": "Stay Road Legal",
-    "desc": "Driving without valid MOT, tax, or insurance can result in fines up to £1,000, points on your licence, or even vehicle seizure. We keep you protected and compliant.",
+    "desc":
+        "Driving without valid MOT, tax, or insurance can result in fines up to £1,000, points on your licence, or even vehicle seizure. We keep you protected and compliant.",
     "image": "assets/image/Rectangle 11 (9).png",
     "icon": "assets/icon/image 3.png",
   },
   {
     "title": "Digital Document Storage",
-    "desc": "Upload and store all your vehicle documents securely in the cloud. Access MOT certificates, insurance papers, and service records anytime, anywhere.",
+    "desc":
+        "Upload and store all your vehicle documents securely in the cloud. Access MOT certificates, insurance papers, and service records anytime, anywhere.",
     "image": "assets/image/Rectangle 11 (10).png",
     "icon": "assets/icon/calendar 1.png",
   },
   {
     "title": "Multi-Vehicle Management",
-    "desc": "Whether you have a car, van, bike, or HGV, manage unlimited vehicles from one account. Perfect for families, car enthusiasts, or small businesses.",
+    "desc":
+        "Whether you have a car, van, bike, or HGV, manage unlimited vehicles from one account. Perfect for families, car enthusiasts, or small businesses.",
     "image": "assets/image/Rectangle 11 (11).png",
     "icon": "assets/icon/calendar 1 (1).png",
   },
   {
     "title": "Access Anywhere",
-    "desc": "Your virtual garage is accessible from any device. Check expiry dates on your phone while at the garage, or renew insurance from your laptop at home.",
+    "desc":
+        "Your virtual garage is accessible from any device. Check expiry dates on your phone while at the garage, or renew insurance from your laptop at home.",
     "image": "assets/image/Rectangle 11 (12).png",
     "icon": "assets/icon/calendar 1 (2).png",
   },
   {
     "title": "Track Running Costs",
-    "desc": "Monitor all your vehicle expenses including fuel, servicing, MOT, insurance, and repairs. See your total spending and average costs per day, week, month, or year to understand your true cost of ownership.",
+    "desc":
+        "Monitor all your vehicle expenses including fuel, servicing, MOT, insurance, and repairs. See your total spending and average costs per day, week, month, or year to understand your true cost of ownership.",
     "image": "assets/image/Rectangle 11 (13).png",
     "icon": "assets/icon/calendar 1 (3).png",
   },
@@ -122,7 +129,9 @@ class HomeScreen extends GetView<HomeController> {
                                         TextSpan(text: 'Why choose '),
                                         TextSpan(
                                           text: 'Motor Bridge\nUK?',
-                                          style: TextStyle(color: Color(0xFF1B4E9F)),
+                                          style: TextStyle(
+                                            color: Color(0xFF1B4E9F),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -155,7 +164,8 @@ class HomeScreen extends GetView<HomeController> {
                                 clipBehavior: Clip.antiAlias,
                                 child: SingleChildScrollView(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       // Image
                                       Container(
@@ -163,7 +173,9 @@ class HomeScreen extends GetView<HomeController> {
                                         height: imageHeight,
                                         decoration: BoxDecoration(
                                           color: Colors.white,
-                                          borderRadius: BorderRadius.circular(14),
+                                          borderRadius: BorderRadius.circular(
+                                            14,
+                                          ),
                                         ),
                                         clipBehavior: Clip.antiAlias,
                                         child: Image.asset(
@@ -174,26 +186,36 @@ class HomeScreen extends GetView<HomeController> {
                                       ),
                                       // Title + description
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
+                                        padding: const EdgeInsets.fromLTRB(
+                                          18,
+                                          0,
+                                          18,
+                                          18,
+                                        ),
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               item['title']!,
-                                              style: AppTextStyles.bigText.copyWith(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w700,
-                                                color: Colors.white,
-                                              ),
+                                              style: AppTextStyles.bigText
+                                                  .copyWith(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: Colors.white,
+                                                  ),
                                             ),
                                             const SizedBox(height: 6),
                                             Text(
                                               item['desc']!,
-                                              style: AppTextStyles.smallText.copyWith(
-                                                fontSize: 11.5,
-                                                color: const Color(0xFFCDD8EC),
-                                                height: 1.5,
-                                              ),
+                                              style: AppTextStyles.smallText
+                                                  .copyWith(
+                                                    fontSize: 11.5,
+                                                    color: const Color(
+                                                      0xFFCDD8EC,
+                                                    ),
+                                                    height: 1.5,
+                                                  ),
                                             ),
                                           ],
                                         ),
@@ -223,7 +245,9 @@ class HomeScreen extends GetView<HomeController> {
                       height: 8,
                       width: active ? 26 : 8,
                       decoration: BoxDecoration(
-                        color: active ? const Color(0xFF1B4E9F) : const Color(0xFFD0DBF0),
+                        color: active
+                            ? const Color(0xFF1B4E9F)
+                            : const Color(0xFFD0DBF0),
                         borderRadius: BorderRadius.circular(10),
                       ),
                     );
@@ -235,13 +259,14 @@ class HomeScreen extends GetView<HomeController> {
                 Padding(
                   padding: EdgeInsets.fromLTRB(sw * 0.04, 0, sw * 0.04, 16),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 12,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFFF3F6FB),
                       borderRadius: BorderRadius.circular(14),
-                      border:Border.all(
-                        color: Color(0xffDDDDDD)
-                      )
+                      border: Border.all(color: Color(0xffDDDDDD)),
                     ),
                     child: Row(
                       children: [
@@ -264,19 +289,18 @@ class HomeScreen extends GetView<HomeController> {
                                 fontSize: 12,
                                 color: const Color(0xFF444444),
                               ),
-                              children:  [
+                              children: [
                                 TextSpan(
                                   text: 'Thousands of UK Motorists ',
-                                  style:AppTextStyles.internt.copyWith(
-                                    
-                                  fontSize:14,
+                                  style: AppTextStyles.internt.copyWith(
+                                    fontSize: 14,
                                     fontWeight: FontWeight.w700,
-                                    color: Color(0xff1B4E9F)
-                                    
+                                    color: Color(0xff1B4E9F),
                                   ),
                                 ),
                                 TextSpan(
-                                  text: 'managing their vehicles smarter with Motor Bridge UK',
+                                  text:
+                                      'managing their vehicles smarter with Motor Bridge UK',
                                 ),
                               ],
                             ),
@@ -322,7 +346,7 @@ class HomeScreen extends GetView<HomeController> {
 
     return Scaffold(
       extendBody: true,
-      bottomNavigationBar: CustomBottomNavBar(selectedIndex: 0),
+      bottomNavigationBar: const CustomBottomNavBar(selectedIndex: 0),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(s.homeAppBarHeight),
         child: AppBar(
@@ -339,36 +363,81 @@ class HomeScreen extends GetView<HomeController> {
                 Positioned(
                   right: -40,
                   top: -40,
-                  child: Image.asset('assets/image/Image__3_-removebg-preview.png', width: 220),
+                  child: Image.asset(
+                    'assets/image/Image__3_-removebg-preview.png',
+                    width: 220,
+                  ),
                 ),
                 SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 25,
+                      vertical: 15,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
                           padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)),
-                          child: Image.asset('assets/image/img.png', height: 40, fit: BoxFit.cover),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Image.asset(
+                            'assets/image/img.png',
+                            height: 40,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                         const Spacer(),
-                        Obx(() => Text(
-                              profileController.userName.value.isEmpty
-                                  ? "Hi User"
-                                  : "Hi ${profileController.userName.value}",
-                              style: const TextStyle(color: Colors.white, fontSize: 16),
-                            )),
+                        Obx(
+                          () => Text(
+                            profileController.userName.value.isEmpty
+                                ? "Hi User"
+                                : "Hi ${profileController.userName.value}",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
                         const SizedBox(height: 4),
-                        const Text("Welcome to your", style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
+                        const Text(
+                          "Welcome to your",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                         const Row(
                           children: [
-                            Text("Virtual ", style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold)),
-                            Text("Garage", style: TextStyle(color: Colors.white54, fontSize: 26, fontWeight: FontWeight.bold)),
+                            Text(
+                              "Virtual ",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 26,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              "Garage",
+                              style: TextStyle(
+                                color: Colors.white54,
+                                fontSize: 26,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ],
                         ),
                         const SizedBox(height: 8),
-                        const Text("Bridging the gaps to smarter motoring.", style: TextStyle(color: Color(0xffEFEFEF), fontSize: 14)),
+                        const Text(
+                          "Bridging the gaps to smarter motoring.",
+                          style: TextStyle(
+                            color: Color(0xffEFEFEF),
+                            fontSize: 14,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -396,10 +465,9 @@ class HomeScreen extends GetView<HomeController> {
                           blurRadius: 6,
                           offset: Offset(0, 3),
                           spreadRadius: 0,
-                          blurStyle: BlurStyle.normal
-                        )
-                      ]
-                     
+                          blurStyle: BlurStyle.normal,
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -407,7 +475,12 @@ class HomeScreen extends GetView<HomeController> {
             ),
           ),
           SingleChildScrollView(
-            padding: EdgeInsets.fromLTRB(18, 0, 18, MediaQuery.of(context).padding.bottom + 120),
+            padding: EdgeInsets.fromLTRB(
+              18,
+              0,
+              18,
+              MediaQuery.of(context).padding.bottom + 120,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -415,11 +488,12 @@ class HomeScreen extends GetView<HomeController> {
                   title: "Add Your Vehicle To Your Virtual Garage",
                   imagePath: "assets/image/whitecar.png",
                   onAddPressed: () => Get.toNamed(AppRoutes.addvehicles),
-                  subtitle: 'Add your vehicle, get timely reminders,\nand never miss an important date.',
+                  subtitle:
+                      'Add your vehicle, get timely reminders,\nand never miss an important date.',
                 ),
                 SizedBox(height: s.spaceM),
                 CustomActionCard(
-                  title: "Why Choose Motorbridge",
+                  title: "Why Choose Motor Bridge",
                   bgColor: const Color(0x33000BE0),
                   contentColor: const Color(0xFF000BE0),
                   onTap: () => showWhyChoosePopup(context),
@@ -437,7 +511,8 @@ class HomeScreen extends GetView<HomeController> {
                 SizedBox(height: s.spaceM),
                 CustomActionButton(
                   title: "Motoring Emergencies",
-                  subtitle: "Quick access to emergency contact\n & insurance details",
+                  subtitle:
+                      "Quick access to emergency contact\n & insurance details",
                   iconPath: "assets/icon/Frame.svg",
                   bgColor: const Color(0xffBD1D1D),
                   contentColor: const Color(0xffFCFDFF),
@@ -463,26 +538,38 @@ class HomeScreen extends GetView<HomeController> {
                     children: [
                       Text(
                         "Added Vehicles",
-                        style: AppTextStyles.bigText.copyWith(fontSize: 22, fontWeight: FontWeight.w500, color: const Color(0xff525252)),
+                        style: AppTextStyles.bigText.copyWith(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w500,
+                          color: const Color(0xff525252),
+                        ),
                       ),
                       const SizedBox(height: 10),
-                      Builder(builder: (context) {
-                        final vehicle = controller.vehiclesList[0];
-                        final String imgPath = ApiServices.getFirstImageUrl(vehicle['galleryImages']);
+                      Builder(
+                        builder: (context) {
+                          final vehicle = controller.vehiclesList[0];
+                          final String imgPath = ApiServices.getFirstImageUrl(
+                            vehicle['galleryImages'],
+                          );
 
-                        return VehicleCard(
-                          hasBorder: true,
-                          registrationTextColor: const Color(0xff000000),
-                          vehicleName: "${vehicle['make'] ?? ''} ${vehicle['model'] ?? ''}",
-                          year: (vehicle['year'] ?? '').toString(),
-                          engineCode: vehicle['engineCode'] ?? '',
-                          vehicleTag: "Vehicle 1",
-                          registrationNumber: vehicle['registration'] ?? '',
-                          vehicleImage: imgPath,
-                          onTagTap: () {},
-                          onViewDetails: () => Get.toNamed(AppRoutes.vehicledetails, arguments: vehicle),
-                        );
-                      }),
+                          return VehicleCard(
+                            hasBorder: true,
+                            registrationTextColor: const Color(0xff000000),
+                            vehicleName:
+                                "${vehicle['make'] ?? ''} ${vehicle['model'] ?? ''}",
+                            year: (vehicle['year'] ?? '').toString(),
+                            engineCode: vehicle['engineCode'] ?? '',
+                            vehicleTag: "Vehicle 1",
+                            registrationNumber: vehicle['registration'] ?? '',
+                            vehicleImage: imgPath,
+                            onTagTap: () {},
+                            onViewDetails: () => Get.toNamed(
+                              AppRoutes.vehicledetails,
+                              arguments: vehicle,
+                            ),
+                          );
+                        },
+                      ),
                     ],
                   );
                 }),
@@ -496,7 +583,13 @@ class HomeScreen extends GetView<HomeController> {
                   ),
                 ),
                 SizedBox(height: s.spaceM),
-                Text("© 2026 Motor Bridge UK. All rights reserved.", style: AppTextStyles.smallText.copyWith(fontSize: 14, color: AppColors.subtleText)),
+                Text(
+                  "© 2026 Motor Bridge UK. All rights reserved.",
+                  style: AppTextStyles.smallText.copyWith(
+                    fontSize: 14,
+                    color: AppColors.subtleText,
+                  ),
+                ),
                 const SizedBox(height: 5),
                 GestureDetector(
                   onTap: () => _launchUrl("https://motor-bridge.co.uk"),

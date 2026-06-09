@@ -18,6 +18,7 @@ class Vehicles extends StatelessWidget {
     controller.fetchVehicles(); // Trigger refresh on loading page
 
     return Scaffold(
+      extendBody: true,
       bottomNavigationBar: const CustomBottomNavBar(selectedIndex: 1),
       appBar: const CustomAppBar(
         title: "Added Vehicles",
@@ -62,7 +63,7 @@ class Vehicles extends StatelessWidget {
                     ),
                   );
                 }),
-                const SizedBox(height: 40),
+                const SizedBox(height: 120),
               ],
             ),
           ),

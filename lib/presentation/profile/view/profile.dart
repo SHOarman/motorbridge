@@ -303,6 +303,7 @@ class Profile extends StatelessWidget {
     homeController.fetchVehicles();
 
     return Scaffold(
+      extendBody: true,
       bottomNavigationBar: const CustomBottomNavBar(selectedIndex: 3),
       appBar: CustomAppBar(
         title: "Profile",
@@ -552,7 +553,7 @@ class Profile extends StatelessWidget {
                   onTap: () => _showDeleteDialog(context),
                   backgroundColor: const Color.fromRGBO(255, 67, 67, 0.2),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 120),
               ],
             ),
           ),

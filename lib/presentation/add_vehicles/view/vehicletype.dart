@@ -214,7 +214,7 @@ class VehicleTypeStep extends StatelessWidget {
             backgroundColor: const Color(0xff3876B3),
           ),
 
-          SizedBox(height: vGap),
+          const SizedBox(height: 120),
         ],
       ),
     );
