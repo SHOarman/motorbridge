@@ -34,8 +34,6 @@ class EditProfile extends StatelessWidget {
                   child: Stack(
                     children: [
                       Obx(() {
-                        final hasImage = controller.profileImageData.value != null ||
-                            controller.profileImageUrl.value.isNotEmpty;
                         return Container(
                           width: 120,
                           height: 120,
@@ -49,22 +47,31 @@ class EditProfile extends StatelessWidget {
                                 blurRadius: 10,
                               ),
                             ],
-                            image: hasImage
-                                ? DecorationImage(
-                                    image: controller.profileImageData.value != null
-                                        ? MemoryImage(controller.profileImageData.value!)
-                                        : NetworkImage(controller.profileImageUrl.value) as ImageProvider,
+                          ),
+                          child: ClipOval(
+                            child: controller.profileImageData.value != null
+                                ? Image.memory(
+                                    controller.profileImageData.value!,
                                     fit: BoxFit.cover,
                                   )
-                                : null,
+                                : (controller.profileImageUrl.value.isNotEmpty
+                                    ? Image.network(
+                                        controller.profileImageUrl.value,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return const Icon(
+                                            Icons.person,
+                                            size: 60,
+                                            color: Color(0xFF94A3B8),
+                                          );
+                                        },
+                                      )
+                                    : const Icon(
+                                        Icons.person,
+                                        size: 60,
+                                        color: Color(0xFF94A3B8),
+                                      )),
                           ),
-                          child: !hasImage
-                              ? const Icon(
-                                  Icons.person,
-                                  size: 60,
-                                  color: Color(0xFF94A3B8),
-                                )
-                              : null,
                         );
                       }),
                       Positioned(

@@ -25,107 +25,130 @@ class _MyEmergencyButtonState extends State<MyEmergencyButton> {
   void _showAddContactDialog() {
     _nameController.clear();
     _numberController.clear();
+    bool isSaving = false;
     
     Get.defaultDialog(
       title: "",
       titlePadding: EdgeInsets.zero,
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       radius: 12,
-      content: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-          const Text(
-            "Emergency Contact Name",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Color(0xff2D3436),
-            ),
-          ),
-          const SizedBox(height: 10),
-          TextField(
-            controller: _nameController,
-            decoration: InputDecoration(
-              hintText: "example - insurance provider",
-              hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: Colors.grey.shade300),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: Colors.grey.shade300),
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          const Text(
-            "Emergency Contact Number",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Color(0xff2D3436),
-            ),
-          ),
-          const SizedBox(height: 10),
-          TextField(
-            controller: _numberController,
-            keyboardType: TextInputType.phone,
-            decoration: InputDecoration(
-              hintText: "example - insurance contact number",
-              hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: Colors.grey.shade300),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: Colors.grey.shade300),
-              ),
-            ),
-          ),
-          const SizedBox(height: 25),
-          SizedBox(
-            width: double.infinity,
-            height: 50,
-            child: ElevatedButton(
-              onPressed: () async {
-                if (_nameController.text.trim().isEmpty || _numberController.text.trim().isEmpty) {
-                  Get.snackbar("Error", "Please fill all fields", backgroundColor: Colors.red, colorText: Colors.white);
-                  return;
-                }
-                
-                bool success = await homeController.addEmergencyContact(
-                  contactName: _nameController.text.trim(),
-                  contactNumber: _numberController.text.trim(),
-                );
-                
-                if (success) {
-                  Get.back();
-                  Get.snackbar("Success", "Contact added successfully", backgroundColor: Colors.green, colorText: Colors.white);
-                } else {
-                  Get.snackbar("Error", "Failed to add contact", backgroundColor: Colors.red, colorText: Colors.white);
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff2664A3),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+      content: StatefulBuilder(
+        builder: (context, setDialogState) {
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Emergency Contact Name",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xff2D3436),
+                  ),
                 ),
-              ),
-              child: const Text(
-                "Create Contact",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+                const SizedBox(height: 10),
+                TextField(
+                  controller: _nameController,
+                  decoration: InputDecoration(
+                    hintText: "example - insurance provider",
+                    hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                    ),
+                  ),
                 ),
-              ),
+                const SizedBox(height: 20),
+                const Text(
+                  "Emergency Contact Number",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xff2D3436),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: _numberController,
+                  keyboardType: TextInputType.phone,
+                  decoration: InputDecoration(
+                    hintText: "example - insurance contact number",
+                    hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 25),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: isSaving
+                        ? null
+                        : () async {
+                            if (_nameController.text.trim().isEmpty || _numberController.text.trim().isEmpty) {
+                              Get.snackbar("Error", "Please fill all fields", backgroundColor: Colors.red, colorText: Colors.white);
+                              return;
+                            }
+                            
+                            setDialogState(() {
+                              isSaving = true;
+                            });
+                            
+                            bool success = await homeController.addEmergencyContact(
+                              contactName: _nameController.text.trim(),
+                              contactNumber: _numberController.text.trim(),
+                            );
+                            
+                            if (success) {
+                              Get.back();
+                              Get.snackbar("Success", "Contact added successfully", backgroundColor: Colors.green, colorText: Colors.white);
+                            } else {
+                              setDialogState(() {
+                                isSaving = false;
+                              });
+                              Get.snackbar("Error", "Failed to add contact", backgroundColor: Colors.red, colorText: Colors.white);
+                            }
+                          },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xff2664A3),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: isSaving
+                        ? const SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2.5,
+                            ),
+                          )
+                        : const Text(
+                            "Create Contact",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
+          );
+        },
       ),
     );
   }

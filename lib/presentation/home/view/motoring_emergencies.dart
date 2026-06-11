@@ -548,84 +548,109 @@ class MotoringEmergencies extends StatelessWidget {
     final TextEditingController nameController = TextEditingController(text: currentName);
     final TextEditingController numberController = TextEditingController(text: currentNumber);
     final HomeController homeController = Get.find<HomeController>();
+    bool isSaving = false;
 
     Get.defaultDialog(
       title: "",
       titlePadding: EdgeInsets.zero,
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       radius: 12,
-      content: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-          const Text(
-            "Update Contact Name",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xff2D3436)),
-          ),
-          const SizedBox(height: 10),
-          TextField(
-            controller: nameController,
-            decoration: InputDecoration(
-              hintText: "example - insurance provider",
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+      content: StatefulBuilder(
+        builder: (context, setDialogState) {
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Update Contact Name",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xff2D3436)),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    hintText: "example - insurance provider",
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  "Update Contact Number",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xff2D3436)),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: numberController,
+                  keyboardType: TextInputType.phone,
+                  decoration: InputDecoration(
+                    hintText: "example - insurance contact number",
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                ),
+                const SizedBox(height: 25),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: isSaving
+                        ? null
+                        : () async {
+                            if (nameController.text.trim().isEmpty || numberController.text.trim().isEmpty) {
+                              Get.snackbar("Error", "Please fill all fields", backgroundColor: Colors.red, colorText: Colors.white);
+                              return;
+                            }
+                            
+                            setDialogState(() {
+                              isSaving = true;
+                            });
+                            
+                            bool success = await homeController.updateEmergencyContact(
+                              id,
+                              nameController.text.trim(),
+                              numberController.text.trim(),
+                            );
+                            
+                            if (success) {
+                              Get.back();
+                              Get.snackbar("Success", "Contact updated successfully", backgroundColor: Colors.green, colorText: Colors.white);
+                            } else {
+                              setDialogState(() {
+                                isSaving = false;
+                              });
+                              Get.snackbar("Error", "Failed to update contact", backgroundColor: Colors.red, colorText: Colors.white);
+                            }
+                          },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xff2664A3),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
+                    child: isSaving
+                        ? const SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2.5,
+                            ),
+                          )
+                        : const Text(
+                            "Update Contact",
+                            style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+                          ),
+                  ),
+                ),
+              ],
             ),
-          ),
-          const SizedBox(height: 20),
-          const Text(
-            "Update Contact Number",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xff2D3436)),
-          ),
-          const SizedBox(height: 10),
-          TextField(
-            controller: numberController,
-            keyboardType: TextInputType.phone,
-            decoration: InputDecoration(
-              hintText: "example - insurance contact number",
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-            ),
-          ),
-          const SizedBox(height: 25),
-          SizedBox(
-            width: double.infinity,
-            height: 50,
-            child: ElevatedButton(
-              onPressed: () async {
-                if (nameController.text.trim().isEmpty || numberController.text.trim().isEmpty) {
-                  Get.snackbar("Error", "Please fill all fields", backgroundColor: Colors.red, colorText: Colors.white);
-                  return;
-                }
-                
-                bool success = await homeController.updateEmergencyContact(
-                  id,
-                  nameController.text.trim(),
-                  numberController.text.trim(),
-                );
-                
-                if (success) {
-                  Get.back();
-                  Get.snackbar("Success", "Contact updated successfully", backgroundColor: Colors.green, colorText: Colors.white);
-                } else {
-                  Get.snackbar("Error", "Failed to update contact", backgroundColor: Colors.red, colorText: Colors.white);
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff2664A3),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              ),
-              child: const Text(
-                "Update Contact",
-                style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-            ),
-          ),
-        ],
-      ),
+          );
+        },
       ),
     );
   }
 
   void _showDeleteConfirmation(String id) {
     final HomeController homeController = Get.find<HomeController>();
+    bool isDeleting = false;
+
     Get.dialog(
       Dialog(
         shape: RoundedRectangleBorder(
@@ -633,125 +658,146 @@ class MotoringEmergencies extends StatelessWidget {
         ),
         elevation: 0,
         backgroundColor: Colors.transparent,
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 15.0,
-                offset: Offset(0.0, 10.0),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.red.shade50,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.delete_outline,
-                  color: Colors.red.shade400,
-                  size: 40,
-                ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                "Delete Contact",
-                style: TextStyle(
-                  fontSize: 22.0,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF2D3436),
-                ),
-              ),
-              const SizedBox(height: 12),
-              const Text(
-                "Are you sure you want to delete this contact? This action cannot be undone.",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14.0,
-                  color: Color(0xFF636E72),
-                  height: 1.4,
-                ),
-              ),
-              const SizedBox(height: 24),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => Get.back(),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        side: BorderSide(color: Colors.grey.shade300),
-                      ),
-                      child: const Text(
-                        "Cancel",
-                        style: TextStyle(
-                          color: Color(0xFF636E72),
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        bool success = await homeController.deleteEmergencyContact(id);
-                        if (success) {
-                          Get.back();
-                          Get.snackbar(
-                            "Success", 
-                            "Contact deleted successfully", 
-                            backgroundColor: Colors.green, 
-                            colorText: Colors.white,
-                            snackPosition: SnackPosition.BOTTOM,
-                            margin: const EdgeInsets.all(12),
-                          );
-                        } else {
-                          Get.snackbar(
-                            "Error", 
-                            "Failed to delete contact", 
-                            backgroundColor: Colors.red, 
-                            colorText: Colors.white,
-                            snackPosition: SnackPosition.BOTTOM,
-                            margin: const EdgeInsets.all(12),
-                          );
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFE74C3C),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        elevation: 0,
-                      ),
-                      child: const Text(
-                        "Delete",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
+        child: StatefulBuilder(
+          builder: (context, setDialogState) {
+            return Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 15.0,
+                    offset: Offset(0.0, 10.0),
                   ),
                 ],
               ),
-            ],
-          ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.red.shade50,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.delete_outline,
+                      color: Colors.red.shade400,
+                      size: 40,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    "Delete Contact",
+                    style: TextStyle(
+                      fontSize: 22.0,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF2D3436),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  const Text(
+                    "Are you sure you want to delete this contact? This action cannot be undone.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      color: Color(0xFF636E72),
+                      height: 1.4,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: isDeleting ? null : () => Get.back(),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            side: BorderSide(color: Colors.grey.shade300),
+                          ),
+                          child: const Text(
+                            "Cancel",
+                            style: TextStyle(
+                              color: Color(0xFF636E72),
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: isDeleting
+                              ? null
+                              : () async {
+                                  setDialogState(() {
+                                    isDeleting = true;
+                                  });
+                                  bool success = await homeController.deleteEmergencyContact(id);
+                                  if (success) {
+                                    Get.back();
+                                    Get.snackbar(
+                                      "Success", 
+                                      "Contact deleted successfully", 
+                                      backgroundColor: Colors.green, 
+                                      colorText: Colors.white,
+                                      snackPosition: SnackPosition.BOTTOM,
+                                      margin: const EdgeInsets.all(12),
+                                    );
+                                  } else {
+                                    setDialogState(() {
+                                      isDeleting = false;
+                                    });
+                                    Get.snackbar(
+                                      "Error", 
+                                      "Failed to delete contact", 
+                                      backgroundColor: Colors.red, 
+                                      colorText: Colors.white,
+                                      snackPosition: SnackPosition.BOTTOM,
+                                      margin: const EdgeInsets.all(12),
+                                    );
+                                  }
+                                },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFE74C3C),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            elevation: 0,
+                          ),
+                          child: isDeleting
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2.5,
+                                  ),
+                                )
+                              : const Text(
+                                  "Delete",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );

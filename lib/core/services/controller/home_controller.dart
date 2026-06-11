@@ -88,16 +88,13 @@ class HomeController extends GetxController {
         headers: {"Authorization": "Bearer $token"},
       );
       if (response.statusCode == 200 || response.statusCode == 204) {
-        Get.snackbar("Success", "Vehicle deleted successfully",
-            backgroundColor: Colors.green, colorText: Colors.white);
         fetchVehicles();
         return true;
       } else {
-        Get.snackbar("Error", "Failed to delete vehicle");
         return false;
       }
     } catch (e) {
-      Get.snackbar("Error", "Something went wrong: $e");
+      debugPrint("Error deleting vehicle: $e");
       return false;
     }
   }

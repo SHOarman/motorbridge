@@ -440,60 +440,79 @@ class _VehicleDetailsState extends State<VehicleDetails> {
   }
 
   void _showDeleteVehicleConfirmation(HomeController homeController) {
+    bool isDeleting = false;
     Get.dialog(
       Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.warning_amber_rounded, color: Colors.red, size: 48),
-              const SizedBox(height: 16),
-              const Text("Remove Vehicle", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              const Text(
-                "Are you sure you want to remove this vehicle and all of its saved components?",
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.black87),
-              ),
-              const SizedBox(height: 24),
-              Row(
+        child: StatefulBuilder(
+          builder: (context, setDialogState) {
+            return Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => Get.back(),
-                      child: const Text("Cancel"),
-                    ),
+                  const Icon(Icons.warning_amber_rounded, color: Colors.red, size: 48),
+                  const SizedBox(height: 16),
+                  const Text("Remove Vehicle", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 8),
+                  const Text(
+                    "Are you sure you want to remove this vehicle and all of its saved components?",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.black87),
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                      onPressed: () async {
-                        Get.back(); // close the dialog
-                        String vehicleId = (vehicle['id'] ?? vehicle['_id'] ?? '').toString().trim();
-                        if (vehicleId.isNotEmpty) {
-                          // Show loading indicator
-                          Get.dialog(
-                            const Center(child: CircularProgressIndicator()),
-                            barrierDismissible: false,
-                          );
-                          bool success = await homeController.deleteVehicle(vehicleId);
-                          Get.back(); // close the loading dialog
-                          if (success) {
-                            Get.back(); // navigate back to previous screen
-                          }
-                        }
-                      },
-                      child: const Text("Remove", style: TextStyle(color: Colors.white)),
-                    ),
+                  const SizedBox(height: 24),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: isDeleting ? null : () => Get.back(),
+                          child: const Text("Cancel"),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                          onPressed: isDeleting
+                              ? null
+                              : () async {
+                                  String vehicleId = (vehicle['id'] ?? vehicle['_id'] ?? '').toString().trim();
+                                  if (vehicleId.isNotEmpty) {
+                                    setDialogState(() {
+                                      isDeleting = true;
+                                    });
+                                    bool success = await homeController.deleteVehicle(vehicleId);
+                                    if (success) {
+                                      Get.back(); // close the dialog
+                                      Get.back(); // navigate back to previous screen
+                                      Get.snackbar("Success", "Vehicle removed successfully", backgroundColor: Colors.green, colorText: Colors.white);
+                                    } else {
+                                      setDialogState(() {
+                                        isDeleting = false;
+                                      });
+                                      Get.snackbar("Error", "Failed to remove vehicle", backgroundColor: Colors.red, colorText: Colors.white);
+                                    }
+                                  }
+                                },
+                          child: isDeleting
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Text("Remove", style: TextStyle(color: Colors.white)),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

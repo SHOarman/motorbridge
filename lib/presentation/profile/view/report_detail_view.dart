@@ -202,9 +202,19 @@ class ReportDetailView extends StatelessWidget {
                                 offset: const Offset(0, 4),
                               )
                             ],
-                            image: DecorationImage(
-                              image: NetworkImage(fullUrl),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Image.network(
+                              fullUrl,
                               fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) => Container(
+                                color: const Color(0xffE2E8F0),
+                                child: const Icon(
+                                  Icons.broken_image,
+                                  color: Colors.grey,
+                                ),
+                              ),
                             ),
                           ),
                         ),

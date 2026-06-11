@@ -205,94 +205,131 @@ class Profile extends StatelessWidget {
   }
 
   void _showDeleteVehicleDialog(BuildContext context, String vehicleId) {
+    bool isDeleting = false;
     Get.dialog(
-      AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        backgroundColor: Colors.white,
-        title: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: const Color(0x33FF4343),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Icon(
-                Icons.delete_outline,
-                color: Color(0xFFFF4343),
-                size: 22,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Flexible(
-              child: Text(
-                "Delete Vehicle",
-                style: AppTextStyles.bigText.copyWith(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          ],
-        ),
-        content: Text(
-          "Are you sure you want to delete this vehicle? This action cannot be undone.",
-          style: AppTextStyles.smallText.copyWith(
-            fontSize: 14,
-            color: const Color(0xFF666666),
-          ),
-        ),
-        actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-        actions: [
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () => Get.back(),
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Color(0xFFDDDDDD)),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
+      StatefulBuilder(
+        builder: (context, setDialogState) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            backgroundColor: Colors.white,
+            title: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: const Color(0x33FF4343),
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Text(
-                    "Cancel",
-                    style: AppTextStyles.smallText.copyWith(
-                      fontSize: 14,
-                      color: const Color(0xFF555555),
-                    ),
+                  child: const Icon(
+                    Icons.delete_outline,
+                    color: Color(0xFFFF4343),
+                    size: 22,
                   ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Get.back();
-                    homeController.deleteVehicle(vehicleId);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFF4343),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    elevation: 0,
-                  ),
+                const SizedBox(width: 12),
+                Flexible(
                   child: Text(
-                    "Delete",
-                    style: AppTextStyles.smallText.copyWith(
-                      fontSize: 14,
-                      color: Colors.white,
+                    "Delete Vehicle",
+                    style: AppTextStyles.bigText.copyWith(
+                      fontSize: 18,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),
+              ],
+            ),
+            content: Text(
+              "Are you sure you want to delete this vehicle? This action cannot be undone.",
+              style: AppTextStyles.smallText.copyWith(
+                fontSize: 14,
+                color: const Color(0xFF666666),
+              ),
+            ),
+            actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            actions: [
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: isDeleting ? null : () => Get.back(),
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: Color(0xFFDDDDDD)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                      child: Text(
+                        "Cancel",
+                        style: AppTextStyles.smallText.copyWith(
+                          fontSize: 14,
+                          color: const Color(0xFF555555),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: isDeleting
+                          ? null
+                          : () async {
+                              setDialogState(() {
+                                isDeleting = true;
+                              });
+                              bool success = await homeController.deleteVehicle(vehicleId);
+                              if (success) {
+                                Get.back();
+                                Get.snackbar(
+                                  "Success",
+                                  "Vehicle deleted successfully",
+                                  backgroundColor: Colors.green,
+                                  colorText: Colors.white,
+                                );
+                              } else {
+                                setDialogState(() {
+                                  isDeleting = false;
+                                });
+                                Get.snackbar(
+                                  "Error",
+                                  "Failed to delete vehicle",
+                                  backgroundColor: Colors.red,
+                                  colorText: Colors.white,
+                                );
+                              }
+                            },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFF4343),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        elevation: 0,
+                      ),
+                      child: isDeleting
+                          ? const SizedBox(
+                              height: 18,
+                              width: 18,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : Text(
+                              "Delete",
+                              style: AppTextStyles.smallText.copyWith(
+                                fontSize: 14,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                    ),
+                  ),
+                ],
               ),
             ],
-          ),
-        ],
+          );
+        },
       ),
     );
   }
@@ -341,22 +378,37 @@ class Profile extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      CircleAvatar(
-                        radius: 40,
-                        backgroundColor: const Color(0xFFF1F5F9),
-                        backgroundImage: controller.profileImageData.value != null
-                            ? MemoryImage(controller.profileImageData.value!)
-                            : (controller.profileImageUrl.value.isNotEmpty
-                                ? NetworkImage(controller.profileImageUrl.value)
-                                : null),
-                        child: (controller.profileImageData.value == null &&
-                                controller.profileImageUrl.value.isEmpty)
-                            ? const Icon(
-                                Icons.person,
-                                size: 40,
-                                color: Color(0xFF94A3B8),
-                              )
-                            : null,
+                      Container(
+                        width: 80,
+                        height: 80,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Color(0xFFF1F5F9),
+                        ),
+                        child: ClipOval(
+                          child: controller.profileImageData.value != null
+                              ? Image.memory(
+                                  controller.profileImageData.value!,
+                                  fit: BoxFit.cover,
+                                )
+                              : (controller.profileImageUrl.value.isNotEmpty
+                                  ? Image.network(
+                                      controller.profileImageUrl.value,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return const Icon(
+                                          Icons.person,
+                                          size: 40,
+                                          color: Color(0xFF94A3B8),
+                                        );
+                                      },
+                                    )
+                                  : const Icon(
+                                      Icons.person,
+                                      size: 40,
+                                      color: Color(0xFF94A3B8),
+                                    )),
+                        ),
                       ),
                       const SizedBox(width: 16),
                       Expanded(
@@ -553,7 +605,7 @@ class Profile extends StatelessWidget {
                   onTap: () => _showDeleteDialog(context),
                   backgroundColor: const Color.fromRGBO(255, 67, 67, 0.2),
                 ),
-                const SizedBox(height: 120),
+                const SizedBox(height: 160),
               ],
             ),
           ),
