@@ -112,87 +112,93 @@ class _HelpAndTutorialViewState extends State<HelpAndTutorialView>
             ),
           ),
           // Bottom Footer
-          Container(
-            padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.08),
-                  blurRadius: 20,
-                  offset: const Offset(0, -5),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          final Uri emailLaunchUri = Uri(
-                            scheme: 'mailto',
-                            path: 'support@motor-bridge.co.uk',
-                          );
-                          launchUrl(emailLaunchUri);
-                        },
-                        child: Text(
-                          "support@motor-bridge.co.uk",
-                          style: AppTextStyles.smallText.copyWith(
-                            color: const Color(0xFF10B981),
-                            fontWeight: FontWeight.w700,
-                            fontSize: 16,
+          SafeArea(
+            top: false,
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(30)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.08),
+                    blurRadius: 20,
+                    offset: const Offset(0, -5),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            final Uri emailLaunchUri = Uri(
+                              scheme: 'mailto',
+                              path: 'support@motor-bridge.co.uk',
+                            );
+                            launchUrl(emailLaunchUri);
+                          },
+                          child: Text(
+                            "support@motor-bridge.co.uk",
+                            style: AppTextStyles.smallText.copyWith(
+                              color: const Color(0xFF10B981),
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
                         ),
-                      ),
-                      const SizedBox(height: 4),
-                      Wrap(
-                        spacing: 12,
-                        children: [
-                          Text(
-                            "Quick Start Tutorial",
-                            style: AppTextStyles.smallText.copyWith(
-                              color: const Color(0xFF64748B),
-                              fontSize: 13,
+                        const SizedBox(height: 4),
+                        Wrap(
+                          spacing: 12,
+                          children: [
+                            Text(
+                              "Quick Start Tutorial",
+                              style: AppTextStyles.smallText.copyWith(
+                                color: const Color(0xFF64748B),
+                                fontSize: 13,
+                              ),
                             ),
-                          ),
-                          Text(
-                            "FAQs",
-                            style: AppTextStyles.smallText.copyWith(
-                              color: const Color(0xFF64748B),
-                              fontSize: 13,
+                            Text(
+                              "FAQs",
+                              style: AppTextStyles.smallText.copyWith(
+                                color: const Color(0xFF64748B),
+                                fontSize: 13,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () => Get.back(),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF10B981),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 32,
-                      vertical: 14,
+                          ],
+                        ),
+                      ],
                     ),
-                    shape: const StadiumBorder(),
-                    elevation: 0,
                   ),
-                  child: const Text(
-                    "Close",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+                  const SizedBox(width: 12),
+                  ElevatedButton(
+                    onPressed: () => Get.back(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF10B981),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 14,
+                      ),
+                      shape: const StadiumBorder(),
+                      elevation: 0,
+                    ),
+                    child: const Text(
+                      "Close",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
@@ -695,14 +701,16 @@ class _HelpAndTutorialViewState extends State<HelpAndTutorialView>
       "Accident Reports",
     ];
 
-    return Column(
-      children: [
-        // Search & Category Header
-        Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
+    return ListView.builder(
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 0, bottom: 30),
+      itemCount: filteredFAQs.length + 2, // +1 for header, +1 for help card
+      itemBuilder: (context, index) {
+        // Header item (title, search bar, filter chips)
+        if (index == 0) {
+          return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(height: 20),
               Text(
                 "Frequently Asked Questions",
                 style: AppTextStyles.bigText.copyWith(
@@ -762,17 +770,14 @@ class _HelpAndTutorialViewState extends State<HelpAndTutorialView>
                     .map((cat) => _buildCategoryChip(cat))
                     .toList(),
               ),
-            ],
-          ),
-        ),
-
-        // FAQ List
-        Expanded(
-          child: filteredFAQs.isEmpty
-              ? Center(
+              const SizedBox(height: 20),
+              // Show "no results" message inline if needed
+              if (filteredFAQs.isEmpty) ...[
+                Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      const SizedBox(height: 40),
                       Icon(Icons.search_off, size: 60, color: Colors.grey[300]),
                       const SizedBox(height: 16),
                       Text(
@@ -781,59 +786,65 @@ class _HelpAndTutorialViewState extends State<HelpAndTutorialView>
                           color: Colors.grey,
                         ),
                       ),
+                      const SizedBox(height: 40),
                     ],
                   ),
-                )
-              : ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  itemCount: filteredFAQs.length + 1, // Add 1 for the help card
-                  itemBuilder: (context, index) {
-                    if (index == filteredFAQs.length) {
-                      return Container(
-                        margin: const EdgeInsets.symmetric(vertical: 10),
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFE8F5E9),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Need more help? Contact support at",
-                              style: AppTextStyles.smallText.copyWith(color: const Color(0xFF2E7D32), fontWeight: FontWeight.w600),
-                            ),
-                            const SizedBox(height: 4),
-                            GestureDetector(
-                              onTap: () {
-                                final Uri emailLaunchUri = Uri(
-                                  scheme: 'mailto',
-                                  path: 'support@motor-bridge.co.uk',
-                                );
-                                launchUrl(emailLaunchUri);
-                              },
-                              child: Text(
-                                "support@motor-bridge.co.uk",
-                                style: AppTextStyles.smallText.copyWith(
-                                  color: const Color(0xFF1B5E20),
-                                  fontWeight: FontWeight.w800,
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                    return _buildFAQItem(
-                      filteredFAQs[index]['category']!,
-                      filteredFAQs[index]['question']!,
-                      filteredFAQs[index]['answer']!,
-                    );
-                  },
                 ),
-        ),
-      ],
+              ],
+            ],
+          );
+        }
+
+        // Help card at the end
+        if (index == filteredFAQs.length + 1) {
+          return Container(
+            margin: const EdgeInsets.symmetric(vertical: 10),
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: const Color(0xFFE8F5E9),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Need more help? Contact support at",
+                  style: AppTextStyles.smallText.copyWith(color: const Color(0xFF2E7D32), fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 4),
+                GestureDetector(
+                  onTap: () {
+                    final Uri emailLaunchUri = Uri(
+                      scheme: 'mailto',
+                      path: 'support@motor-bridge.co.uk',
+                    );
+                    launchUrl(emailLaunchUri);
+                  },
+                  child: Text(
+                    "support@motor-bridge.co.uk",
+                    style: AppTextStyles.smallText.copyWith(
+                      color: const Color(0xFF1B5E20),
+                      fontWeight: FontWeight.w800,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        // FAQ items (offset by 1 for the header)
+        final faqIndex = index - 1;
+        if (faqIndex < filteredFAQs.length) {
+          return _buildFAQItem(
+            filteredFAQs[faqIndex]['category']!,
+            filteredFAQs[faqIndex]['question']!,
+            filteredFAQs[faqIndex]['answer']!,
+          );
+        }
+        return const SizedBox.shrink();
+      },
     );
   }
 

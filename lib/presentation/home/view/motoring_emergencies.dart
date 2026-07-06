@@ -348,7 +348,7 @@ class MotoringEmergencies extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 70),
             ],
           ),
         ),
@@ -792,6 +792,7 @@ class MotoringEmergencies extends StatelessWidget {
                                 ),
                         ),
                       ),
+
                     ],
                   ),
                 ],

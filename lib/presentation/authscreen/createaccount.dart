@@ -180,7 +180,7 @@ class Createaccount extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -195,12 +195,12 @@ class Createaccount extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Already have an account",
+                    "Already have an account ?",
                     style: AppTextStyles.smallText.copyWith(
                       fontSize: 14,
                       color: const Color(0xff374151),
@@ -209,7 +209,7 @@ class Createaccount extends StatelessWidget {
                   TextButton(
                     onPressed: () => Get.back(),
                     child: Text(
-                      "? Sign in",
+                      " Sign in",
                       style: AppTextStyles.smallText.copyWith(
                         fontSize: 14,
                         color: AppColors.primaryColor,
@@ -219,6 +219,7 @@ class Createaccount extends StatelessWidget {
                   ),
                 ],
               ),
+              const SizedBox(height: 40),
             ],
           ),
         ),

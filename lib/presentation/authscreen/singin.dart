@@ -131,12 +131,12 @@ class Singin extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Don't have an account",
+                    "Don't have an account ?",
                     style: AppTextStyles.smallText.copyWith(
                       fontSize: 14,
                       color: const Color(0xff374151),
@@ -147,7 +147,7 @@ class Singin extends StatelessWidget {
                       Get.toNamed(AppRoutes.createaccount);
                     },
                     child: Text(
-                      "? Sign Up",
+                      " Sign Up",
                       style: AppTextStyles.smallText.copyWith(
                         fontSize: 14,
                         color: AppColors.primaryColor,
@@ -157,6 +157,7 @@ class Singin extends StatelessWidget {
                   ),
                 ],
               ),
+              const SizedBox(height: 40),
             ],
           ),
         ),

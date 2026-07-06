@@ -26,9 +26,9 @@ class CustomButton extends StatelessWidget {
     final sw = MediaQuery.of(context).size.width;
     final sh = MediaQuery.of(context).size.height;
 
-    final double fontSize = sw * 0.042; // ~15px on 360 screen
-    final double iconSize = sw * 0.050; // ~18px
-    final double vPad = sh * 0.018; // ~14px on 760 screen
+    final double fontSize = sw * 0.042;
+    final double iconSize = sw * 0.050;
+    final double vPad = sh * 0.018;
 
     return Material(
       color: backgroundColor,

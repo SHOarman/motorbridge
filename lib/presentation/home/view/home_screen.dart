@@ -335,6 +335,50 @@ class HomeScreen extends GetView<HomeController> {
     );
   }
 
+  Widget _buildVehicleImage(String imagePath) {
+    if (imagePath.isEmpty) {
+      return Image.asset("assets/image/Rectangle_2-removebg-preview.png", fit: BoxFit.cover);
+    }
+    
+    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+      return Image.network(
+        imagePath,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Image.asset("assets/image/Rectangle_2-removebg-preview.png", fit: BoxFit.cover);
+        },
+      );
+    } else if (imagePath.startsWith("/uploads/") || imagePath.startsWith("uploads/")) {
+      final String cleanPath = imagePath.startsWith("/") ? imagePath : "/$imagePath";
+      final String fullUrl = "${ApiServices.baseurl}$cleanPath";
+      return Image.network(
+        fullUrl,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Image.asset("assets/image/Rectangle_2-removebg-preview.png", fit: BoxFit.cover);
+        },
+      );
+    } else {
+      if (!imagePath.contains("assets/") && !imagePath.startsWith("/")) {
+        final String fullUrl = "${ApiServices.baseurl}/$imagePath";
+        return Image.network(
+          fullUrl,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Image.asset("assets/image/Rectangle_2-removebg-preview.png", fit: BoxFit.cover);
+          },
+        );
+      }
+      return Image.asset(
+        imagePath,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Image.asset("assets/image/Rectangle_2-removebg-preview.png", fit: BoxFit.cover);
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final s = AppSizes(context);
@@ -536,40 +580,105 @@ class HomeScreen extends GetView<HomeController> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Added Vehicles",
-                        style: AppTextStyles.bigText.copyWith(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w500,
-                          color: const Color(0xff525252),
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Added Vehicles",
+                            style: AppTextStyles.bigText.copyWith(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w500,
+                              color: const Color(0xff525252),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () => Get.toNamed(AppRoutes.vehicles),
+                            child: Row(
+                              children: [
+                                Text(
+                                  "See More",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: primaryColor,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 12,
+                                  color: primaryColor,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 10),
-                      Builder(
-                        builder: (context) {
-                          final vehicle = controller.vehiclesList[0];
-                          final String imgPath = ApiServices.getFirstImageUrl(
-                            vehicle['galleryImages'],
-                          );
+                      if (controller.vehiclesList.length == 1)
+                        Builder(
+                          builder: (context) {
+                            if (controller.vehiclesList.isEmpty) return const SizedBox.shrink();
+                            final vehicle = controller.vehiclesList[0];
+                            final String imgPath = ApiServices.getFirstImageUrl(
+                              vehicle['galleryImages'],
+                            );
 
-                          return VehicleCard(
-                            hasBorder: true,
-                            registrationTextColor: const Color(0xff000000),
-                            vehicleName:
-                                "${vehicle['make'] ?? ''} ${vehicle['model'] ?? ''}",
-                            year: (vehicle['year'] ?? '').toString(),
-                            engineCode: vehicle['engineCode'] ?? '',
-                            vehicleTag: "Vehicle 1",
-                            registrationNumber: vehicle['registration'] ?? '',
-                            vehicleImage: imgPath,
-                            onTagTap: () {},
-                            onViewDetails: () => Get.toNamed(
-                              AppRoutes.vehicledetails,
-                              arguments: vehicle,
-                            ),
-                          );
-                        },
-                      ),
+                            return VehicleCard(
+                              hasBorder: true,
+                              registrationTextColor: const Color(0xff000000),
+                              vehicleName:
+                                  "${vehicle['make'] ?? ''} ${vehicle['model'] ?? ''}",
+                              year: (vehicle['year'] ?? '').toString(),
+                              engineCode: vehicle['engineCode'] ?? '',
+                              vehicleTag: "Vehicle 1",
+                              registrationNumber: vehicle['registration'] ?? '',
+                              vehicleImage: imgPath,
+                              onTagTap: () {},
+                              onViewDetails: () => Get.toNamed(
+                                AppRoutes.vehicledetails,
+                                arguments: vehicle,
+                              ),
+                            );
+                          },
+                        )
+                      else
+                        SizedBox(
+                          height: (s.vehicleCardImageHeight + 350).clamp(480.0, 580.0),
+                          child: PageView.builder(
+                            controller: PageController(viewportFraction: 1.0),
+                            itemCount: controller.vehiclesList.length,
+                            itemBuilder: (context, index) {
+                              if (index >= controller.vehiclesList.length) {
+                                return const SizedBox.shrink();
+                              }
+                              final vehicle = controller.vehiclesList[index];
+                              final String imgPath = ApiServices.getFirstImageUrl(
+                                vehicle['galleryImages'],
+                              );
+
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                                child: VehicleCard(
+                                  hasBorder: true,
+                                  registrationTextColor: const Color(0xff000000),
+                                  vehicleName:
+                                      "${vehicle['make'] ?? ''} ${vehicle['model'] ?? ''}",
+                                  year: (vehicle['year'] ?? '').toString(),
+                                  engineCode: vehicle['engineCode'] ?? '',
+                                  vehicleTag: "Vehicle ${index + 1}",
+                                  registrationNumber: vehicle['registration'] ?? '',
+                                  vehicleImage: imgPath,
+                                  onTagTap: () {},
+                                  onViewDetails: () => Get.toNamed(
+                                    AppRoutes.vehicledetails,
+                                    arguments: vehicle,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
                     ],
                   );
                 }),

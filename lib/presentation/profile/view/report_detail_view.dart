@@ -227,6 +227,8 @@ class ReportDetailView extends StatelessWidget {
 
               // Accident Details Card
               _buildSectionCard(
+
+
                 icon: Icons.description,
                 title: "Accident Details",
                 children: [
@@ -272,6 +274,8 @@ class ReportDetailView extends StatelessWidget {
                       ],
                       phoneToCall: witness['phoneNumber'],
                     )),
+
+
             ],
           ),
         ),
@@ -340,6 +344,7 @@ class ReportDetailView extends StatelessWidget {
           ),
         ],
       ),
+
     );
   }
 

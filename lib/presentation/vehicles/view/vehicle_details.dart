@@ -1232,7 +1232,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                   if (docId.isNotEmpty) _showDeleteDocConfirmation(docId);
                 },
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 70),
             ],
           ),
         ),

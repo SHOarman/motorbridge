@@ -21,11 +21,11 @@ void main() async {
   await dotenv.load(fileName: ".env");
   DependencyInjection.bindings();
   runApp(
-    // DevicePreview(
-    //   enabled: !kReleaseMode,
-    //   builder: (context) =>  MyApp(),
-    // ),
-    MyApp(),
+    DevicePreview(
+      enabled: !kReleaseMode,
+      builder: (context) =>  MyApp(),
+    ),
+    // MyApp(),
   );
 
 }
