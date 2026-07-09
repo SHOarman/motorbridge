@@ -9,6 +9,8 @@
     <application
         android:label="motorbridge"
         android:name="${applicationName}"
+        android:allowBackup="false"
+        android:fullBackupOnly="false"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/launcher_icon">
         <activity

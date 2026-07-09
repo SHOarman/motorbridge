@@ -79,11 +79,22 @@ class ProfileController extends GetxController {
       debugPrint("getProfile status: ${response.statusCode}");
       debugPrint("getProfile body: ${response.body}");
 
+      if (response.statusCode == 401 || response.statusCode == 403) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.clear();
+        Get.offAllNamed(AppRoutes.singin);
+        return;
+      }
+
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
         var data = responseData;
         if (responseData is Map && responseData.containsKey('data') && responseData['data'] != null) {
           data = responseData['data'];
+        }
+
+        if (data is Map && data.containsKey('user') && data['user'] is Map) {
+          data = data['user'];
         }
 
         if (data is Map) {

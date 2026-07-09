@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../api_sevices/api_services.dart';
+import '../../route/app_routes.dart';
 
 class HomeController extends GetxController {
   var vehiclesList = <dynamic>[].obs;
@@ -38,11 +39,21 @@ class HomeController extends GetxController {
           Uri.parse(ApiServices.user_profile),
           headers: {"Authorization": "Bearer $token"},
         );
+        if (profileResponse.statusCode == 401 || profileResponse.statusCode == 403) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.clear();
+          Get.offAllNamed(AppRoutes.singin);
+          return;
+        }
+
         if (profileResponse.statusCode == 200) {
           var profileData = jsonDecode(profileResponse.body);
           var data = profileData;
           if (profileData is Map && profileData.containsKey('data') && profileData['data'] != null) {
             data = profileData['data'];
+          }
+          if (data is Map && data.containsKey('user') && data['user'] is Map) {
+            data = data['user'];
           }
           userId = (data['id'] ?? data['_id'] ?? "").toString();
           if (userId.isNotEmpty) {
@@ -64,6 +75,13 @@ class HomeController extends GetxController {
 
       debugPrint("fetchVehicles status: ${response.statusCode}");
       debugPrint("fetchVehicles body: ${response.body}");
+
+      if (response.statusCode == 401 || response.statusCode == 403) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.clear();
+        Get.offAllNamed(AppRoutes.singin);
+        return;
+      }
 
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
