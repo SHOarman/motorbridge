@@ -32,6 +32,8 @@ class AppRoutes {
   static const String editpassword = '/editpassword';
   static const String allReports = '/allReports';
   static const String accidentReportDetail = '/accidentReportDetail';
+  static const String privacyPolicy = '/privacyPolicy';
+  static const String termsConditions = '/termsConditions';
 
   //==============================home==================================
   static const String home = '/home';

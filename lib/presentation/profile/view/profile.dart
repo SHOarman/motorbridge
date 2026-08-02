@@ -575,13 +575,13 @@ class Profile extends StatelessWidget {
                   borderColor: const Color.fromRGBO(182, 192, 209, 0.43),
                   title: "Privacy & Policy",
                   leading: Image.asset("assets/icon/image 4 (2).png"),
-                  onTap: () {},
+                  onTap: () => Get.toNamed(AppRoutes.privacyPolicy),
                 ),
                 CustomMenuTile(
                   borderColor: const Color.fromRGBO(182, 192, 209, 0.43),
                   title: "Terms & Conditions",
                   leading: Image.asset("assets/icon/image 4 (3).png"),
-                  onTap: () {},
+                  onTap: () => Get.toNamed(AppRoutes.termsConditions),
                 ),
                 const SizedBox(height: 10),
                 CustomMenuTile(

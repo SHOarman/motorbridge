@@ -19,6 +19,8 @@ import '../../presentation/reminders/view/reminders.dart';
 import '../../presentation/splashscreen/splashscreen1.dart';
 import '../../presentation/splashscreen/splashscreen2.dart';
 import '../../presentation/home/view/accident_report_tab.dart';
+import '../../presentation/profile/view/privacy_policy_view.dart';
+import '../../presentation/profile/view/terms_conditions_view.dart';
 import 'app_routes.dart';
 
 class AppPages {
@@ -89,7 +91,7 @@ class AppPages {
       transitionDuration: Duration.zero,
     ),
 
-    //=======================================profile======================================================
+    //================================-------profile======================================================
     GetPage(
       name: AppRoutes.profile,
       page: () => Profile(),
@@ -108,6 +110,16 @@ class AppPages {
     GetPage(
       name: AppRoutes.accidentReportDetail,
       page: () => const ReportDetailView(),
+      transitionDuration: Duration.zero,
+    ),
+    GetPage(
+      name: AppRoutes.privacyPolicy,
+      page: () => const PrivacyPolicyView(),
+      transitionDuration: Duration.zero,
+    ),
+    GetPage(
+      name: AppRoutes.termsConditions,
+      page: () => const TermsConditionsView(),
       transitionDuration: Duration.zero,
     ),
   ];

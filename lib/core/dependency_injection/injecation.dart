@@ -3,6 +3,9 @@ import 'package:motorbridge/core/services/controller/add_vehicle_controller.dart
 import 'package:motorbridge/core/services/controller/authcontroller.dart';
 import 'package:motorbridge/core/services/controller/home_controller.dart';
 
+import 'package:motorbridge/core/services/controller/policy_controller.dart';
+import 'package:motorbridge/core/services/controller/terms_controller.dart';
+
 import '../services/controller/profile_controller.dart';
 
 class DependencyInjection {
@@ -18,5 +21,9 @@ class DependencyInjection {
 
     //============================home_controller===============================
     Get.lazyPut(()=>HomeController(), fenix: true);
+
+    //============================policy & terms=================================
+    Get.lazyPut(()=>PolicyController(), fenix: true);
+    Get.lazyPut(()=>TermsController(), fenix: true);
   }
 }

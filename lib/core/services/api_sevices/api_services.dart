@@ -118,9 +118,8 @@ static String get get_vehicle_costs => "$baseurl/api/cost/vehicle/";
  static String get update_number => "$baseurl/api/contact";
  static String get delet_number => "$baseurl/api/contact";
 
-
-
-
-
+//===============================policy & terms====================
+ static String get get_policy => "$baseurl/api/policy";
+ static String get get_terms => "$baseurl/api/terms";
 
 }

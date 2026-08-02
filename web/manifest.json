@@ -1,6 +1,6 @@
 {
-    "name": "motorbridge",
-    "short_name": "motorbridge",
+    "name": "Motorbridge",
+    "short_name": "Motorbridge",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
