@@ -71,6 +71,7 @@ static String get register => "$baseurl/api/auth/register";
 static String get forgotPassword => "$baseurl/api/auth/forget-password";
 static String get resetPassword => "$baseurl/api/auth/reset-password";
 static String get verif_email => "$baseurl/api/auth/verify-email";
+static String get resend_verify => "$baseurl/api/auth/resend-code"; // Change this if backend uses a different endpoint for resending OTP
 static String get verify_code => "$baseurl/api/auth/code-verify";
 
 //========================User_profile======================

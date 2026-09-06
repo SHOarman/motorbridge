@@ -346,35 +346,75 @@ class _VehicleDetailsState extends State<VehicleDetails> {
     };
   }
 
+  String? _getExplicitFileUrl(Map<String, dynamic> doc) {
+    final keys = ['fileUrl', 'files', 'file', 'url', 'path', 'filePath', 'documentUrl', 'secure_url', 'document'];
+    for (var k in keys) {
+      var val = doc[k];
+      if (val != null) {
+        if (val is String && val.isNotEmpty) return val;
+        if (val is List && val.isNotEmpty) {
+          var last = val.last;
+          if (last is String && last.isNotEmpty) return last;
+          if (last is Map) {
+            if (last['url'] != null) return last['url'].toString();
+            if (last['path'] != null) return last['path'].toString();
+            if (last['secure_url'] != null) return last['secure_url'].toString();
+          }
+        }
+        if (val is Map) {
+          if (val['url'] != null) return val['url'].toString();
+          if (val['path'] != null) return val['path'].toString();
+        }
+      }
+    }
+    return null;
+  }
+
   Future<void> viewDocument(Map<String, dynamic> doc) async {
-    String? fileUrl;
-    if (doc['files'] is List && (doc['files'] as List).isNotEmpty) {
-      final last = (doc['files'] as List).last;
-      if (last is String) fileUrl = last;
-      if (last is Map) fileUrl = last['url']?.toString() ?? last['path']?.toString();
-    } else if (doc['files'] is String) {
-      fileUrl = doc['files'];
-    } else if (doc['file'] is String) {
-      fileUrl = doc['file'];
-    } else if (doc['url'] is String) {
-      fileUrl = doc['url'];
+    String? fileUrl = _getExplicitFileUrl(doc);
+    
+    if (fileUrl == null || fileUrl.isEmpty) {
+      String docId = (doc['_id'] ?? doc['id'] ?? '').toString();
+      if (docId.isNotEmpty) {
+        try {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          String? token = prefs.getString('token');
+          final response = await http.get(
+            Uri.parse("${ApiServices.baseurl}/api/document/$docId"),
+            headers: {"Authorization": "Bearer $token"},
+          );
+          if (response.statusCode == 200) {
+            var decoded = jsonDecode(response.body);
+            var fetchedDoc = decoded['data'] ?? decoded;
+            if (fetchedDoc is Map<String, dynamic>) {
+              fileUrl = _getExplicitFileUrl(fetchedDoc);
+              if (fileUrl == null || fileUrl.isEmpty) {
+                // For debugging, update doc so we can see keys in snackbar
+                doc = fetchedDoc;
+              }
+            }
+          }
+        } catch (e) {
+          debugPrint("Failed to fetch single document: $e");
+        }
+      }
     }
 
     if (fileUrl == null || fileUrl.isEmpty) {
-      Get.snackbar("Error", "No document link available",
+      Get.snackbar("Debug Info (Screenshot this)", "Keys available: ${doc.keys.toList().join(', ')}",
           snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white);
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 15));
       return;
     }
-
-    String fullFileUrl = fileUrl;
+    
     if (fileUrl.startsWith('/uploads/')) {
-      fullFileUrl = "${ApiServices.baseurl}$fileUrl";
+      fileUrl = "${ApiServices.baseurl}$fileUrl";
     }
 
     try {
-      final uri = Uri.parse(fullFileUrl);
+      final uri = Uri.parse(fileUrl);
       if (await canLaunchUrl(uri)) {
         await launchUrl(uri, mode: LaunchMode.externalApplication);
       } else {
@@ -384,7 +424,7 @@ class _VehicleDetailsState extends State<VehicleDetails> {
             colorText: Colors.white);
       }
     } catch (e) {
-      Get.snackbar("Error", "Something went wrong opening the link: $e",
+      Get.snackbar("Error", "Something went wrong parsing URL: $fileUrl",
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red,
           colorText: Colors.white);
@@ -1138,31 +1178,6 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                     child: Text(
                       isSaving ? "Saving..." : "Save Changes",
                       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                SizedBox(
-                  width: double.infinity,
-                  height: 52,
-                  child: OutlinedButton(
-                    onPressed: isSaving ? null : () => _showDeleteVehicleConfirmation(homeController),
-                    style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Colors.red, width: 1.5),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.delete_forever, color: Colors.red),
-                        SizedBox(width: 8),
-                        Text(
-                          "Remove Vehicle",
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red),
-                        ),
-                      ],
                     ),
                   ),
                 ),

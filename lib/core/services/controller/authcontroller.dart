@@ -62,7 +62,7 @@ class AuthController extends GetxController {
       final response = await http.post(
         Uri.parse(ApiServices.verif_email),
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"email": email, "verificationCode": code}),
+        body: jsonEncode({"email": email, "code": code}),
       );
 
       if (response.statusCode == 200) {
@@ -83,6 +83,33 @@ class AuthController extends GetxController {
     }
   }
 
+  Future<bool> resendVerificationCode({required String email}) async {
+    isLoading.value = true;
+    try {
+      final response = await http.post(
+        Uri.parse(ApiServices.resend_verify),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"email": email}),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Get.snackbar("Success", "Verification code resent successfully");
+        return true;
+      } else {
+        debugPrint("Resend email error response: ${response.body}");
+        var error = jsonDecode(response.body);
+        Get.snackbar("Error", error['message'] ?? "Failed to resend code");
+        return false;
+      }
+    } catch (e) {
+      debugPrint("Resend email exception: $e");
+      Get.snackbar("Error", "Something went wrong while resending code");
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   Future<bool> loginUser({
     required String email,
     required String password,
@@ -97,7 +124,7 @@ class AuthController extends GetxController {
 
       debugPrint("Response Body: ${response.body}");
 
-      if (response.statusCode == 200) {
+      if (response.statusCode >= 200 && response.statusCode < 300) {
         var responseData = jsonDecode(response.body);
 
         String token = '';

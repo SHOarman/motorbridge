@@ -95,7 +95,13 @@ class _AllReportsViewState extends State<AllReportsView> {
         final data = jsonDecode(response.body);
         if (data['success'] == true && data['data'] != null) {
           setState(() {
-            reports = data['data']['items'] ?? [];
+            if (data['data'] is List) {
+              reports = data['data'];
+            } else if (data['data'] is Map) {
+              reports = data['data']['items'] ?? [];
+            } else {
+              reports = [];
+            }
           });
         } else {
           setState(() {

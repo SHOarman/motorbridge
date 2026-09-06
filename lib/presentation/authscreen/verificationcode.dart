@@ -112,11 +112,8 @@ class Verificationcode extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
-                      if (fromForgot) {
-                        controller.forgotPassword(email: email);
-                      } else {
-                        // Resend registration OTP if applicable
-                      }
+                      // Using forgotPassword API to resend code for both registration and password reset
+                      controller.forgotPassword(email: email);
                     },
                     child: Text(
                       "Resend Code",

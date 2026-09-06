@@ -216,18 +216,32 @@ class ProfileController extends GetxController {
         userId = prefs.getString('userId') ?? "";
       }
 
-      final response = await http.delete(
-        Uri.parse("${ApiServices.delete_account}/$userId"),
+      final url = "${ApiServices.delete_account}/$userId";
+      debugPrint("Deleting account at: $url");
 
+      final response = await http.delete(
+        Uri.parse(url),
         headers: {"Authorization": "Bearer $token"},
       );
 
-      if (response.statusCode == 200) {
+      debugPrint("Delete account status: ${response.statusCode}");
+      debugPrint("Delete account body: ${response.body}");
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Get.snackbar("Success", "Account deleted successfully", backgroundColor: Colors.green, colorText: Colors.white);
         await prefs.clear();
         Get.offAllNamed(AppRoutes.singin);
+      } else {
+        var errorMsg = "Failed to delete account";
+        try {
+          var errorData = jsonDecode(response.body);
+          errorMsg = errorData['message'] ?? errorMsg;
+        } catch (_) {}
+        Get.snackbar("Error", errorMsg, backgroundColor: Colors.red, colorText: Colors.white);
       }
     } catch (e) {
-      debugPrint(e.toString());
+      debugPrint("Error in deleteAccount: $e");
+      Get.snackbar("Error", "Something went wrong while deleting account");
     } finally {
       isLoading.value = false;
     }

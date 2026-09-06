@@ -37,8 +37,17 @@ class TermsController extends GetxController {
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
-        if (responseData['success'] == true && responseData['data'] is List) {
-          final List listData = responseData['data'];
+        if (responseData['success'] == true && responseData['data'] != null) {
+          List listData = [];
+          if (responseData['data'] is List) {
+            listData = responseData['data'];
+          } else if (responseData['data'] is Map) {
+            if (responseData['data']['sections'] is List) {
+              listData = responseData['data']['sections'];
+            } else {
+              listData = [responseData['data']];
+            }
+          }
 
           DateTime? latestDate;
           for (var item in listData) {

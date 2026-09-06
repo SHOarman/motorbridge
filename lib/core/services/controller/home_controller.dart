@@ -69,7 +69,7 @@ class HomeController extends GetxController {
 
       // Fetch vehicles for this user
       final response = await http.get(
-        Uri.parse("${ApiServices.baseurl}/api/vehicle/userId/$userId"),
+        Uri.parse(ApiServices.get_all_vehicles),
         headers: {"Authorization": "Bearer $token"},
       );
 
@@ -86,7 +86,15 @@ class HomeController extends GetxController {
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
         if (responseData['success'] == true && responseData['data'] != null) {
-          vehiclesList.value = List<dynamic>.from(responseData['data']);
+          var list = List<dynamic>.from(responseData['data']);
+          list.sort((a, b) {
+            final dateAStr = (a['createdAt'] ?? '').toString();
+            final dateBStr = (b['createdAt'] ?? '').toString();
+            final dateA = DateTime.tryParse(dateAStr) ?? DateTime(1970);
+            final dateB = DateTime.tryParse(dateBStr) ?? DateTime(1970);
+            return dateA.compareTo(dateB);
+          });
+          vehiclesList.value = list;
         }
       }
     } catch (e) {

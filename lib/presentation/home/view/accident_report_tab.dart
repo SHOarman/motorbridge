@@ -288,23 +288,13 @@ class AccidentReportTabController extends GetxController {
         );
       }
 
-      // Preserve existing photos by re-uploading them
-      for (String url in existingPhotos) {
-        try {
-          var response = await http.get(Uri.parse(ApiServices.getFirstImageUrl(url)));
-          if (response.statusCode == 200) {
-            request.files.add(
-              http.MultipartFile.fromBytes(
-                'scenePhotos',
-                response.bodyBytes,
-                filename: 'existing_photo_${DateTime.now().millisecondsSinceEpoch}.jpg',
-                contentType: MediaType('image', 'jpeg'),
-              ),
-            );
-          }
-        } catch (e) {
-          debugPrint("Failed to download existing photo: $e");
-        }
+      // Existing photos - we send their URLs back to the server so it knows which ones to keep
+      for (int i = 0; i < existingPhotos.length; i++) {
+        request.fields['existingScenePhotos[$i]'] = ApiServices.getFirstImageUrl(existingPhotos[i]);
+      }
+      // Also send it as scenePhotos string list just in case backend expects it
+      for (int i = 0; i < existingPhotos.length; i++) {
+        request.fields['scenePhotos[$i]'] = ApiServices.getFirstImageUrl(existingPhotos[i]);
       }
 
       var streamedResponse = await request.send();
