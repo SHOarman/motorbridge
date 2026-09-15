@@ -5,6 +5,7 @@ import 'package:motorbridge/general_widget/customtaxbutton.dart';
 import 'package:motorbridge/utils/app_text_styles.dart';
 import '../../../core/services/controller/home_controller.dart';
 import '../../../core/services/controller/profile_controller.dart';
+import '../../../core/services/controller/subscription_controller.dart';
 import '../../../general_widget/custom_bottom_nav_bar.dart';
 import '../../../general_widget/customappbar.dart';
 import '../widget/custom_menu_tile.dart';
@@ -456,8 +457,8 @@ class Profile extends StatelessWidget {
                                   color: const Color(0xff2A2A2A),
                                 ),
                               ),
+                                ],
                             ],
-                          ],
                         ),
                       ),
                     ],
@@ -558,7 +559,7 @@ class Profile extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  "Settings",
+                  "Payment & Subscriptions",
                   style: AppTextStyles.bigText.copyWith(
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
@@ -567,21 +568,50 @@ class Profile extends StatelessWidget {
                 const SizedBox(height: 10),
                 CustomMenuTile(
                   borderColor: const Color.fromRGBO(182, 192, 209, 0.43),
-                  title: "Notifications",
-                  leading: Image.asset("assets/icon/image 4 (1).png"),
-                  onTap: () {},
+                  title: "Subscription Plans",
+                  leading: const Icon(
+                    Icons.workspace_premium,
+                    color: Color(0xFF1B4E9F),
+                  ),
+                  onTap: () => Get.toNamed(AppRoutes.subscriptionPlans),
                 ),
+                CustomMenuTile(
+                  borderColor: const Color.fromRGBO(182, 192, 209, 0.43),
+                  title: "My Current Plan",
+                  leading: const Icon(
+                    Icons.card_membership,
+                    color: Color(0xFF1B4E9F),
+                  ),
+                  onTap: () => Get.toNamed(AppRoutes.currentPlan),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  "Settings",
+                  style: AppTextStyles.bigText.copyWith(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                // CustomMenuTile(
+                //   borderColor: const Color.fromRGBO(182, 192, 209, 0.43),
+                //   title: "Notifications",
+                //   leading: Image.asset("assets/icon/image 4 (1).png"),
+                //   onTap: () {},
+                // ),
                 CustomMenuTile(
                   borderColor: const Color.fromRGBO(182, 192, 209, 0.43),
                   title: "Privacy & Policy",
                   leading: Image.asset("assets/icon/image 4 (2).png"),
-                  onTap: () {},
+                  onTap: () {
+                    Get.toNamed(AppRoutes.privacyPolicy);
+                  },
                 ),
                 CustomMenuTile(
                   borderColor: const Color.fromRGBO(182, 192, 209, 0.43),
                   title: "Terms & Conditions",
                   leading: Image.asset("assets/icon/image 4 (3).png"),
-                  onTap: () {},
+                  onTap: () {Get.toNamed(AppRoutes.termsConditions);},
                 ),
                 const SizedBox(height: 10),
                 CustomMenuTile(

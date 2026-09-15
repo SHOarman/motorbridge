@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:motorbridge/core/route/app_routes.dart';
 import 'package:motorbridge/core/services/controller/authcontroller.dart';
 import 'package:motorbridge/presentation/authscreen/widget/customtextfield.dart';
@@ -112,7 +113,12 @@ class Createaccount extends StatelessWidget {
                           ),
                         ),
                         InkWell(
-                          onTap: () {},
+                          onTap: () async {
+                            final Uri url = Uri.parse("https://admin.myvirtualgarage.app/terms");
+                            if (!await launchUrl(url, mode: LaunchMode.inAppWebView)) {
+                              Get.snackbar("Error", "Could not launch Terms & Conditions");
+                            }
+                          },
                           child: Text(
                             "Terms & Conditions",
                             style: AppTextStyles.smallText.copyWith(
@@ -150,7 +156,7 @@ class Createaccount extends StatelessWidget {
                       });
                     }
                   },
-                  backgroundColor: AppColors.primaryColor,
+                  backgroundColor: controller.isAgreed.value ? AppColors.primaryColor : Colors.grey.shade400,
                 ),
               ),
               const SizedBox(height: 40),
@@ -207,7 +213,9 @@ class Createaccount extends StatelessWidget {
                     ),
                   ),
                   TextButton(
-                    onPressed: () => Get.back(),
+                    onPressed:(){
+                      Get.toNamed(AppRoutes.singin);
+                    },
                     child: Text(
                       " Sign in",
                       style: AppTextStyles.smallText.copyWith(

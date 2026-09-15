@@ -21,6 +21,8 @@ import '../../presentation/splashscreen/splashscreen2.dart';
 import '../../presentation/home/view/accident_report_tab.dart';
 import '../../presentation/profile/view/privacy_policy_view.dart';
 import '../../presentation/profile/view/terms_conditions_view.dart';
+import '../../presentation/profile/view/current_plan_view.dart';
+import '../../presentation/profile/view/subscription_plans_view.dart';
 import 'app_routes.dart';
 
 class AppPages {
@@ -120,6 +122,16 @@ class AppPages {
     GetPage(
       name: AppRoutes.termsConditions,
       page: () => const TermsConditionsView(),
+      transitionDuration: Duration.zero,
+    ),
+    GetPage(
+      name: AppRoutes.subscriptionPlans,
+      page: () => const SubscriptionPlansView(),
+      transitionDuration: Duration.zero,
+    ),
+    GetPage(
+      name: AppRoutes.currentPlan,
+      page: () => const CurrentPlanView(),
       transitionDuration: Duration.zero,
     ),
   ];

@@ -5,6 +5,7 @@ import 'package:motorbridge/core/services/controller/home_controller.dart';
 
 import 'package:motorbridge/core/services/controller/policy_controller.dart';
 import 'package:motorbridge/core/services/controller/terms_controller.dart';
+import 'package:motorbridge/core/services/controller/subscription_controller.dart';
 
 import '../services/controller/profile_controller.dart';
 
@@ -25,5 +26,8 @@ class DependencyInjection {
     //============================policy & terms=================================
     Get.lazyPut(()=>PolicyController(), fenix: true);
     Get.lazyPut(()=>TermsController(), fenix: true);
+
+    //============================subscription=================================
+    Get.lazyPut(()=>SubscriptionController(), fenix: true);
   }
 }

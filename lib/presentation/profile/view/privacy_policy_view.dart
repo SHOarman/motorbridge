@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:motorbridge/core/services/controller/policy_controller.dart';
 import 'package:motorbridge/general_widget/customappbar.dart';
 import 'package:motorbridge/utils/app_text_styles.dart';
@@ -31,7 +32,7 @@ class PrivacyPolicyView extends StatelessWidget {
           child: Obx(() {
             if (controller.isLoading.value) {
               return const Center(
-                child: CircularProgressIndicator(
+                 child: CircularProgressIndicator(
                   color: Color(0xFF004AAD),
                 ),
               );
@@ -52,7 +53,7 @@ class PrivacyPolicyView extends StatelessWidget {
                       Text(
                         controller.errorMessage.value!,
                         textAlign: TextAlign.center,
-                        style: AppTextStyles.bigText.copyWith(
+                         style: AppTextStyles.bigText.copyWith(
                           fontSize: 16,
                           color: Colors.grey[700],
                         ),
@@ -81,13 +82,13 @@ class PrivacyPolicyView extends StatelessWidget {
                 child: Container(
                   height: MediaQuery.of(context).size.height * 0.7,
                   alignment: Alignment.center,
-                  child: Text(
-                    "No Privacy Policy content available.",
-                    style: AppTextStyles.bigText.copyWith(
-                      fontSize: 16,
-                      color: Colors.grey[600],
-                    ),
-                  ),
+                   child: Text(
+                     "No Privacy Policy content available.",
+                     style: AppTextStyles.bigText.copyWith(
+                       fontSize: 16,
+                       color: Colors.grey[600],
+                     ),
+                   ),
                 ),
               );
             }
@@ -117,7 +118,7 @@ class PrivacyPolicyView extends StatelessWidget {
                         const SizedBox(width: 8),
                         Text(
                           "Last Updated: ${controller.lastUpdatedFormatted.value}",
-                          style: AppTextStyles.bigText.copyWith(
+                           style: AppTextStyles.bigText.copyWith(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: const Color(0xFF004AAD),
@@ -148,13 +149,13 @@ class PrivacyPolicyView extends StatelessWidget {
                         color: const Color.fromRGBO(182, 192, 209, 0.3),
                       ),
                     ),
-                    child: Column(
+                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (sectionTitle.isNotEmpty) ...[
                           Text(
                             sectionTitle,
-                            style: AppTextStyles.bigText.copyWith(
+                             style: AppTextStyles.bigText.copyWith(
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
                               color: const Color(0xFF004AAD),
@@ -165,7 +166,7 @@ class PrivacyPolicyView extends StatelessWidget {
                         if (title.isNotEmpty) ...[
                           Text(
                             title,
-                            style: AppTextStyles.bigText.copyWith(
+                             style: AppTextStyles.bigText.copyWith(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
                               color: const Color(0xFF1E293B),
@@ -174,9 +175,9 @@ class PrivacyPolicyView extends StatelessWidget {
                           const SizedBox(height: 10),
                         ],
                         if (content.isNotEmpty)
-                          Text(
+                          HtmlWidget(
                             content,
-                            style: AppTextStyles.bigText.copyWith(
+                            textStyle: AppTextStyles.bigText.copyWith(
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
                               color: const Color(0xFF475569),

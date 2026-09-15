@@ -123,4 +123,11 @@ static String get get_vehicle_costs => "$baseurl/api/cost/vehicle/";
  static String get get_policy => "$baseurl/api/policy";
  static String get get_terms => "$baseurl/api/terms";
 
+//===============================payment===========================
+ static String get get_payment_status => "$baseurl/api/payment/status";
+ static String get get_payment_plans => "$baseurl/api/payment/plans";
+ static String get verify_purchase => "$baseurl/api/payment/verify-purchase";
+ static String get restore_purchases => "$baseurl/api/payment/restore-purchases";
+ static String get cancel_subscription => "$baseurl/api/payment/cancel";
+
 }

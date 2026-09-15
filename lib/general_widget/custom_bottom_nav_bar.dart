@@ -2,6 +2,9 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:motorbridge/core/route/app_routes.dart';
+import 'package:motorbridge/core/services/controller/home_controller.dart' as motorbridge_home;
+import 'package:motorbridge/core/services/controller/subscription_controller.dart' as motorbridge_sub;
+import 'upgrade_plan_dialog.dart';
 
 class BottomNavPainter extends CustomPainter {
   final double barHeight;
@@ -122,7 +125,21 @@ class CustomBottomNavBar extends StatelessWidget {
             Positioned(
               bottom: totalBarHeight - (fabSize / 1.5) - 4,
               child: GestureDetector(
-                onTap: () => Get.toNamed(AppRoutes.addvehicles),
+                onTap: () {
+                  final homeController = Get.isRegistered<motorbridge_home.HomeController>()
+                      ? Get.find<motorbridge_home.HomeController>()
+                      : Get.put(motorbridge_home.HomeController());
+                  
+                  final subController = Get.isRegistered<motorbridge_sub.SubscriptionController>()
+                      ? Get.find<motorbridge_sub.SubscriptionController>()
+                      : Get.put(motorbridge_sub.SubscriptionController());
+                  
+                  if (homeController.vehiclesList.length >= subController.maxVehicles.value) {
+                    UpgradePlanDialog.show(context);
+                  } else {
+                    Get.toNamed(AppRoutes.addvehicles);
+                  }
+                },
                 child: Container(
                   height: fabSize,
                   width: fabSize,

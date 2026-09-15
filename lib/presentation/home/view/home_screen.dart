@@ -12,7 +12,10 @@ import 'package:motorbridge/presentation/home/widget/custom_action_card.dart';
 import 'package:motorbridge/utils/app_text_styles.dart';
 import 'package:motorbridge/utils/app_sizes.dart';
 import 'package:motorbridge/utils/app_colors.dart';
-import '../../../core/services/controller/home_controller.dart';
+import 'package:motorbridge/core/services/controller/home_controller.dart';
+import '../../vehicles/view/vehicle_details.dart';
+import '../../../core/services/controller/subscription_controller.dart' as motorbridge_sub;
+import '../../../general_widget/upgrade_plan_dialog.dart';
 import '../../../core/services/controller/profile_controller.dart';
 import '../../../core/services/api_sevices/api_services.dart';
 import '../widget/vehiclecard.dart';
@@ -531,7 +534,17 @@ class HomeScreen extends GetView<HomeController> {
                 AddVehicleCard(
                   title: "Add Your Vehicle To Your Virtual Garage",
                   imagePath: "assets/image/whitecar.png",
-                  onAddPressed: () => Get.toNamed(AppRoutes.addvehicles),
+                  onAddPressed: () {
+                    final subController = Get.isRegistered<motorbridge_sub.SubscriptionController>()
+                        ? Get.find<motorbridge_sub.SubscriptionController>()
+                        : Get.put(motorbridge_sub.SubscriptionController());
+                        
+                    if (controller.vehiclesList.length >= subController.maxVehicles.value) {
+                      UpgradePlanDialog.show(context);
+                    } else {
+                      Get.toNamed(AppRoutes.addvehicles);
+                    }
+                  },
                   subtitle:
                       'Add your vehicle, get timely reminders,\nand never miss an important date.',
                 ),

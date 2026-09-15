@@ -9,6 +9,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:motorbridge/core/route/app_routes.dart';
 import '../api_sevices/api_services.dart';
+import 'package:motorbridge/core/services/controller/subscription_controller.dart';
+import 'package:motorbridge/general_widget/upgrade_plan_dialog.dart';
 
 class AddVehicleController extends GetxController {
 
@@ -176,12 +178,18 @@ class AddVehicleController extends GetxController {
   }
 
   Future<void> pickImages() async {
-    if (galleryImages.length >= 6) {
-      Get.snackbar(
-        "Limit Exceeded",
-        "You can add up to 6 images only.",
-        snackPosition: SnackPosition.BOTTOM,
-      );
+    final subController = Get.isRegistered<SubscriptionController>()
+        ? Get.find<SubscriptionController>()
+        : Get.put(SubscriptionController());
+        
+    int maxLimit = subController.maxGalleryImagesPerVehicle.value > 0 
+        ? subController.maxGalleryImagesPerVehicle.value 
+        : 6; // fallback 6 if unlimited or error
+
+    if (galleryImages.length >= maxLimit) {
+      if (Get.context != null) {
+        UpgradePlanDialog.show(Get.context!);
+      }
       return;
     }
 
@@ -196,7 +204,7 @@ class AddVehicleController extends GetxController {
                 title: const Text('Gallery'),
                 onTap: () {
                   Get.back();
-                  _pickImagesFromSource(ImageSource.gallery);
+                  _pickImagesFromSource(ImageSource.gallery, maxLimit);
                 },
               ),
               ListTile(
@@ -204,7 +212,7 @@ class AddVehicleController extends GetxController {
                 title: const Text('Camera'),
                 onTap: () {
                   Get.back();
-                  _pickImagesFromSource(ImageSource.camera);
+                  _pickImagesFromSource(ImageSource.camera, maxLimit);
                 },
               ),
             ],
@@ -214,7 +222,7 @@ class AddVehicleController extends GetxController {
     );
   }
 
-  Future<void> _pickImagesFromSource(ImageSource source) async {
+  Future<void> _pickImagesFromSource(ImageSource source, int maxLimit) async {
     if (source == ImageSource.camera) {
       final XFile? image = await _picker.pickImage(
         source: source,
@@ -232,14 +240,14 @@ class AddVehicleController extends GetxController {
         maxHeight: 1200,
       );
       if (images.isNotEmpty) {
-        if (galleryImages.length + images.length > 6) {
-          int availableSlots = 6 - galleryImages.length;
-          galleryImages.addAll(images.sublist(0, availableSlots));
-          Get.snackbar(
-            "Notice",
-            "Only $availableSlots images added. Max limit is 6.",
-            snackPosition: SnackPosition.BOTTOM,
-          );
+        if (galleryImages.length + images.length > maxLimit) {
+          int availableSlots = maxLimit - galleryImages.length;
+          if (availableSlots > 0) {
+            galleryImages.addAll(images.sublist(0, availableSlots));
+          }
+          if (Get.context != null) {
+             UpgradePlanDialog.show(Get.context!);
+          }
         } else {
           galleryImages.addAll(images);
         }
