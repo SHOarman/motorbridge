@@ -13,6 +13,7 @@ import '../api_sevices/api_services.dart';
 class AddDocumentController extends GetxController {
   var selectedFile = Rxn<PlatformFile>();
   var fileBytes = Rxn<Uint8List>();
+  ///====================================================================//
 
   final titleController = TextEditingController();
   String vehicleId = "";
@@ -181,6 +182,9 @@ class AddDocumentController extends GetxController {
             if (docId.isNotEmpty && vehicleId.isNotEmpty) {
               await prefs.setString("doc_vehicle_$docId", vehicleId);
             }
+
+            //========================================================================================//
+
 
             debugPrint("==================================================");
             debugPrint("🚀 DOCUMENT CREATION SUCCESS 🚀");
