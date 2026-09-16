@@ -5,6 +5,7 @@ import 'package:motorbridge/general_widget/customtaxbutton.dart';
 import 'package:motorbridge/core/services/controller/authcontroller.dart';
 import 'package:motorbridge/presentation/authscreen/widget/customtextfield.dart';
 import 'package:motorbridge/presentation/authscreen/widget/socialloginbutton.dart';
+import 'google_login_webview.dart';
 import 'package:motorbridge/utils/app_colors.dart';
 import 'package:motorbridge/utils/app_text_styles.dart';
 
@@ -122,7 +123,13 @@ class Singin extends StatelessWidget {
                 children: [
                   SocialLoginButton(
                     imagePath: "assets/icon/google 1.png",
-                    onTap: () {},
+                    onTap: () {
+                      Get.bottomSheet(
+                        const GoogleLoginWebView(),
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                      );
+                    },
                   ),
                   const SizedBox(width: 20),
                   SocialLoginButton(

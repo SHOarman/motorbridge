@@ -39,7 +39,7 @@ class GalleryImagesStep extends GetView<AddVehicleController> {
             )),
             const SizedBox(height: 30),
             
-            // Upload Area
+            // ================================Upload Area===================================
             GestureDetector(
               onTap: () => controller.pickImages(),
               child: DottedBorder(
@@ -76,8 +76,7 @@ class GalleryImagesStep extends GetView<AddVehicleController> {
             ),
             
             const SizedBox(height: 20),
-            
-            // Image Preview Grid
+
             Obx(() => controller.galleryImages.isEmpty
               ? const SizedBox.shrink()
               : GridView.builder(

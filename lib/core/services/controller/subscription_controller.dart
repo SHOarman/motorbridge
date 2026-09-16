@@ -123,7 +123,13 @@ class SubscriptionController extends GetxController {
       
       await _initRevenueCatIfNeeded();
       
-      final result = await Purchases.purchaseProduct(rcProductId);
+      List<StoreProduct> products = await Purchases.getProducts([rcProductId]);
+      if (products.isEmpty) {
+        Get.snackbar("Error", "Product not found on Store", backgroundColor: Colors.red, colorText: Colors.white);
+        return false;
+      }
+      
+      final result = await Purchases.purchaseStoreProduct(products.first);
       CustomerInfo customerInfo = result.customerInfo;
       
       // ২. Entitlement চেক:

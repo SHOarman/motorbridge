@@ -401,6 +401,8 @@ class HomeScreen extends GetView<HomeController> {
           systemOverlayStyle: const SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
             statusBarIconBrightness: Brightness.light,
+            systemNavigationBarColor: Colors.black,
+            systemNavigationBarIconBrightness: Brightness.light,
           ),
           elevation: 0,
           automaticallyImplyLeading: false,

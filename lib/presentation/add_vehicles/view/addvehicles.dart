@@ -25,7 +25,7 @@ class _AddVehiclesScreenState extends State<AddVehiclesScreen> {
   @override
   void initState() {
     super.initState();
-    // Sync controller and page controller
+    // ===========================================Sync controller and page controller============================
     ever(controller.currentStep, (int step) {
       if (_pageController.hasClients && _pageController.page!.round() != step) {
         _pageController.animateToPage(

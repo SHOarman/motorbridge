@@ -9,6 +9,7 @@ import '../../../core/services/controller/subscription_controller.dart';
 import '../../../general_widget/custom_bottom_nav_bar.dart';
 import '../../../general_widget/customappbar.dart';
 import '../widget/custom_menu_tile.dart';
+import 'terms_conditions_view.dart'; // explicitly import view
 
 class Profile extends StatelessWidget {
   Profile({super.key});
@@ -611,7 +612,22 @@ class Profile extends StatelessWidget {
                   borderColor: const Color.fromRGBO(182, 192, 209, 0.43),
                   title: "Terms & Conditions",
                   leading: Image.asset("assets/icon/image 4 (3).png"),
-                  onTap: () {Get.toNamed(AppRoutes.termsConditions);},
+                  onTap: () {
+                    Get.bottomSheet(
+                      Container(
+                        height: MediaQuery.of(context).size.height * 0.9,
+                        margin: const EdgeInsets.only(top: 10),
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(24),
+                              topRight: Radius.circular(24)),
+                          child: const TermsConditionsView(),
+                        ),
+                      ),
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                    );
+                  },
                 ),
                 const SizedBox(height: 10),
                 CustomMenuTile(

@@ -73,6 +73,10 @@ static String get resetPassword => "$baseurl/api/auth/reset-password";
 static String get verif_email => "$baseurl/api/auth/verify-email";
 static String get resend_verify => "$baseurl/api/auth/resend-code"; // Change this if backend uses a different endpoint for resending OTP
 static String get verify_code => "$baseurl/api/auth/code-verify";
+//=====================================OAuth_Api===========================
+static String get oauthGoogle => "$baseurl/api/oauth/google";
+static String get oauthMe => "$baseurl/api/oauth/me";
+static String get oauthLogout => "$baseurl/api/oauth/logout";
 
 //========================User_profile======================
 static String get user_profile => "$baseurl/api/user/me";

@@ -15,7 +15,6 @@ class VehicleTypeStep extends StatelessWidget {
     final sw = MediaQuery.of(context).size.width;
     final sh = MediaQuery.of(context).size.height;
 
-    // Responsive dimensions
     final double hPad        = sw * 0.050;
     final double cardWidth   = (sw - hPad * 2 - 12 * 3) / 4;
     final double cardHeight  = cardWidth * 0.94;
@@ -33,7 +32,6 @@ class VehicleTypeStep extends StatelessWidget {
         children: [
           SizedBox(height: vGap),
 
-          // ── Section title ──
           Text(
             "Vehicle Type*",
             style: TextStyle(
@@ -43,7 +41,6 @@ class VehicleTypeStep extends StatelessWidget {
           ),
           SizedBox(height: sh * 0.018),
 
-          // ── Vehicle type cards ──
           Obx(() => Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -96,7 +93,6 @@ class VehicleTypeStep extends StatelessWidget {
 
           SizedBox(height: vGap),
 
-          // ── Registration ──
           _buildLabel(context, "Registration*", labelFont),
           Row(
             children: [
@@ -145,7 +141,6 @@ class VehicleTypeStep extends StatelessWidget {
 
           SizedBox(height: vGap),
 
-          // ── Make ──
           _buildLabel(context, "Make*", labelFont),
           Obx(() => _buildTextField(
             controller: controller.makeController,
@@ -159,7 +154,6 @@ class VehicleTypeStep extends StatelessWidget {
 
           SizedBox(height: vGap),
 
-          // ── Model ──
           _buildLabel(context, "Model*", labelFont),
           _buildTextField(
             controller: controller.modelController,
@@ -172,7 +166,6 @@ class VehicleTypeStep extends StatelessWidget {
 
           SizedBox(height: vGap),
 
-          // ── Year picker ──
           _buildLabel(context, "Year", labelFont),
           Obx(() => GestureDetector(
             onTap: controller.isGovDataLoaded.value ? null : () => _showYearPicker(context, controller),
@@ -207,7 +200,6 @@ class VehicleTypeStep extends StatelessWidget {
           ),
           SizedBox(height: sh * 0.045),
 
-          // ── Save & Continue ──
           CustomButton(
             text: "Save & Continue",
             onTap: () => controller.setStep(1),
@@ -283,7 +275,7 @@ class VehicleTypeStep extends StatelessWidget {
   }
 
   // ─────────────────────────────────────────────────────────
-  // Section label
+  // ===================================Section label=======================
   // ─────────────────────────────────────────────────────────
   Widget _buildLabel(BuildContext context, String label, double fontSize) {
     return Padding(

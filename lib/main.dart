@@ -13,6 +13,15 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarIconBrightness: Brightness.light, 
+      statusBarColor: Colors.transparent,
+    ),
+  );
+
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -36,34 +45,41 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      useInheritedMediaQuery: true,
-      locale: DevicePreview.locale(context),
-      builder: DevicePreview.appBuilder,
-      debugShowCheckedModeBanner: false,
-      title: 'MotorBridge',
-      theme: ThemeData(
-        appBarTheme: const AppBarTheme(
-          systemOverlayStyle: SystemUiOverlayStyle(
-            systemNavigationBarColor: Colors.transparent,
-            systemNavigationBarIconBrightness: Brightness.dark,
-          ),
-        ),
-        scaffoldBackgroundColor: const Color(0xFFF5F6F8),
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: AppColors.primaryColor,
-          surface: const Color(0xFFF5F6F8),
-        ),
-        textTheme: GoogleFonts.nunitoTextTheme(),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.buttonColor,
-            foregroundColor: Colors.white,
-          ),
-        ),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarIconBrightness: Brightness.light,
+        systemNavigationBarDividerColor: Colors.transparent,
       ),
-      initialRoute: AppPages.initial,
-      getPages: AppPages.routes,
+      child: GetMaterialApp(
+        useInheritedMediaQuery: true,
+        locale: DevicePreview.locale(context),
+        builder: DevicePreview.appBuilder,
+        debugShowCheckedModeBanner: false,
+        title: 'MotorBridge',
+        theme: ThemeData(
+          appBarTheme: const AppBarTheme(
+            systemOverlayStyle: SystemUiOverlayStyle(
+              systemNavigationBarColor: Colors.transparent, 
+              systemNavigationBarIconBrightness: Brightness.light, 
+            ),
+          ),
+          scaffoldBackgroundColor: const Color(0xFFF5F6F8),
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: AppColors.primaryColor,
+            surface: const Color(0xFFF5F6F8),
+          ),
+          textTheme: GoogleFonts.nunitoTextTheme(),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.buttonColor,
+              foregroundColor: Colors.white,
+            ),
+          ),
+        ),
+        initialRoute: AppPages.initial,
+        getPages: AppPages.routes,
+      ),
     );
   }
 }

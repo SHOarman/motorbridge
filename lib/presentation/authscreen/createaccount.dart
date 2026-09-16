@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:motorbridge/core/route/app_routes.dart';
 import 'package:motorbridge/core/services/controller/authcontroller.dart';
 import 'package:motorbridge/presentation/authscreen/widget/customtextfield.dart';
 import 'package:motorbridge/presentation/authscreen/widget/socialloginbutton.dart';
+import 'google_login_webview.dart';
 import '../../general_widget/customtaxbutton.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_text_styles.dart';
+import '../profile/view/terms_conditions_view.dart';
 
 class Createaccount extends StatelessWidget {
   Createaccount({super.key});
@@ -113,11 +114,21 @@ class Createaccount extends StatelessWidget {
                           ),
                         ),
                         InkWell(
-                          onTap: () async {
-                            final Uri url = Uri.parse("https://admin.myvirtualgarage.app/terms");
-                            if (!await launchUrl(url, mode: LaunchMode.inAppWebView)) {
-                              Get.snackbar("Error", "Could not launch Terms & Conditions");
-                            }
+                          onTap: () {
+                            Get.bottomSheet(
+                              Container(
+                                height: MediaQuery.of(context).size.height * 0.9,
+                                margin: const EdgeInsets.only(top: 10),
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(24),
+                                      topRight: Radius.circular(24)),
+                                  child:  TermsConditionsView(),
+                                ),
+                              ),
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                            );
                           },
                           child: Text(
                             "Terms & Conditions",
@@ -192,7 +203,13 @@ class Createaccount extends StatelessWidget {
                 children: [
                   SocialLoginButton(
                     imagePath: "assets/icon/google 1.png",
-                    onTap: () {},
+                    onTap: () {
+                      Get.bottomSheet(
+                        const GoogleLoginWebView(),
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                      );
+                    },
                   ),
                   const SizedBox(width: 20),
                   SocialLoginButton(

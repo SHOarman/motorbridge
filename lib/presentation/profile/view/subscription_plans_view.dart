@@ -269,6 +269,7 @@ class _SubscriptionPlansViewState extends State<SubscriptionPlansView> {
                         ),
                       );
                     }),
+                    const SizedBox(height: 24),
                   ],
                 ],
               ),

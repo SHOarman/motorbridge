@@ -102,9 +102,21 @@ class CustomBottomNavBar extends StatelessWidget {
         alignment: Alignment.bottomCenter,
         clipBehavior: Clip.none,
         children: [
-          CustomPaint(
-            size: Size(sw, totalBarHeight),
-            painter: BottomNavPainter(barHeight: barHeight),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            height: systemNavBarHeight,
+            child: Container(color: Colors.black),
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: systemNavBarHeight,
+            child: CustomPaint(
+              size: Size(sw, barHeight),
+              painter: BottomNavPainter(barHeight: barHeight),
+            ),
           ),
 
           Container(
