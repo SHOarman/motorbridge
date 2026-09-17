@@ -17,7 +17,12 @@ class GalleryImagesStep extends GetView<AddVehicleController> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.fromLTRB(
+          20, 
+          20, 
+          20, 
+          MediaQuery.of(context).padding.bottom + 120,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -162,7 +167,6 @@ class GalleryImagesStep extends GetView<AddVehicleController> {
                       : () => controller.submitVehicle(),
                   backgroundColor: const Color(0xff3876B3),
                 )),
-            const SizedBox(height: 120),
           ],
         ),
       ),

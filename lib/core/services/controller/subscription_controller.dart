@@ -61,10 +61,23 @@ class SubscriptionController extends GetxController {
             var entitlements = data['entitlements'];
             planCode.value = entitlements['planCode'] ?? '';
             title.value = entitlements['title'] ?? '';
-            maxVehicles.value = entitlements['maxVehicles'] ?? 1;
-            maxGalleryImagesPerVehicle.value = entitlements['maxGalleryImagesPerVehicle'] ?? 1;
-            maxDocuments.value = entitlements['maxDocuments'] ?? 1;
+            
+            // For max values, if the API returns null, it means 'Unlimited' (-1).
+            maxVehicles.value = entitlements['maxVehicles'] ?? -1;
+            maxGalleryImagesPerVehicle.value = entitlements['maxGalleryImagesPerVehicle'] ?? -1;
+            maxDocuments.value = entitlements['maxDocuments'] ?? -1;
+            
             costCalculatorUnlocked.value = entitlements['costCalculatorUnlocked'] ?? false;
+            
+            // Console Logging for limits (as requested by user)
+            debugPrint("==================================================");
+            debugPrint("🔐 SUBSCRIPTION & LIMITS LOADED 🔐");
+            debugPrint("Plan: ${planCode.value} (${title.value})");
+            debugPrint("Max Vehicles: ${maxVehicles.value == -1 ? 'Unlimited' : maxVehicles.value}");
+            debugPrint("Max Gallery Images: ${maxGalleryImagesPerVehicle.value == -1 ? 'Unlimited' : maxGalleryImagesPerVehicle.value}");
+            debugPrint("Max Documents: ${maxDocuments.value == -1 ? 'Unlimited' : maxDocuments.value}");
+            debugPrint("Cost Calculator Unlocked: ${costCalculatorUnlocked.value}");
+            debugPrint("==================================================");
           }
         }
       }

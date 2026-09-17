@@ -89,9 +89,9 @@ class CurrentPlanView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 15),
-              _buildEntitlementRow("Maximum Vehicles", subController.maxVehicles.value.toString()),
-              _buildEntitlementRow("Gallery Images / Vehicle", subController.maxGalleryImagesPerVehicle.value.toString()),
-              _buildEntitlementRow("Maximum Documents", subController.maxDocuments.value.toString()),
+              _buildEntitlementRow("Maximum Vehicles", subController.maxVehicles.value == -1 ? "Unlimited" : subController.maxVehicles.value.toString()),
+              _buildEntitlementRow("Gallery Images / Vehicle", subController.maxGalleryImagesPerVehicle.value == -1 ? "Unlimited" : subController.maxGalleryImagesPerVehicle.value.toString()),
+              _buildEntitlementRow("Maximum Documents", subController.maxDocuments.value == -1 ? "Unlimited" : subController.maxDocuments.value.toString()),
               _buildEntitlementRow("Cost Calculator", subController.costCalculatorUnlocked.value ? "Unlocked" : "Locked"),
               const SizedBox(height: 40),
               if (subController.isActive.value && 

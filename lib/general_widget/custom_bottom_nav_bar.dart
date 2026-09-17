@@ -137,7 +137,7 @@ class CustomBottomNavBar extends StatelessWidget {
             Positioned(
               bottom: totalBarHeight - (fabSize / 1.5) - 4,
               child: GestureDetector(
-                onTap: () {
+                onTap: () async {
                   final homeController = Get.isRegistered<motorbridge_home.HomeController>()
                       ? Get.find<motorbridge_home.HomeController>()
                       : Get.put(motorbridge_home.HomeController());
@@ -145,8 +145,16 @@ class CustomBottomNavBar extends StatelessWidget {
                   final subController = Get.isRegistered<motorbridge_sub.SubscriptionController>()
                       ? Get.find<motorbridge_sub.SubscriptionController>()
                       : Get.put(motorbridge_sub.SubscriptionController());
+                      
+                  if (subController.isLoading.value) {
+                    Get.dialog(const Center(child: CircularProgressIndicator()), barrierDismissible: false);
+                    while (subController.isLoading.value) {
+                      await Future.delayed(const Duration(milliseconds: 200));
+                    }
+                    if (Get.isDialogOpen ?? false) Get.back();
+                  }
                   
-                  if (homeController.vehiclesList.length >= subController.maxVehicles.value) {
+                  if (subController.maxVehicles.value != -1 && homeController.vehiclesList.length >= subController.maxVehicles.value) {
                     UpgradePlanDialog.show(context);
                   } else {
                     Get.toNamed(AppRoutes.addvehicles);

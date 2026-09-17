@@ -536,12 +536,20 @@ class HomeScreen extends GetView<HomeController> {
                 AddVehicleCard(
                   title: "Add Your Vehicle To Your Virtual Garage",
                   imagePath: "assets/image/whitecar.png",
-                  onAddPressed: () {
+                  onAddPressed: () async {
                     final subController = Get.isRegistered<motorbridge_sub.SubscriptionController>()
                         ? Get.find<motorbridge_sub.SubscriptionController>()
                         : Get.put(motorbridge_sub.SubscriptionController());
                         
-                    if (controller.vehiclesList.length >= subController.maxVehicles.value) {
+                    if (subController.isLoading.value) {
+                      Get.dialog(const Center(child: CircularProgressIndicator()), barrierDismissible: false);
+                      while (subController.isLoading.value) {
+                        await Future.delayed(const Duration(milliseconds: 200));
+                      }
+                      if (Get.isDialogOpen ?? false) Get.back();
+                    }
+                        
+                    if (subController.maxVehicles.value != -1 && controller.vehiclesList.length >= subController.maxVehicles.value) {
                       UpgradePlanDialog.show(context);
                     } else {
                       Get.toNamed(AppRoutes.addvehicles);

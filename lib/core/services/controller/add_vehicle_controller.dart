@@ -182,11 +182,17 @@ class AddVehicleController extends GetxController {
         ? Get.find<SubscriptionController>()
         : Get.put(SubscriptionController());
         
-    int maxLimit = subController.maxGalleryImagesPerVehicle.value > 0 
-        ? subController.maxGalleryImagesPerVehicle.value 
-        : 6; // fallback 6 if unlimited or error
+    if (subController.isLoading.value) {
+      Get.dialog(const Center(child: CircularProgressIndicator()), barrierDismissible: false);
+      while (subController.isLoading.value) {
+        await Future.delayed(const Duration(milliseconds: 200));
+      }
+      if (Get.isDialogOpen ?? false) Get.back();
+    }
+        
+    int maxLimit = subController.maxGalleryImagesPerVehicle.value;
 
-    if (galleryImages.length >= maxLimit) {
+    if (maxLimit != -1 && galleryImages.length >= maxLimit) {
       if (Get.context != null) {
         UpgradePlanDialog.show(Get.context!);
       }
@@ -240,7 +246,7 @@ class AddVehicleController extends GetxController {
         maxHeight: 1200,
       );
       if (images.isNotEmpty) {
-        if (galleryImages.length + images.length > maxLimit) {
+        if (maxLimit != -1 && galleryImages.length + images.length > maxLimit) {
           int availableSlots = maxLimit - galleryImages.length;
           if (availableSlots > 0) {
             galleryImages.addAll(images.sublist(0, availableSlots));
@@ -352,6 +358,18 @@ class AddVehicleController extends GetxController {
         Future.delayed(const Duration(seconds: 1), () {
           Get.offAllNamed(AppRoutes.home);
         });
+      } else if (response.statusCode == 403) {
+        if (Get.context != null) {
+           UpgradePlanDialog.show(Get.context!);
+        } else {
+          Get.snackbar(
+            "Limit Reached",
+            "Please upgrade your subscription to add more vehicles.",
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.orange,
+            colorText: Colors.white,
+          );
+        }
       } else {
         Get.snackbar(
           "Submission Failed",

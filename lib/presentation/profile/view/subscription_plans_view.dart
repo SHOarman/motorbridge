@@ -51,7 +51,12 @@ class _SubscriptionPlansViewState extends State<SubscriptionPlansView> {
           children: [
             Expanded(
               child: ListView.builder(
-                padding: const EdgeInsets.all(20),
+                padding: EdgeInsets.fromLTRB(
+                  20, 
+                  20, 
+                  20, 
+                  MediaQuery.of(context).padding.bottom + 20,
+                ),
                 itemCount: subController.plansList.length,
                 itemBuilder: (context, index) {
                   final plan = subController.plansList[index];
@@ -171,7 +176,7 @@ class _SubscriptionPlansViewState extends State<SubscriptionPlansView> {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        "/${plan['billingCycle'] ?? 'month'}",
+                        "/${plan['billingCycle'] ?? 'year'}",
                         style: AppTextStyles.smallText.copyWith(
                           color: Colors.grey.shade600,
                           fontWeight: FontWeight.w500,
@@ -179,6 +184,18 @@ class _SubscriptionPlansViewState extends State<SubscriptionPlansView> {
                       ),
                     ],
                   ),
+                  if (!isFreePlan)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 6),
+                      child: Text(
+                        "Price subject to VAT/tax at checkout",
+                        style: AppTextStyles.smallText.copyWith(
+                          color: Colors.grey.shade500,
+                          fontSize: 14,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ),
                   const SizedBox(height: 24),
                   const Divider(),
                   const SizedBox(height: 16),
@@ -204,13 +221,12 @@ class _SubscriptionPlansViewState extends State<SubscriptionPlansView> {
                         ),
                       ),
                     ),
-                  if (isSelected) ...[
-                    const SizedBox(height: 20),
-                    Obx(() {
-                      bool isVerifying = subController.isVerifyingPurchase.value;
-                      bool isFreePlan = plan['price'] == 0 || plan['price'] == 0.0;
-                      
-                      return ElevatedButton(
+                  const SizedBox(height: 20),
+                  Obx(() {
+                    bool isVerifying = subController.isVerifyingPurchase.value;
+                    bool isFreePlan = plan['price'] == 0 || plan['price'] == 0.0;
+                    
+                    return ElevatedButton(
                         onPressed: isVerifying ? null : () async {
                           if (isFreePlan) {
                             Get.snackbar(
@@ -269,8 +285,6 @@ class _SubscriptionPlansViewState extends State<SubscriptionPlansView> {
                         ),
                       );
                     }),
-                    const SizedBox(height: 24),
-                  ],
                 ],
               ),
             ),

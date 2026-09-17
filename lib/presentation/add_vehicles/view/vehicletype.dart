@@ -26,7 +26,7 @@ class VehicleTypeStep extends StatelessWidget {
     final double vGap        = sh * 0.022;
 
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(horizontal: hPad),
+      padding: EdgeInsets.fromLTRB(hPad, 0, hPad, MediaQuery.of(context).padding.bottom + 120),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -205,8 +205,6 @@ class VehicleTypeStep extends StatelessWidget {
             onTap: () => controller.setStep(1),
             backgroundColor: const Color(0xff3876B3),
           ),
-
-          const SizedBox(height: 120),
         ],
       ),
     );

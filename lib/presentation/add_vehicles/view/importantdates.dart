@@ -15,7 +15,7 @@ class ImportantDatesStep extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.fromLTRB(20, 20, 20, MediaQuery.of(context).padding.bottom + 120),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -80,7 +80,6 @@ class ImportantDatesStep extends StatelessWidget {
             CustomButton(text: "Save & Continue", onTap: (){
               controller.setStep(2);
             },backgroundColor: Color(0xff3876B3),),
-            const SizedBox(height: 120),
           ],
         ),
       ),

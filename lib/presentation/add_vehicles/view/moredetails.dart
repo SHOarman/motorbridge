@@ -15,7 +15,7 @@ class MoreDetailsStep extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.fromLTRB(20, 20, 20, MediaQuery.of(context).padding.bottom + 120),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -126,7 +126,6 @@ class MoreDetailsStep extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 120),
           ],
         ),
       ),

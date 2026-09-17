@@ -20,7 +20,8 @@ import '../widget/custom_vehicle_field.dart';
 import 'viewallexpensesaddnew.dart';
 import '../../../core/services/api_sevices/api_services.dart';
 import '../../../core/services/controller/home_controller.dart';
-
+import 'package:motorbridge/core/services/controller/subscription_controller.dart';
+import 'package:motorbridge/general_widget/upgrade_plan_dialog.dart';
 class VehicleDetails extends StatefulWidget {
   const VehicleDetails({super.key});
 
@@ -1232,9 +1233,27 @@ class _VehicleDetailsState extends State<VehicleDetails> {
                 documents: documents,
                 isLoading: isLoadingDocs,
                 onAddTap: () async {
-                  String vehicleId = vehicle['id'] ?? vehicle['_id'] ?? '';
-                  await Get.toNamed(AppRoutes.addDocuments, arguments: vehicleId);
-                  fetchDocuments();
+                  final subController = Get.isRegistered<SubscriptionController>()
+                      ? Get.find<SubscriptionController>()
+                      : Get.put(SubscriptionController());
+                      
+                  if (subController.isLoading.value) {
+                    Get.dialog(const Center(child: CircularProgressIndicator()), barrierDismissible: false);
+                    while (subController.isLoading.value) {
+                      await Future.delayed(const Duration(milliseconds: 200));
+                    }
+                    if (Get.isDialogOpen ?? false) Get.back();
+                  }
+                  
+                  int maxLimit = subController.maxDocuments.value;
+
+                  if (maxLimit != -1 && documents.length >= maxLimit) {
+                    UpgradePlanDialog.show(context);
+                  } else {
+                    String vehicleId = vehicle['id'] ?? vehicle['_id'] ?? '';
+                    await Get.toNamed(AppRoutes.addDocuments, arguments: vehicleId);
+                    fetchDocuments();
+                  }
                 },
                 onViewTap: (doc) {
                   viewDocument(doc);

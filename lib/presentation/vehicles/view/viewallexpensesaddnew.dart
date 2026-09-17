@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/services/api_sevices/api_services.dart';
 import '../../../utils/app_text_styles.dart';
+import 'package:motorbridge/core/services/controller/subscription_controller.dart';
+import 'package:motorbridge/general_widget/upgrade_plan_dialog.dart';
 
 class ViewAllExpensesAddNew extends StatefulWidget {
   const ViewAllExpensesAddNew({super.key});
@@ -606,7 +608,26 @@ class _ViewAllExpensesAddNewState extends State<ViewAllExpensesAddNew> {
                                       ),
                                     ),
                                     ElevatedButton.icon(
-                                      onPressed: () => _showAddCostDialog(context),
+                                      onPressed: () async {
+                                        final subController = Get.isRegistered<SubscriptionController>()
+                                            ? Get.find<SubscriptionController>()
+                                            : Get.put(SubscriptionController());
+                                            
+                                        if (subController.isLoading.value) {
+                                          Get.dialog(const Center(child: CircularProgressIndicator()), barrierDismissible: false);
+                                          while (subController.isLoading.value) {
+                                            await Future.delayed(const Duration(milliseconds: 200));
+                                          }
+                                          if (Get.isDialogOpen ?? false) Get.back();
+                                        }
+
+                                        // Restrict free mode users based on entitlements
+                                        if (!subController.costCalculatorUnlocked.value) {
+                                          UpgradePlanDialog.show(context);
+                                        } else {
+                                          _showAddCostDialog(context);
+                                        }
+                                      },
                                       icon: const Icon(Icons.add, size: 18, color: Colors.white),
                                       label: const Text("Add Cost", style: TextStyle(color: Colors.white)),
                                       style: ElevatedButton.styleFrom(
